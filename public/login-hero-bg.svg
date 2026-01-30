@@ -1,25 +1,15 @@
 <svg width="1400" height="900" viewBox="0 0 1400 900" fill="none" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <linearGradient id="purple" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="base" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#5B21B6"/>
       <stop offset="100%" stop-color="#7C3AED"/>
     </linearGradient>
-    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#60A5FA"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
-    </linearGradient>
   </defs>
-  <rect width="1400" height="900" fill="url(#purple)"/>
-  <rect x="120" y="120" width="1160" height="660" rx="36" fill="url(#glass)" opacity="0.35"/>
-  <rect x="200" y="200" width="240" height="500" rx="24" fill="#0F172A" opacity="0.25"/>
-  <rect x="500" y="200" width="340" height="500" rx="24" fill="#0F172A" opacity="0.25"/>
-  <rect x="900" y="200" width="240" height="500" rx="24" fill="#0F172A" opacity="0.25"/>
-  <rect x="720" y="140" width="140" height="620" rx="32" fill="#E9D5FF" opacity="0.65"/>
-  <rect x="1080" y="140" width="140" height="620" rx="32" fill="#E9D5FF" opacity="0.65"/>
-  <rect x="800" y="420" width="320" height="140" rx="32" fill="#E9D5FF" opacity="0.65"/>
-  <text x="140" y="520" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#F8FAFC" opacity="0.9">Unidos</text>
-  <text x="140" y="600" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#A5B4FC" opacity="0.9">transformamos</text>
-  <text x="140" y="680" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#F472B6" opacity="0.9">sonhos,</text>
-  <text x="140" y="760" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#F8FAFC" opacity="0.9">alcançamos</text>
-  <text x="140" y="840" font-family="Inter, system-ui, sans-serif" font-size="64" font-weight="700" fill="#A3E635" opacity="0.9">conquistas!</text>
+  <rect width="1400" height="900" fill="url(#base)"/>
+  <rect x="120" y="140" width="460" height="620" rx="36" fill="#6D28D9" opacity="0.55"/>
+  <rect x="260" y="220" width="420" height="520" rx="36" fill="#7C3AED" opacity="0.45"/>
+  <rect x="760" y="140" width="140" height="620" rx="32" fill="#E9D5FF" opacity="0.35"/>
+  <rect x="1120" y="140" width="140" height="620" rx="32" fill="#E9D5FF" opacity="0.35"/>
+  <rect x="860" y="420" width="320" height="140" rx="32" fill="#E9D5FF" opacity="0.35"/>
+  <rect x="120" y="140" width="1160" height="620" rx="36" stroke="#8B5CF6" stroke-width="10" opacity="0.35"/>
 </svg>
