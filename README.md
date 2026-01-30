@@ -1,6 +1,19 @@
 # Sistema Comercial para Consórcio (Web + App)
 
-Este repositório descreve uma proposta inicial de sistema para uso do time comercial, com acesso individual por usuário e senha, disponível em **aplicativo mobile** e **site para PC**.
+Este repositório contém um **protótipo funcional web** (com API Node/Express) para o sistema comercial solicitado, com login individual e painel completo para a equipe. A estrutura pode ser reutilizada para evoluir o **app mobile** (via React Native/Flutter) e um backend definitivo.
+
+## Como executar (protótipo web)
+
+```bash
+npm install
+npm start
+```
+
+Acesse: `http://localhost:3000`
+
+**Usuário demo**
+- E-mail: `ana@consorcio.com`
+- Senha: `123456`
 
 ## Objetivos do sistema
 
@@ -90,7 +103,3 @@ Este repositório descreve uma proposta inicial de sistema para uso do time come
 - Integrações necessárias (financeiro, CRM, gateways de boleto, bots/robôs internos).
 - Definir tecnologia e arquitetura (mobile + web).
 - Criar protótipo de interface para validação com a equipe comercial.
-
----
-
-Se quiser, posso transformar este documento em **backlog detalhado**, **mapa de telas** ou **protótipo inicial** para validação.

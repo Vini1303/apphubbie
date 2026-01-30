@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema Comercial Consórcio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app" id="app">
+      <section class="login" id="login">
+        <header>
+          <h1>Sistema Comercial</h1>
+          <p>Entre com usuário e senha para acessar seu painel.</p>
+        </header>
+        <form id="login-form">
+          <label>
+            E-mail
+            <input type="email" name="email" placeholder="ana@consorcio.com" required />
+          </label>
+          <label>
+            Senha
+            <input type="password" name="password" placeholder="123456" required />
+          </label>
+          <button type="submit">Entrar</button>
+          <p class="hint">Usuário demo: ana@consorcio.com • senha: 123456</p>
+          <p class="error" id="login-error" hidden></p>
+        </form>
+      </section>
+
+      <section class="dashboard" id="dashboard" hidden>
+        <header class="dashboard-header">
+          <div>
+            <h2>Bem-vindo, <span id="user-name"></span></h2>
+            <p id="user-role"></p>
+          </div>
+          <button class="logout" id="logout">Sair</button>
+        </header>
+
+        <section class="cards" id="metrics"></section>
+
+        <section class="grid">
+          <div class="panel">
+            <h3>Carteira de clientes</h3>
+            <ul id="carteira"></ul>
+          </div>
+          <div class="panel">
+            <h3>Boletos e vencimentos</h3>
+            <ul id="boletos"></ul>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="panel">
+            <h3>Campanhas e metas</h3>
+            <ul id="campanhas"></ul>
+          </div>
+          <div class="panel">
+            <h3>Lembretes do dia</h3>
+            <ul id="lembretes"></ul>
+          </div>
+        </section>
+
+        <section class="grid">
+          <div class="panel">
+            <h3>Robôs disponíveis</h3>
+            <ul id="robos"></ul>
+          </div>
+          <div class="panel">
+            <h3>Meta mensal da equipe</h3>
+            <div class="progress">
+              <div class="progress-bar" id="meta-progress"></div>
+            </div>
+            <p id="meta-text"></p>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
