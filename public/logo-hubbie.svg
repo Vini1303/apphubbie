@@ -1,0 +1,5 @@
+<svg width="140" height="32" viewBox="0 0 140 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="8" fill="#2563EB"/>
+  <path d="M9 10H13V14H19V10H23V22H19V18H13V22H9V10Z" fill="white"/>
+  <text x="40" y="21" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="700" fill="#1F2937">hubbie</text>
+</svg>
