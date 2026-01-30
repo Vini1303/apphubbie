@@ -21,6 +21,18 @@ body {
   background: #f5f7fb;
 }
 
+.logged-out .sidebar {
+  display: none;
+}
+
+.logged-out .content {
+  padding: 0;
+}
+
+.logged-out .layout {
+  grid-template-columns: 1fr;
+}
+
 .sidebar {
   position: sticky;
   top: 0;
@@ -58,12 +70,21 @@ body {
   border-radius: 10px;
   font-weight: 600;
   font-size: 14px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
 }
 
 .menu-item:hover,
 .menu-item:focus {
   background: #eff6ff;
   color: #2563eb;
+}
+
+.menu-item.is-active {
+  background: #ede9fe;
+  color: #6d28d9;
 }
 
 .content {
@@ -73,16 +94,68 @@ body {
 }
 
 .login {
-  max-width: 420px;
-  margin: 0 auto;
-  background: #fff;
-  padding: 32px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+  min-height: 100vh;
+  display: grid;
 }
 
-.login h1 {
-  margin: 0 0 8px;
+.login-wrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 100vh;
+}
+
+.login-hero {
+  background: linear-gradient(145deg, #6d28d9, #7c3aed);
+  color: #fff;
+  padding: 56px 64px;
+  display: grid;
+  align-content: center;
+  gap: 16px;
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.login-title {
+  font-size: 40px;
+  margin: 0;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  margin: 0 0 16px;
+}
+
+.hero-word {
+  font-size: 96px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  line-height: 1;
+  background-image: url("hero-texture.svg");
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0.9;
+}
+
+.login-form-panel {
+  display: grid;
+  align-content: center;
+  padding: 56px;
+  gap: 16px;
+  background: #fff;
+}
+
+.login-form-panel h2 {
+  margin: 0;
+}
+
+.login-form-panel p {
+  margin: 0 0 16px;
 }
 
 form {
@@ -108,7 +181,7 @@ button {
   border: none;
   border-radius: 10px;
   padding: 12px 16px;
-  background: #2563eb;
+  background: #6d28d9;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -133,6 +206,15 @@ button.logout {
 .dashboard {
   display: grid;
   gap: 24px;
+}
+
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.section.hidden {
+  display: none;
 }
 
 .dashboard-header {
@@ -266,10 +348,23 @@ button.logout {
     height: auto;
     grid-template-columns: 1fr;
   }
+
+  .login-wrapper {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 720px) {
   .content {
     padding: 20px;
+  }
+
+  .login-hero,
+  .login-form-panel {
+    padding: 32px;
+  }
+
+  .hero-word {
+    font-size: 64px;
   }
 }
