@@ -105,7 +105,10 @@ body {
 }
 
 .login-hero {
-  background: linear-gradient(145deg, #6d28d9, #7c3aed);
+  background: linear-gradient(145deg, rgba(109, 40, 217, 0.85), rgba(124, 58, 237, 0.85)),
+    url("login-hero-bg.svg");
+  background-size: cover;
+  background-position: center;
   color: #fff;
   padding: 56px 64px;
   display: grid;
