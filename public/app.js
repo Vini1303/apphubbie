@@ -249,4 +249,5 @@ robosList.addEventListener("click", async (event) => {
   }, 1500);
 });
 
+setLoggedOut(true);
 fetchDashboard();
