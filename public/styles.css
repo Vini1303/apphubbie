@@ -185,8 +185,7 @@ body {
 }
 
 .login__upload {
-  width: 100%;
-  max-width: 420px;
+  display: none;
 }
 
 @media (max-width: 900px) {

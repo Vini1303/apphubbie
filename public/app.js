@@ -13,6 +13,7 @@ const brandToggle = document.getElementById('brandToggle');
 const subnavButtons = document.querySelectorAll('.subnav__item');
 const subsections = document.querySelectorAll('.subsection');
 const loginMedia = document.getElementById('loginMedia');
+const topbar = document.getElementById('topbar');
 const loginHeroFileInput = document.getElementById('loginHeroFile');
 const loginHeroBase64Input = document.getElementById('loginHeroBase64');
 const saveLoginHeroImageButton = document.getElementById('saveLoginHeroImage');
@@ -138,11 +139,19 @@ const state = {
 const setLoggedInView = () => {
   loginCard.style.display = 'none';
   content.style.display = 'flex';
+  sidebar.style.display = 'flex';
+  if (topbar) {
+    topbar.style.display = 'flex';
+  }
 };
 
 const setLoggedOutView = () => {
   loginCard.style.display = 'grid';
   content.style.display = 'none';
+  sidebar.style.display = 'none';
+  if (topbar) {
+    topbar.style.display = 'none';
+  }
 };
 
 const renderList = (elementId, items, formatter) => {
