@@ -425,7 +425,18 @@ const setActiveSection = (sectionId) => {
 
 menuButtons.forEach((button) => {
   button.addEventListener('click', () => {
-    setActiveSection(button.dataset.section);
+    const section = button.dataset.section;
+    if (section === 'logout') {
+      localStorage.removeItem('consorcioUser');
+      state.user = null;
+      userName.textContent = 'Convidado';
+      userRole.textContent = 'Comercial';
+      setLoggedOutView();
+      setActiveSection('inicio');
+      setActiveSubsection('campanhas-individuais');
+      return;
+    }
+    setActiveSection(section);
   });
 });
 

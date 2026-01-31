@@ -83,6 +83,16 @@ body {
   color: #fff;
 }
 
+.menu__item--logout {
+  color: #fecaca;
+}
+
+.menu__item--logout:hover,
+.menu__item--logout.is-active {
+  background: rgba(248, 113, 113, 0.2);
+  color: #fff;
+}
+
 .sidebar.is-collapsed .menu__item {
   font-size: 0.8rem;
   text-align: center;
