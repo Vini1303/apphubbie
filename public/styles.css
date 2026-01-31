@@ -345,6 +345,10 @@ button:hover {
   font-weight: 600;
 }
 
+.is-hidden {
+  display: none !important;
+}
+
 .list {
   list-style: none;
   padding: 0;

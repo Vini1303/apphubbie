@@ -17,6 +17,7 @@ const puntaCanaBase64Input = document.getElementById('puntaCanaBase64');
 const savePuntaCanaImageButton = document.getElementById('savePuntaCanaImage');
 const clearPuntaCanaImageButton = document.getElementById('clearPuntaCanaImage');
 const puntaCanaStatus = document.getElementById('puntaCanaStatus');
+const puntaCanaUploadCard = document.getElementById('puntaCanaUploadCard');
 
 let storedOverrides = {};
 try {
@@ -213,6 +214,13 @@ const persistImageOverrides = (overrides) => {
   localStorage.setItem('hubbieImageOverrides', JSON.stringify(overrides));
 };
 
+const togglePuntaCanaUploadVisibility = (hasImage) => {
+  if (!puntaCanaUploadCard) {
+    return;
+  }
+  puntaCanaUploadCard.classList.toggle('is-hidden', hasImage);
+};
+
 const updatePuntaCanaImage = (dataUrl) => {
   if (!puntaCanaStatus) {
     return;
@@ -233,6 +241,7 @@ const updatePuntaCanaImage = (dataUrl) => {
   if (campaign) {
     campaign.image = dataUrl || null;
   }
+  togglePuntaCanaUploadVisibility(Boolean(dataUrl));
   renderIndividualCampaigns();
 };
 
@@ -251,6 +260,7 @@ const initializePuntaCanaUpload = () => {
     puntaCanaBase64Input.value = imageOverrides.puntaCana;
     puntaCanaStatus.textContent = 'Imagem base64 carregada.';
   }
+  togglePuntaCanaUploadVisibility(Boolean(imageOverrides.puntaCana));
 
   puntaCanaFileInput.addEventListener('change', () => {
     const [file] = puntaCanaFileInput.files || [];
