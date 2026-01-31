@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hubbie Consórcio - Painel Comercial</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <button class="brand" id="brandToggle" type="button">
+          <img src="hubbie-logo.svg" alt="Logo Hubbie" />
+          <span>Hubbie</span>
+        </button>
+        <nav class="menu" id="menu">
+          <button class="menu__item is-active" data-section="inicio">Início</button>
+          <button class="menu__item" data-section="carteira">Carteira de clientes</button>
+          <button class="menu__item" data-section="boletos">Boletos e vencimentos</button>
+          <button class="menu__item" data-section="metas">Metas e campanhas</button>
+          <button class="menu__item" data-section="ranking">Ranking e pontuação</button>
+          <button class="menu__item" data-section="robos">Robôs</button>
+          <button class="menu__item" data-section="agenda">Agenda e lembretes</button>
+          <button class="menu__item" data-section="comunicacao">Comunicação</button>
+          <button class="menu__item" data-section="relatorios">Relatórios</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div>
+            <h1>Painel Comercial</h1>
+            <p>Gestão da equipe e performance em tempo real.</p>
+          </div>
+          <div class="user-summary" id="userSummary">
+            <span class="badge" id="userRole">Comercial</span>
+            <span id="userName">Convidado</span>
+          </div>
+        </header>
+
+        <section class="card login" id="loginCard">
+          <h2>Login</h2>
+          <p>Acesse com seu usuário e senha para ver sua carteira e metas.</p>
+          <form id="loginForm">
+            <label>
+              Usuário
+              <input type="text" id="loginUser" placeholder="ex: ana.souza" required />
+            </label>
+            <label>
+              Senha
+              <input type="password" id="loginPass" placeholder="••••••" required />
+            </label>
+            <label>
+              Perfil
+              <select id="loginRole">
+                <option value="Comercial">Comercial</option>
+                <option value="Gestor">Gestor</option>
+                <option value="TI">TI/Administrador</option>
+              </select>
+            </label>
+            <button type="submit">Entrar</button>
+          </form>
+        </section>
+
+        <section class="content" id="content">
+          <div class="section" data-section="inicio">
+            <div class="grid">
+              <article class="card">
+                <h3>Meta mensal</h3>
+                <p class="metric" id="monthlyGoal">R$ 280.000</p>
+                <p class="sub">Realizado: <strong id="monthlyProgress">R$ 172.500</strong></p>
+                <div class="progress">
+                  <div class="progress__bar" id="monthlyBar"></div>
+                </div>
+              </article>
+
+              <article class="card">
+                <h3>Pontuação individual</h3>
+                <p class="metric" id="userPoints">420 pts</p>
+                <p class="sub">Faltam <strong id="pointsRemaining">80 pts</strong> para a campanha Ouro.</p>
+                <ul class="list" id="pointsBreakdown"></ul>
+              </article>
+
+              <article class="card">
+                <h3>Ranking geral</h3>
+                <ol class="list" id="rankingList"></ol>
+              </article>
+
+              <article class="card">
+                <h3>Alertas de boletos</h3>
+                <ul class="list" id="billAlerts"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="carteira">
+            <div class="card">
+              <h3>Carteira de clientes</h3>
+              <div class="filters">
+                <input type="search" id="clientSearch" placeholder="Buscar cliente" />
+                <select id="clientStatusFilter">
+                  <option value="">Todos os status</option>
+                  <option value="Em negociação">Em negociação</option>
+                  <option value="Aguardando pagamento">Aguardando pagamento</option>
+                  <option value="Pago">Pago</option>
+                  <option value="Inadimplente">Inadimplente</option>
+                  <option value="Cancelado">Cancelado</option>
+                  <option value="Tentando contato">Tentando contato</option>
+                </select>
+              </div>
+              <ul class="list" id="clientList"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="boletos">
+            <div class="card">
+              <h3>Boletos e vencimentos</h3>
+              <p class="sub">Acompanhe status, atrasos e próximos vencimentos.</p>
+              <ul class="list" id="billDetails"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="metas">
+            <div class="subnav">
+              <button class="subnav__item is-active" data-subsection="campanhas-individuais">
+                Campanhas individuais
+              </button>
+              <button class="subnav__item" data-subsection="campanhas-coletivas">
+                Campanhas coletivas
+              </button>
+            </div>
+
+            <div class="subsection is-active" data-subsection="campanhas-individuais">
+              <div class="campaign-grid" id="individualCampaigns"></div>
+            </div>
+
+            <div class="subsection" data-subsection="campanhas-coletivas">
+              <div class="grid">
+                <article class="card">
+                  <h3>Metas da empresa</h3>
+                  <ul class="list" id="companyGoals"></ul>
+                </article>
+                <article class="card">
+                  <h3>Campanhas em andamento</h3>
+                  <ul class="list" id="campaignList"></ul>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" data-section="ranking">
+            <div class="grid">
+              <article class="card">
+                <h3>Ranking geral</h3>
+                <ol class="list" id="rankingFull"></ol>
+              </article>
+              <article class="card">
+                <h3>Resumo de pontos</h3>
+                <ul class="list" id="pointsSummary"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="robos">
+            <div class="card">
+              <h3>Robôs disponíveis</h3>
+              <p class="sub">Acesso somente para execução autorizada.</p>
+              <ul class="list" id="robotList"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="agenda">
+            <div class="grid">
+              <article class="card">
+                <h3>Agenda e lembretes</h3>
+                <form id="reminderForm">
+                  <label>
+                    Cliente
+                    <input type="text" id="reminderClient" placeholder="Nome do cliente" required />
+                  </label>
+                  <label>
+                    Horário
+                    <input type="time" id="reminderTime" required />
+                  </label>
+                  <label>
+                    Nota
+                    <input type="text" id="reminderNote" placeholder="Ex: Enviar boleto atualizado" />
+                  </label>
+                  <button type="submit">Adicionar lembrete</button>
+                </form>
+                <ul class="list" id="reminderList"></ul>
+              </article>
+              <article class="card">
+                <h3>Indicadores rápidos</h3>
+                <ul class="list" id="quickIndicators"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="comunicacao">
+            <div class="card">
+              <h3>Comunicação com clientes</h3>
+              <ul class="list" id="communicationList"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="relatorios">
+            <div class="grid">
+              <article class="card">
+                <h3>Relatórios e auditoria</h3>
+                <ul class="list" id="reportList"></ul>
+              </article>
+              <article class="card">
+                <h3>Gráficos de meta mensal</h3>
+                <ul class="list" id="chartsList"></ul>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="images.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
