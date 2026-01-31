@@ -4,4 +4,5 @@ window.HUBBIE_IMAGES = {
   // puntaCana: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...'
   // gramado: 'data:image/jpeg;base64,...',
   // lisboa: 'data:image/jpeg;base64,...'
+  // loginHero: 'data:image/jpeg;base64,...'
 };

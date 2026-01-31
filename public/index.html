@@ -38,28 +38,33 @@
           </div>
         </header>
 
-        <section class="card login" id="loginCard">
-          <h2>Login</h2>
-          <p>Acesse com seu usuário e senha para ver sua carteira e metas.</p>
-          <form id="loginForm">
-            <label>
-              Usuário
-              <input type="text" id="loginUser" placeholder="ex: ana.souza" required />
-            </label>
-            <label>
-              Senha
-              <input type="password" id="loginPass" placeholder="••••••" required />
-            </label>
-            <label>
-              Perfil
-              <select id="loginRole">
-                <option value="Comercial">Comercial</option>
-                <option value="Gestor">Gestor</option>
-                <option value="TI">TI/Administrador</option>
-              </select>
-            </label>
-            <button type="submit">Entrar</button>
-          </form>
+        <section class="login" id="loginCard">
+          <div class="login__media" id="loginMedia" aria-hidden="true"></div>
+          <div class="login__panel">
+            <div class="card login__card">
+              <h2>Login</h2>
+              <p>Acesse com seu usuário e senha para ver sua carteira e metas.</p>
+              <form id="loginForm">
+                <label>
+                  Usuário
+                  <input type="text" id="loginUser" placeholder="ex: ana.souza" required />
+                </label>
+                <label>
+                  Senha
+                  <input type="password" id="loginPass" placeholder="••••••" required />
+                </label>
+                <label>
+                  Perfil
+                  <select id="loginRole">
+                    <option value="Comercial">Comercial</option>
+                    <option value="Gestor">Gestor</option>
+                    <option value="TI">TI/Administrador</option>
+                  </select>
+                </label>
+                <button type="submit">Entrar</button>
+              </form>
+            </div>
+          </div>
         </section>
 
         <section class="content" id="content">

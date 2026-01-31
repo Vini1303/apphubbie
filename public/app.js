@@ -12,6 +12,7 @@ const sidebar = document.getElementById('sidebar');
 const brandToggle = document.getElementById('brandToggle');
 const subnavButtons = document.querySelectorAll('.subnav__item');
 const subsections = document.querySelectorAll('.subsection');
+const loginMedia = document.getElementById('loginMedia');
 const puntaCanaFileInput = document.getElementById('puntaCanaFile');
 const puntaCanaBase64Input = document.getElementById('puntaCanaBase64');
 const savePuntaCanaImageButton = document.getElementById('savePuntaCanaImage');
@@ -134,7 +135,7 @@ const setLoggedInView = () => {
 };
 
 const setLoggedOutView = () => {
-  loginCard.style.display = 'flex';
+  loginCard.style.display = 'grid';
   content.style.display = 'none';
 };
 
@@ -318,6 +319,16 @@ const initializeCampaignUpload = (config) => {
   });
 };
 
+const initializeLoginHero = () => {
+  if (!loginMedia) {
+    return;
+  }
+  const heroImage = imageOverrides.loginHero;
+  if (heroImage) {
+    loginMedia.style.backgroundImage = `url('${heroImage}')`;
+  }
+};
+
 const loadSession = () => {
   const saved = localStorage.getItem('consorcioUser');
   if (saved) {
@@ -407,6 +418,7 @@ reminderForm.addEventListener('submit', (event) => {
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 loadSession();
+initializeLoginHero();
 initializeCampaignUpload({
   key: 'puntaCana',
   fileInput: puntaCanaFileInput,
