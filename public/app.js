@@ -1,10 +1,14 @@
 const loginForm = document.getElementById('loginForm');
 const loginCard = document.getElementById('loginCard');
-const dashboard = document.getElementById('dashboard');
+const content = document.getElementById('content');
 const userName = document.getElementById('userName');
 const userRole = document.getElementById('userRole');
 const monthlyBar = document.getElementById('monthlyBar');
 const clientSearch = document.getElementById('clientSearch');
+const menuButtons = document.querySelectorAll('.menu__item');
+const sections = document.querySelectorAll('.section');
+const sidebar = document.getElementById('sidebar');
+const brandToggle = document.getElementById('brandToggle');
 
 const state = {
   user: null,
@@ -29,9 +33,9 @@ const state = {
     { name: 'Bruno Lima', value: '390 pts' }
   ],
   bills: [
-    { name: 'Carlos Andrade', status: 'Atrasado 3 dias' },
-    { name: 'Fernanda Lopes', status: 'Vence amanhã' },
-    { name: 'Mariana Costa', status: 'Vence em 2 dias' }
+    { name: 'Carlos Andrade', status: 'Atrasado 3 dias', detail: 'R$ 980 • Venc. 12/11' },
+    { name: 'Fernanda Lopes', status: 'Vence amanhã', detail: 'R$ 2.100 • Venc. 18/11' },
+    { name: 'Mariana Costa', status: 'Vence em 2 dias', detail: 'R$ 1.280 • Venc. 15/11' }
   ],
   robots: [
     { name: 'Robô de emissão de boletos', status: 'Pronto para executar' },
@@ -43,6 +47,11 @@ const state = {
     { name: 'Campanha Indique & Ganhe', status: '2 indicações pendentes' },
     { name: 'Meta Regional', status: 'R$ 35.000 faltando' }
   ],
+  companyGoals: [
+    { name: 'Meta mensal empresa', status: '62% concluída' },
+    { name: 'Meta novos contratos', status: '28/40 fechados' },
+    { name: 'Meta renovação', status: '15/25 clientes' }
+  ],
   indicators: [
     { name: 'Conversão', value: '18%' },
     { name: 'Novos leads', value: '42' },
@@ -52,17 +61,27 @@ const state = {
     { name: 'Templates aprovados', value: '6' },
     { name: 'Mensagens enviadas', value: '24' },
     { name: 'Retornos aguardando', value: '5' }
+  ],
+  reports: [
+    { name: 'Relatório semanal', value: 'Última atualização: hoje' },
+    { name: 'Auditoria de acessos', value: '3 alertas pendentes' },
+    { name: 'Performance por consultor', value: 'Disponível para exportar' }
+  ],
+  charts: [
+    { name: 'Meta vs realizado', value: 'Gráfico mensal' },
+    { name: 'Funil de vendas', value: 'Atualizado em tempo real' },
+    { name: 'Evolução da carteira', value: 'Comparativo trimestral' }
   ]
 };
 
 const setLoggedInView = () => {
   loginCard.style.display = 'none';
-  dashboard.style.display = 'flex';
+  content.style.display = 'flex';
 };
 
 const setLoggedOutView = () => {
   loginCard.style.display = 'flex';
-  dashboard.style.display = 'none';
+  content.style.display = 'none';
 };
 
 const renderList = (elementId, items, formatter) => {
@@ -81,11 +100,17 @@ const renderDashboard = () => {
 
   renderList('pointsBreakdown', state.points, (item) => `<span>${item.label}</span>${item.value}`);
   renderList('rankingList', state.ranking, (item) => `<span>${item.name}</span>${item.value}`);
+  renderList('rankingFull', state.ranking, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('billAlerts', state.bills, (item) => `<span>${item.name}</span>${item.status}`);
+  renderList('billDetails', state.bills, (item) => `<span>${item.name}</span>${item.detail}`);
   renderList('robotList', state.robots, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('campaignList', state.campaigns, (item) => `<span>${item.name}</span>${item.status}`);
+  renderList('companyGoals', state.companyGoals, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('quickIndicators', state.indicators, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('communicationList', state.communications, (item) => `<span>${item.name}</span>${item.value}`);
+  renderList('reportList', state.reports, (item) => `<span>${item.name}</span>${item.value}`);
+  renderList('chartsList', state.charts, (item) => `<span>${item.name}</span>${item.value}`);
+  renderList('pointsSummary', state.points, (item) => `<span>${item.label}</span>${item.value}`);
 
   applyClientFilter('');
   renderReminders();
@@ -119,6 +144,29 @@ const loadSession = () => {
   }
 };
 
+const setActiveSection = (sectionId) => {
+  sections.forEach((section) => {
+    section.classList.toggle('is-active', section.dataset.section === sectionId);
+  });
+  menuButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.section === sectionId);
+  });
+};
+
+menuButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    setActiveSection(button.dataset.section);
+  });
+});
+
+brandToggle.addEventListener('click', () => {
+  if (sidebar.classList.contains('is-collapsed')) {
+    sidebar.classList.remove('is-collapsed');
+  } else {
+    setActiveSection('inicio');
+  }
+});
+
 loginForm.addEventListener('submit', (event) => {
   event.preventDefault();
   const name = document.getElementById('loginUser').value.trim();
@@ -130,6 +178,7 @@ loginForm.addEventListener('submit', (event) => {
   userRole.textContent = role;
   setLoggedInView();
   renderDashboard();
+  setActiveSection('inicio');
 });
 
 clientSearch.addEventListener('input', (event) => {
@@ -148,4 +197,5 @@ reminderForm.addEventListener('submit', (event) => {
   renderReminders();
 });
 
+setActiveSection('inicio');
 loadSession();

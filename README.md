@@ -107,3 +107,4 @@ Este documento descreve uma proposta de sistema completo para equipe comercial d
 - Carteira de clientes com filtro rápido.
 - Alertas de boletos e robôs disponíveis.
 - Agenda com criação de lembretes.
+- Menu lateral com logo Hubbie e seções separadas por funcionalidade.
