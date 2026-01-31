@@ -140,6 +140,7 @@ const setLoggedInView = () => {
   loginCard.style.display = 'none';
   content.style.display = 'flex';
   sidebar.style.display = 'flex';
+  document.body.classList.remove('is-login');
   if (topbar) {
     topbar.style.display = 'flex';
   }
@@ -149,6 +150,7 @@ const setLoggedOutView = () => {
   loginCard.style.display = 'grid';
   content.style.display = 'none';
   sidebar.style.display = 'none';
+  document.body.classList.add('is-login');
   if (topbar) {
     topbar.style.display = 'none';
   }

@@ -147,11 +147,11 @@ body {
 
 .login {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: 520px;
-  border-radius: 24px;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+  min-height: 100vh;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.1);
+  box-shadow: none;
   background: #fff;
 }
 
@@ -168,7 +168,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 40px;
+  padding: 56px 48px;
   flex-direction: column;
   gap: 24px;
 }
@@ -196,6 +196,14 @@ body {
   .login__media {
     min-height: 240px;
   }
+}
+
+body.is-login .layout {
+  min-height: 100vh;
+}
+
+body.is-login .main {
+  padding: 0;
 }
 
 .content {
