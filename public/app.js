@@ -5,6 +5,7 @@ const userName = document.getElementById('userName');
 const userRole = document.getElementById('userRole');
 const monthlyBar = document.getElementById('monthlyBar');
 const clientSearch = document.getElementById('clientSearch');
+const clientStatusFilter = document.getElementById('clientStatusFilter');
 const menuButtons = document.querySelectorAll('.menu__item');
 const sections = document.querySelectorAll('.section');
 const sidebar = document.getElementById('sidebar');
@@ -14,9 +15,11 @@ const state = {
   user: null,
   clients: [
     { name: 'Mariana Costa', status: 'Em negociação', due: '15/11', value: 'R$ 1.280' },
-    { name: 'Carlos Andrade', status: 'Boleto em atraso', due: '12/11', value: 'R$ 980' },
-    { name: 'Fernanda Lopes', status: 'Pendente assinatura', due: '18/11', value: 'R$ 2.100' },
-    { name: 'Rafael Nunes', status: 'Contato agendado', due: '20/11', value: 'R$ 1.550' }
+    { name: 'Carlos Andrade', status: 'Inadimplente', due: '12/11', value: 'R$ 980' },
+    { name: 'Fernanda Lopes', status: 'Aguardando pagamento', due: '18/11', value: 'R$ 2.100' },
+    { name: 'Rafael Nunes', status: 'Tentando contato', due: '20/11', value: 'R$ 1.550' },
+    { name: 'Paula Martins', status: 'Pago', due: '10/11', value: 'R$ 1.750' },
+    { name: 'Eduardo Reis', status: 'Cancelado', due: '08/11', value: 'R$ 900' }
   ],
   reminders: [
     { client: 'Mariana Costa', time: '14:00', note: 'Confirmar envio de contrato' },
@@ -112,16 +115,20 @@ const renderDashboard = () => {
   renderList('chartsList', state.charts, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('pointsSummary', state.points, (item) => `<span>${item.label}</span>${item.value}`);
 
-  applyClientFilter('');
+  applyClientFilter();
   renderReminders();
 };
 
-const applyClientFilter = (query) => {
-  const filtered = state.clients.filter((client) =>
-    client.name.toLowerCase().includes(query.toLowerCase())
-  );
+const applyClientFilter = () => {
+  const query = clientSearch.value.trim().toLowerCase();
+  const status = clientStatusFilter.value;
+  const filtered = state.clients.filter((client) => {
+    const matchesName = client.name.toLowerCase().includes(query);
+    const matchesStatus = status ? client.status === status : true;
+    return matchesName && matchesStatus;
+  });
   renderList('clientList', filtered, (client) =>
-    `<span>${client.name}</span>${client.status} • ${client.due} • ${client.value}`
+    `<span>${client.name}</span><span class="status">${client.status}</span> ${client.due} • ${client.value}`
   );
 };
 
@@ -181,8 +188,12 @@ loginForm.addEventListener('submit', (event) => {
   setActiveSection('inicio');
 });
 
-clientSearch.addEventListener('input', (event) => {
-  applyClientFilter(event.target.value);
+clientSearch.addEventListener('input', () => {
+  applyClientFilter();
+});
+
+clientStatusFilter.addEventListener('change', () => {
+  applyClientFilter();
 });
 
 const reminderForm = document.getElementById('reminderForm');

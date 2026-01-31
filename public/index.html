@@ -96,7 +96,18 @@
           <div class="section" data-section="carteira">
             <div class="card">
               <h3>Carteira de clientes</h3>
-              <input type="search" id="clientSearch" placeholder="Buscar cliente" />
+              <div class="filters">
+                <input type="search" id="clientSearch" placeholder="Buscar cliente" />
+                <select id="clientStatusFilter">
+                  <option value="">Todos os status</option>
+                  <option value="Em negociação">Em negociação</option>
+                  <option value="Aguardando pagamento">Aguardando pagamento</option>
+                  <option value="Pago">Pago</option>
+                  <option value="Inadimplente">Inadimplente</option>
+                  <option value="Cancelado">Cancelado</option>
+                  <option value="Tentando contato">Tentando contato</option>
+                </select>
+              </div>
               <ul class="list" id="clientList"></ul>
             </div>
           </div>

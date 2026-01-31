@@ -159,6 +159,21 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 12px;
+}
+
+.status {
+  background: #e2e8f0;
+  color: #1e293b;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
 label {
   display: flex;
   flex-direction: column;
@@ -272,5 +287,9 @@ button:hover {
   .topbar {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .filters {
+    grid-template-columns: 1fr;
   }
 }
