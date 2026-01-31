@@ -91,3 +91,19 @@ Este documento descreve uma proposta de sistema completo para equipe comercial d
 2. Mapear integrações atuais (robôs, ERP, boletos).
 3. Criar protótipo de UX/UI (web e app).
 4. Validar requisitos com equipe comercial.
+
+## Como executar
+1. Certifique-se de ter Node.js instalado.
+2. Execute:
+   ```bash
+   npm install
+   npm start
+   ```
+3. Acesse `http://localhost:3000` no navegador.
+
+## O que já está pronto neste protótipo
+- Login básico (simulado) com perfil individual.
+- Painel com metas, ranking, pontos e campanhas.
+- Carteira de clientes com filtro rápido.
+- Alertas de boletos e robôs disponíveis.
+- Agenda com criação de lembretes.

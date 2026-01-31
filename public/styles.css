@@ -1,0 +1,177 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", "Segoe UI", sans-serif;
+  background: #f5f7fb;
+  color: #1e1e2d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app__header {
+  background: #0b2341;
+  color: #fff;
+  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.app__header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+}
+
+.app__header p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.app__user {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-weight: 600;
+}
+
+.app__content {
+  padding: 32px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card h2,
+.card h3 {
+  margin: 0;
+}
+
+.dashboard {
+  display: none;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dashboard__grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-weight: 600;
+}
+
+input,
+select,
+button {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d8dee9;
+  font-size: 0.95rem;
+}
+
+button {
+  background: #1b5cff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 16px rgba(27, 92, 255, 0.25);
+}
+
+.metric {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.sub {
+  margin: 0;
+  color: #5b6880;
+}
+
+.progress {
+  background: #e6e9f0;
+  border-radius: 999px;
+  overflow: hidden;
+  height: 10px;
+}
+
+.progress__bar {
+  background: linear-gradient(90deg, #1b5cff, #6dd5ed);
+  height: 100%;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.list li {
+  padding: 10px 12px;
+  background: #f3f6fb;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.list li span {
+  font-weight: 600;
+}
+
+.badge {
+  background: #dbeafe;
+  color: #1b5cff;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+}
+
+#loginCard {
+  max-width: 420px;
+}
+
+@media (max-width: 768px) {
+  .app__content {
+    padding: 20px;
+  }
+
+  .app__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

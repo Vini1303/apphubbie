@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consórcio Comercial - Painel</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <div>
+          <h1>Consórcio Comercial</h1>
+          <p>App + Web para equipe comercial</p>
+        </div>
+        <div class="app__user" id="userSummary">
+          <span class="badge" id="userRole">Comercial</span>
+          <span id="userName">Convidado</span>
+        </div>
+      </header>
+
+      <main class="app__content">
+        <section class="card" id="loginCard">
+          <h2>Login</h2>
+          <p>Acesse com seu usuário e senha para ver sua carteira e metas.</p>
+          <form id="loginForm">
+            <label>
+              Usuário
+              <input type="text" id="loginUser" placeholder="ex: ana.souza" required />
+            </label>
+            <label>
+              Senha
+              <input type="password" id="loginPass" placeholder="••••••" required />
+            </label>
+            <label>
+              Perfil
+              <select id="loginRole">
+                <option value="Comercial">Comercial</option>
+                <option value="Gestor">Gestor</option>
+                <option value="TI">TI/Administrador</option>
+              </select>
+            </label>
+            <button type="submit">Entrar</button>
+          </form>
+        </section>
+
+        <section class="dashboard" id="dashboard">
+          <div class="dashboard__grid">
+            <article class="card">
+              <h3>Meta mensal</h3>
+              <p class="metric" id="monthlyGoal">R$ 280.000</p>
+              <p class="sub">Realizado: <strong id="monthlyProgress">R$ 172.500</strong></p>
+              <div class="progress">
+                <div class="progress__bar" id="monthlyBar"></div>
+              </div>
+            </article>
+
+            <article class="card">
+              <h3>Pontuação individual</h3>
+              <p class="metric" id="userPoints">420 pts</p>
+              <p class="sub">Faltam <strong id="pointsRemaining">80 pts</strong> para a campanha Ouro.</p>
+              <ul class="list" id="pointsBreakdown"></ul>
+            </article>
+
+            <article class="card">
+              <h3>Ranking geral</h3>
+              <ol class="list" id="rankingList"></ol>
+            </article>
+
+            <article class="card">
+              <h3>Alertas de boletos</h3>
+              <ul class="list" id="billAlerts"></ul>
+            </article>
+          </div>
+
+          <div class="dashboard__grid">
+            <article class="card">
+              <h3>Carteira de clientes</h3>
+              <input type="search" id="clientSearch" placeholder="Buscar cliente" />
+              <ul class="list" id="clientList"></ul>
+            </article>
+
+            <article class="card">
+              <h3>Agenda e lembretes</h3>
+              <form id="reminderForm">
+                <label>
+                  Cliente
+                  <input type="text" id="reminderClient" placeholder="Nome do cliente" required />
+                </label>
+                <label>
+                  Horário
+                  <input type="time" id="reminderTime" required />
+                </label>
+                <label>
+                  Nota
+                  <input type="text" id="reminderNote" placeholder="Ex: Enviar boleto atualizado" />
+                </label>
+                <button type="submit">Adicionar lembrete</button>
+              </form>
+              <ul class="list" id="reminderList"></ul>
+            </article>
+
+            <article class="card">
+              <h3>Robôs disponíveis</h3>
+              <p class="sub">Acesso somente para execução autorizada.</p>
+              <ul class="list" id="robotList"></ul>
+            </article>
+          </div>
+
+          <div class="dashboard__grid">
+            <article class="card">
+              <h3>Campanhas e metas</h3>
+              <ul class="list" id="campaignList"></ul>
+            </article>
+
+            <article class="card">
+              <h3>Indicadores rápidos</h3>
+              <ul class="list" id="quickIndicators"></ul>
+            </article>
+
+            <article class="card">
+              <h3>Comunicação com clientes</h3>
+              <ul class="list" id="communicationList"></ul>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
