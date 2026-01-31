@@ -121,15 +121,30 @@
           </div>
 
           <div class="section" data-section="metas">
-            <div class="grid">
-              <article class="card">
-                <h3>Metas da empresa</h3>
-                <ul class="list" id="companyGoals"></ul>
-              </article>
-              <article class="card">
-                <h3>Campanhas em andamento</h3>
-                <ul class="list" id="campaignList"></ul>
-              </article>
+            <div class="subnav">
+              <button class="subnav__item is-active" data-subsection="campanhas-individuais">
+                Campanhas individuais
+              </button>
+              <button class="subnav__item" data-subsection="campanhas-coletivas">
+                Campanhas coletivas
+              </button>
+            </div>
+
+            <div class="subsection is-active" data-subsection="campanhas-individuais">
+              <div class="campaign-grid" id="individualCampaigns"></div>
+            </div>
+
+            <div class="subsection" data-subsection="campanhas-coletivas">
+              <div class="grid">
+                <article class="card">
+                  <h3>Metas da empresa</h3>
+                  <ul class="list" id="companyGoals"></ul>
+                </article>
+                <article class="card">
+                  <h3>Campanhas em andamento</h3>
+                  <ul class="list" id="campaignList"></ul>
+                </article>
+              </div>
             </div>
           </div>
 

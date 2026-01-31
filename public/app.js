@@ -10,6 +10,8 @@ const menuButtons = document.querySelectorAll('.menu__item');
 const sections = document.querySelectorAll('.section');
 const sidebar = document.getElementById('sidebar');
 const brandToggle = document.getElementById('brandToggle');
+const subnavButtons = document.querySelectorAll('.subnav__item');
+const subsections = document.querySelectorAll('.subsection');
 
 const state = {
   user: null,
@@ -49,6 +51,26 @@ const state = {
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
     { name: 'Campanha Indique & Ganhe', status: '2 indicações pendentes' },
     { name: 'Meta Regional', status: 'R$ 35.000 faltando' }
+  ],
+  individualCampaigns: [
+    {
+      title: 'Punta Cana',
+      image: 'images/punta-cana.svg',
+      pointsHave: 420,
+      pointsGoal: 600
+    },
+    {
+      title: 'Gramado',
+      image: 'images/gramado.svg',
+      pointsHave: 280,
+      pointsGoal: 450
+    },
+    {
+      title: 'Lisboa',
+      image: 'images/lisboa.svg',
+      pointsHave: 150,
+      pointsGoal: 500
+    }
   ],
   companyGoals: [
     { name: 'Meta mensal empresa', status: '62% concluída' },
@@ -114,9 +136,42 @@ const renderDashboard = () => {
   renderList('reportList', state.reports, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('chartsList', state.charts, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('pointsSummary', state.points, (item) => `<span>${item.label}</span>${item.value}`);
+  renderIndividualCampaigns();
 
   applyClientFilter();
   renderReminders();
+};
+
+const renderIndividualCampaigns = () => {
+  const container = document.getElementById('individualCampaigns');
+  container.innerHTML = '';
+  state.individualCampaigns.forEach((campaign) => {
+    const remaining = Math.max(campaign.pointsGoal - campaign.pointsHave, 0);
+    const percent = Math.min(Math.round((campaign.pointsHave / campaign.pointsGoal) * 100), 100);
+    const percentRemaining = Math.max(100 - percent, 0);
+
+    const card = document.createElement('article');
+    card.className = 'card campaign-card';
+    card.innerHTML = `
+      <img src="${campaign.image}" alt="Imagem da campanha ${campaign.title}" />
+      <div>
+        <h3>${campaign.title}</h3>
+        <p class="sub">Campanha individual com destino ${campaign.title}.</p>
+      </div>
+      <div class="campaign-metrics">
+        <div class="metric-line"><span>Pontos atuais</span><span>${campaign.pointsHave} pts</span></div>
+        <div class="metric-line"><span>Meta de pontos</span><span>${campaign.pointsGoal} pts</span></div>
+        <div class="metric-line"><span>Pontos restantes</span><span>${remaining} pts</span></div>
+      </div>
+      <div class="campaign-progress">
+        <small>${percent}% atingido • ${percentRemaining}% faltando</small>
+        <div class="progress">
+          <div class="progress__bar" style="width: ${percent}%"></div>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
 };
 
 const applyClientFilter = () => {
@@ -166,6 +221,21 @@ menuButtons.forEach((button) => {
   });
 });
 
+const setActiveSubsection = (subsectionId) => {
+  subsections.forEach((subsection) => {
+    subsection.classList.toggle('is-active', subsection.dataset.subsection === subsectionId);
+  });
+  subnavButtons.forEach((button) => {
+    button.classList.toggle('is-active', button.dataset.subsection === subsectionId);
+  });
+};
+
+subnavButtons.forEach((button) => {
+  button.addEventListener('click', () => {
+    setActiveSubsection(button.dataset.subsection);
+  });
+});
+
 brandToggle.addEventListener('click', () => {
   if (sidebar.classList.contains('is-collapsed')) {
     sidebar.classList.remove('is-collapsed');
@@ -186,6 +256,7 @@ loginForm.addEventListener('submit', (event) => {
   setLoggedInView();
   renderDashboard();
   setActiveSection('inicio');
+  setActiveSubsection('campanhas-individuais');
 });
 
 clientSearch.addEventListener('input', () => {
@@ -209,4 +280,5 @@ reminderForm.addEventListener('submit', (event) => {
 });
 
 setActiveSection('inicio');
+setActiveSubsection('campanhas-individuais');
 loadSession();

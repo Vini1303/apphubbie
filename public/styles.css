@@ -159,6 +159,75 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
 }
 
+.subnav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.subnav__item {
+  background: #e2e8f0;
+  color: #1e293b;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.subnav__item.is-active {
+  background: #1b5cff;
+  color: #fff;
+}
+
+.subsection {
+  display: none;
+}
+
+.subsection.is-active {
+  display: block;
+}
+
+.campaign-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.campaign-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.campaign-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.campaign-metrics {
+  display: grid;
+  gap: 8px;
+}
+
+.campaign-metrics .metric-line {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.campaign-progress {
+  display: grid;
+  gap: 6px;
+}
+
+.campaign-progress small {
+  color: #64748b;
+  font-weight: 600;
+}
+
 .filters {
   display: grid;
   grid-template-columns: 1fr 220px;
@@ -291,5 +360,10 @@ button:hover {
 
   .filters {
     grid-template-columns: 1fr;
+  }
+
+  .subnav {
+    flex-direction: column;
+    align-items: stretch;
   }
 }

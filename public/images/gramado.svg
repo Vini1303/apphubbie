@@ -1,0 +1,19 @@
+<svg width="640" height="360" viewBox="0 0 640 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#c4b5fd" />
+      <stop offset="100%" stop-color="#f5d0fe" />
+    </linearGradient>
+    <linearGradient id="field" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#4ade80" />
+      <stop offset="100%" stop-color="#16a34a" />
+    </linearGradient>
+  </defs>
+  <rect width="640" height="360" fill="url(#sky)" />
+  <rect y="190" width="640" height="170" fill="url(#field)" />
+  <rect x="80" y="140" width="200" height="140" fill="#fef3c7" stroke="#a16207" stroke-width="6" />
+  <polygon points="60,150 180,60 300,150" fill="#f97316" />
+  <rect x="410" y="160" width="160" height="120" fill="#e2e8f0" stroke="#334155" stroke-width="6" />
+  <polygon points="390,170 490,90 590,170" fill="#64748b" />
+  <text x="24" y="42" font-family="Segoe UI, sans-serif" font-size="26" font-weight="700" fill="#1e293b">Gramado</text>
+</svg>
