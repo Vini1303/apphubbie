@@ -13,6 +13,12 @@ const brandToggle = document.getElementById('brandToggle');
 const subnavButtons = document.querySelectorAll('.subnav__item');
 const subsections = document.querySelectorAll('.subsection');
 const loginMedia = document.getElementById('loginMedia');
+const loginHeroFileInput = document.getElementById('loginHeroFile');
+const loginHeroBase64Input = document.getElementById('loginHeroBase64');
+const saveLoginHeroImageButton = document.getElementById('saveLoginHeroImage');
+const clearLoginHeroImageButton = document.getElementById('clearLoginHeroImage');
+const loginHeroStatus = document.getElementById('loginHeroStatus');
+const loginHeroUploadCard = document.getElementById('loginHeroUpload');
 const puntaCanaFileInput = document.getElementById('puntaCanaFile');
 const puntaCanaBase64Input = document.getElementById('puntaCanaBase64');
 const savePuntaCanaImageButton = document.getElementById('savePuntaCanaImage');
@@ -327,6 +333,72 @@ const initializeLoginHero = () => {
   if (heroImage) {
     loginMedia.style.backgroundImage = `url('${heroImage}')`;
   }
+  toggleUploadVisibility(loginHeroUploadCard, Boolean(heroImage));
+};
+
+const updateLoginHero = (dataUrl) => {
+  if (!loginMedia || !loginHeroStatus) {
+    return;
+  }
+  if (dataUrl) {
+    storedOverrides = { ...storedOverrides, loginHero: dataUrl };
+    loginMedia.style.backgroundImage = `url('${dataUrl}')`;
+    loginHeroStatus.textContent = 'Imagem salva localmente para a tela de login.';
+  } else {
+    const { loginHero, ...rest } = storedOverrides;
+    storedOverrides = rest;
+    loginMedia.style.backgroundImage = '';
+    loginHeroStatus.textContent = 'Imagem removida. Cole uma nova base64.';
+  }
+  persistImageOverrides(storedOverrides);
+  toggleUploadVisibility(loginHeroUploadCard, Boolean(dataUrl));
+};
+
+const initializeLoginHeroUpload = () => {
+  if (
+    !loginHeroFileInput ||
+    !loginHeroBase64Input ||
+    !saveLoginHeroImageButton ||
+    !clearLoginHeroImageButton ||
+    !loginHeroStatus
+  ) {
+    return;
+  }
+
+  if (imageOverrides.loginHero) {
+    loginHeroBase64Input.value = imageOverrides.loginHero;
+    loginHeroStatus.textContent = 'Imagem base64 carregada.';
+  }
+
+  loginHeroFileInput.addEventListener('change', () => {
+    const [file] = loginHeroFileInput.files || [];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      loginHeroBase64Input.value = reader.result;
+      loginHeroStatus.textContent = 'Imagem convertida para base64. Clique em salvar.';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  saveLoginHeroImageButton.addEventListener('click', () => {
+    const value = loginHeroBase64Input.value.trim();
+    if (!value) {
+      loginHeroStatus.textContent = 'Cole uma base64 válida para salvar.';
+      return;
+    }
+    updateLoginHero(value);
+  });
+
+  clearLoginHeroImageButton.addEventListener('click', () => {
+    loginHeroBase64Input.value = '';
+    if (loginHeroFileInput) {
+      loginHeroFileInput.value = '';
+    }
+    updateLoginHero(null);
+  });
 };
 
 const loadSession = () => {
@@ -419,6 +491,7 @@ setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 loadSession();
 initializeLoginHero();
+initializeLoginHeroUpload();
 initializeCampaignUpload({
   key: 'puntaCana',
   fileInput: puntaCanaFileInput,

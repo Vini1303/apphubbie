@@ -159,6 +159,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 48px 40px;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .login__card {
@@ -170,6 +172,11 @@ body {
 
 .login__card form {
   margin-top: 16px;
+}
+
+.login__upload {
+  width: 100%;
+  max-width: 420px;
 }
 
 @media (max-width: 900px) {

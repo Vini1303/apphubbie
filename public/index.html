@@ -64,6 +64,29 @@
                 <button type="submit">Entrar</button>
               </form>
             </div>
+            <div class="card login__upload" id="loginHeroUpload">
+              <h3>Imagem do login</h3>
+              <p class="sub">Cole a imagem em base64 para aparecer ao lado do login.</p>
+              <div class="upload-grid">
+                <label class="upload-field">
+                  <span>Arquivo</span>
+                  <input type="file" id="loginHeroFile" accept="image/*" />
+                </label>
+                <label class="upload-field">
+                  <span>Base64</span>
+                  <textarea
+                    id="loginHeroBase64"
+                    rows="4"
+                    placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                  ></textarea>
+                </label>
+              </div>
+              <div class="upload-actions">
+                <button type="button" class="btn" id="saveLoginHeroImage">Salvar imagem</button>
+                <button type="button" class="btn btn--ghost" id="clearLoginHeroImage">Limpar</button>
+              </div>
+              <small class="upload-hint" id="loginHeroStatus"></small>
+            </div>
           </div>
         </section>
 
