@@ -18,6 +18,18 @@ const savePuntaCanaImageButton = document.getElementById('savePuntaCanaImage');
 const clearPuntaCanaImageButton = document.getElementById('clearPuntaCanaImage');
 const puntaCanaStatus = document.getElementById('puntaCanaStatus');
 const puntaCanaUploadCard = document.getElementById('puntaCanaUploadCard');
+const gramadoFileInput = document.getElementById('gramadoFile');
+const gramadoBase64Input = document.getElementById('gramadoBase64');
+const saveGramadoImageButton = document.getElementById('saveGramadoImage');
+const clearGramadoImageButton = document.getElementById('clearGramadoImage');
+const gramadoStatus = document.getElementById('gramadoStatus');
+const gramadoUploadCard = document.getElementById('gramadoUploadCard');
+const lisboaFileInput = document.getElementById('lisboaFile');
+const lisboaBase64Input = document.getElementById('lisboaBase64');
+const saveLisboaImageButton = document.getElementById('saveLisboaImage');
+const clearLisboaImageButton = document.getElementById('clearLisboaImage');
+const lisboaStatus = document.getElementById('lisboaStatus');
+const lisboaUploadCard = document.getElementById('lisboaUploadCard');
 
 let storedOverrides = {};
 try {
@@ -68,18 +80,21 @@ const state = {
   ],
   individualCampaigns: [
     {
+      key: 'puntaCana',
       title: 'Punta Cana',
       image: imageOverrides.puntaCana || null,
       pointsHave: 420,
       pointsGoal: 600
     },
     {
+      key: 'gramado',
       title: 'Gramado',
       image: imageOverrides.gramado || null,
       pointsHave: 280,
       pointsGoal: 450
     },
     {
+      key: 'lisboa',
       title: 'Lisboa',
       image: imageOverrides.lisboa || null,
       pointsHave: 150,
@@ -214,82 +229,92 @@ const persistImageOverrides = (overrides) => {
   localStorage.setItem('hubbieImageOverrides', JSON.stringify(overrides));
 };
 
-const togglePuntaCanaUploadVisibility = (hasImage) => {
-  if (!puntaCanaUploadCard) {
+const toggleUploadVisibility = (uploadCard, hasImage) => {
+  if (!uploadCard) {
     return;
   }
-  puntaCanaUploadCard.classList.toggle('is-hidden', hasImage);
+  uploadCard.classList.toggle('is-hidden', hasImage);
 };
 
-const updatePuntaCanaImage = (dataUrl) => {
-  if (!puntaCanaStatus) {
+const updateCampaignImage = (key, dataUrl, statusElement, uploadCard) => {
+  if (!statusElement) {
     return;
   }
   const overrides = { ...(window.HUBBIE_IMAGES || {}), ...storedOverrides };
   if (dataUrl) {
-    overrides.puntaCana = dataUrl;
-    storedOverrides = { ...storedOverrides, puntaCana: dataUrl };
-    puntaCanaStatus.textContent = 'Imagem salva localmente para esta campanha.';
+    overrides[key] = dataUrl;
+    storedOverrides = { ...storedOverrides, [key]: dataUrl };
+    statusElement.textContent = 'Imagem salva localmente para esta campanha.';
   } else {
-    delete overrides.puntaCana;
-    const { puntaCana, ...rest } = storedOverrides;
+    delete overrides[key];
+    const { [key]: removed, ...rest } = storedOverrides;
     storedOverrides = rest;
-    puntaCanaStatus.textContent = 'Imagem removida. Cole uma nova base64.';
+    statusElement.textContent = 'Imagem removida. Cole uma nova base64.';
   }
   persistImageOverrides(storedOverrides);
-  const campaign = state.individualCampaigns.find((item) => item.title === 'Punta Cana');
+  const campaign = state.individualCampaigns.find((item) => item.key === key);
   if (campaign) {
     campaign.image = dataUrl || null;
   }
-  togglePuntaCanaUploadVisibility(Boolean(dataUrl));
+  toggleUploadVisibility(uploadCard, Boolean(dataUrl));
   renderIndividualCampaigns();
 };
 
-const initializePuntaCanaUpload = () => {
+const initializeCampaignUpload = (config) => {
+  const {
+    key,
+    fileInput,
+    base64Input,
+    saveButton,
+    clearButton,
+    statusElement,
+    uploadCard
+  } = config;
+
   if (
-    !puntaCanaFileInput ||
-    !puntaCanaBase64Input ||
-    !savePuntaCanaImageButton ||
-    !clearPuntaCanaImageButton ||
-    !puntaCanaStatus
+    !fileInput ||
+    !base64Input ||
+    !saveButton ||
+    !clearButton ||
+    !statusElement
   ) {
     return;
   }
 
-  if (imageOverrides.puntaCana) {
-    puntaCanaBase64Input.value = imageOverrides.puntaCana;
-    puntaCanaStatus.textContent = 'Imagem base64 carregada.';
+  if (imageOverrides[key]) {
+    base64Input.value = imageOverrides[key];
+    statusElement.textContent = 'Imagem base64 carregada.';
   }
-  togglePuntaCanaUploadVisibility(Boolean(imageOverrides.puntaCana));
+  toggleUploadVisibility(uploadCard, Boolean(imageOverrides[key]));
 
-  puntaCanaFileInput.addEventListener('change', () => {
-    const [file] = puntaCanaFileInput.files || [];
+  fileInput.addEventListener('change', () => {
+    const [file] = fileInput.files || [];
     if (!file) {
       return;
     }
     const reader = new FileReader();
     reader.onload = () => {
-      puntaCanaBase64Input.value = reader.result;
-      puntaCanaStatus.textContent = 'Imagem convertida para base64. Clique em salvar.';
+      base64Input.value = reader.result;
+      statusElement.textContent = 'Imagem convertida para base64. Clique em salvar.';
     };
     reader.readAsDataURL(file);
   });
 
-  savePuntaCanaImageButton.addEventListener('click', () => {
-    const value = puntaCanaBase64Input.value.trim();
+  saveButton.addEventListener('click', () => {
+    const value = base64Input.value.trim();
     if (!value) {
-      puntaCanaStatus.textContent = 'Cole uma base64 válida para salvar.';
+      statusElement.textContent = 'Cole uma base64 válida para salvar.';
       return;
     }
-    updatePuntaCanaImage(value);
+    updateCampaignImage(key, value, statusElement, uploadCard);
   });
 
-  clearPuntaCanaImageButton.addEventListener('click', () => {
-    puntaCanaBase64Input.value = '';
-    if (puntaCanaFileInput) {
-      puntaCanaFileInput.value = '';
+  clearButton.addEventListener('click', () => {
+    base64Input.value = '';
+    if (fileInput) {
+      fileInput.value = '';
     }
-    updatePuntaCanaImage(null);
+    updateCampaignImage(key, null, statusElement, uploadCard);
   });
 };
 
@@ -382,4 +407,30 @@ reminderForm.addEventListener('submit', (event) => {
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 loadSession();
-initializePuntaCanaUpload();
+initializeCampaignUpload({
+  key: 'puntaCana',
+  fileInput: puntaCanaFileInput,
+  base64Input: puntaCanaBase64Input,
+  saveButton: savePuntaCanaImageButton,
+  clearButton: clearPuntaCanaImageButton,
+  statusElement: puntaCanaStatus,
+  uploadCard: puntaCanaUploadCard
+});
+initializeCampaignUpload({
+  key: 'gramado',
+  fileInput: gramadoFileInput,
+  base64Input: gramadoBase64Input,
+  saveButton: saveGramadoImageButton,
+  clearButton: clearGramadoImageButton,
+  statusElement: gramadoStatus,
+  uploadCard: gramadoUploadCard
+});
+initializeCampaignUpload({
+  key: 'lisboa',
+  fileInput: lisboaFileInput,
+  base64Input: lisboaBase64Input,
+  saveButton: saveLisboaImageButton,
+  clearButton: clearLisboaImageButton,
+  statusElement: lisboaStatus,
+  uploadCard: lisboaUploadCard
+});

@@ -154,6 +154,52 @@
                 </div>
                 <small class="upload-hint" id="puntaCanaStatus"></small>
               </div>
+              <div class="card campaign-upload" id="gramadoUploadCard">
+                <h3>Imagem da campanha: Gramado</h3>
+                <p class="sub">Cole uma imagem em base64 ou selecione um arquivo para gerar localmente.</p>
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Arquivo</span>
+                    <input type="file" id="gramadoFile" accept="image/*" />
+                  </label>
+                  <label class="upload-field">
+                    <span>Base64</span>
+                    <textarea
+                      id="gramadoBase64"
+                      rows="4"
+                      placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="btn" id="saveGramadoImage">Salvar imagem</button>
+                  <button type="button" class="btn btn--ghost" id="clearGramadoImage">Limpar</button>
+                </div>
+                <small class="upload-hint" id="gramadoStatus"></small>
+              </div>
+              <div class="card campaign-upload" id="lisboaUploadCard">
+                <h3>Imagem da campanha: Lisboa</h3>
+                <p class="sub">Cole uma imagem em base64 ou selecione um arquivo para gerar localmente.</p>
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Arquivo</span>
+                    <input type="file" id="lisboaFile" accept="image/*" />
+                  </label>
+                  <label class="upload-field">
+                    <span>Base64</span>
+                    <textarea
+                      id="lisboaBase64"
+                      rows="4"
+                      placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="btn" id="saveLisboaImage">Salvar imagem</button>
+                  <button type="button" class="btn btn--ghost" id="clearLisboaImage">Limpar</button>
+                </div>
+                <small class="upload-hint" id="lisboaStatus"></small>
+              </div>
               <div class="campaign-grid" id="individualCampaigns"></div>
             </div>
 
