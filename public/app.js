@@ -508,6 +508,13 @@ Suits - Cicero,Carla Lorensetti,,,,,Suits,Cicero,,,,,,,,,,,,
 Suits - Cicero,Yasmin Tavares,,,,,Suits,Cicero,,,,,,,,,,,,
 Suits - Cicero,Patricia Romero,,,,,Suits,Cicero,,,,,,,,,,,,
 Suits - Cicero,Juliana Macedo,,,,,Suits,Cicero,,,,,,,,,,,,
+,,,,,,,,,,Troia,"R$ 0,00","R$ 0,00","R$ 5.500.000,00","R$ 5.500.000,00"
+,,,,,,,,,,Meteor,"R$ 90.000,00","R$ 200.000,00","R$ 5.250.000,00","R$ 5.050.000,00"
+,,,,,,,,,,Chronos,"R$ 0,00","R$ 0,00","R$ 5.500.000,00","R$ 5.500.000,00"
+,,,,,,,,,,Constellation,"R$ 0,00","R$ 0,00","R$ 5.500.000,00","R$ 5.500.000,00"
+,,,,,,,,,,Maktub,"R$ 0,00","R$ 800.000,00","R$ 5.500.000,00","R$ 4.700.000,00"
+,,,,,,,,,,Titan,"R$ 0,00","R$ 0,00","R$ 4.750.000,00","R$ 4.750.000,00"
+,,,,,,,,,,Suits,"R$ 0,00","R$ 0,00","R$ 5.250.000,00","R$ 5.250.000,00"
 `;
 
 const buildRankingFromRows = (rows) => {
