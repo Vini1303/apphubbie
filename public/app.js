@@ -206,6 +206,7 @@ const state = {
     { name: 'Auditoria de acessos', value: '3 alertas pendentes' },
     { name: 'Performance por consultor', value: 'Disponível para exportar' }
   ],
+  teamRanking: [],
   charts: [
     { name: 'Meta vs realizado', value: 'Gráfico mensal' },
     { name: 'Funil de vendas', value: 'Atualizado em tempo real' },
@@ -267,6 +268,49 @@ const formatCurrency = (value) => {
 const getSortedRanking = () =>
   [...state.ranking].sort((a, b) => (b.valueNumber || 0) - (a.valueNumber || 0));
 
+const buildTeamRankingFromRows = (rows) => {
+  if (rows.length < 2) {
+    return [];
+  }
+  const header = rows[0].map((cell) => cell.trim().toLowerCase());
+  const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
+  const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
+  const metaIndex = header.findIndex((cell) => cell === 'meta');
+
+  if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
+    console.warn('Cabeçalhos de equipes não encontrados na planilha.');
+    return [];
+  }
+
+  const teams = new Map();
+
+  rows.slice(1).forEach((row) => {
+    const name = (row[teamIndex] || '').trim();
+    if (!name || name.toLowerCase().includes('total')) {
+      return;
+    }
+    const totalValue = parseCurrencyToNumber(row[totalIndex] || '');
+    const metaValue = parseCurrencyToNumber(row[metaIndex] || '');
+    const current = teams.get(name) || { name, total: 0, meta: 0 };
+
+    if (totalValue) {
+      current.total += totalValue;
+    }
+    if (metaValue) {
+      current.meta = Math.max(current.meta, metaValue);
+    }
+    teams.set(name, current);
+  });
+
+  return Array.from(teams.values())
+    .map((team) => {
+      const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
+      const remaining = Math.max(100 - percent, 0);
+      return { ...team, percent, remaining };
+    })
+    .sort((a, b) => b.total - a.total);
+};
+
 const renderDashboard = () => {
   const progressPercent = Math.round((172500 / 280000) * 100);
   monthlyBar.style.width = `${progressPercent}%`;
@@ -294,7 +338,14 @@ const renderDashboard = () => {
   renderList('communicationList', state.communications, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('reportList', state.reports, (item) => `<span>${item.name}</span>${item.value}`);
   renderList('chartsList', state.charts, (item) => `<span>${item.name}</span>${item.value}`);
-  renderList('pointsSummary', state.points, (item) => `<span>${item.label}</span>${item.value}`);
+  renderList(
+    'teamRankingList',
+    state.teamRanking,
+    (item, index) =>
+      `<span>${index + 1}° ${item.name}</span>${formatCurrency(item.total)} • Meta ${formatCurrency(
+        item.meta
+      )} • ${item.percent}% atingido • ${item.remaining}% faltando`
+  );
   renderIndividualCampaigns();
 
   applyClientFilter();
@@ -476,10 +527,12 @@ const fetchRankingFromSheets = async () => {
     const text = await response.text();
     const rows = parseCsv(text);
     const rankingEntries = buildRankingFromRows(rows);
+    const teamEntries = buildTeamRankingFromRows(rows);
     if (!rankingEntries.length) {
       throw new Error('Ranking vazio após parse do CSV.');
     }
     state.ranking = rankingEntries;
+    state.teamRanking = teamEntries;
     if (state.user) {
       renderDashboard();
     }
@@ -487,8 +540,10 @@ const fetchRankingFromSheets = async () => {
     console.warn('Não foi possível carregar o ranking do Google Sheets.', error);
     const fallbackRows = parseCsv(fallbackRankingCsv);
     const fallbackEntries = buildRankingFromRows(fallbackRows);
+    const fallbackTeamEntries = buildTeamRankingFromRows(fallbackRows);
     if (fallbackEntries.length) {
       state.ranking = fallbackEntries;
+      state.teamRanking = fallbackTeamEntries;
       if (state.user) {
         renderDashboard();
       }
