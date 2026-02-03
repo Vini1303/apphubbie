@@ -283,47 +283,38 @@ const buildTeamRankingFromRows = (rows) => {
   if (rows.length < 2) {
     return { teams: [], summary: { totalMonth: 0, metaFinal: 0 } };
   }
-  const header = rows[0].map((cell) => cell.trim().toLowerCase());
-  const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
-  const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
-  const metaIndex = header.findIndex((cell) => cell === 'meta');
-  const summary = { totalMonth: 0, metaFinal: 0 };
+  const summary = {
+    totalMonth: parseCurrencyToNumber(rows[12]?.[11] || ''),
+    metaFinal: parseCurrencyToNumber(rows[21]?.[11] || '')
+  };
 
-  if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
-    console.warn('Cabeçalhos de equipes não encontrados na planilha.');
-    return { teams: [], summary };
-  }
+  const teamRows = [
+    { name: 'Tróia', rowIndex: 1 },
+    { name: 'Meteor', rowIndex: 2 },
+    { name: 'Chronos', rowIndex: 3 },
+    { name: 'Constellation', rowIndex: 4 },
+    { name: 'Maktub', rowIndex: 5 },
+    { name: 'Titan', rowIndex: 6 },
+    { name: 'Suits', rowIndex: 7 }
+  ];
 
-  const teams = new Map();
-
-  rows.slice(1).forEach((row) => {
-    const name = (row[teamIndex] || '').trim();
-    if (!name || name.toLowerCase().includes('total')) {
-      return;
-    }
-    const totalValue = parseCurrencyToNumber(row[totalIndex] || '');
-    const metaValue = parseCurrencyToNumber(row[metaIndex] || '');
-    const current = teams.get(name) || { name, total: 0, meta: 0 };
-
-    if (totalValue) {
-      current.total += totalValue;
-    }
-    if (metaValue) {
-      current.meta = Math.max(current.meta, metaValue);
-    }
-    teams.set(name, current);
+  const teams = teamRows.map(({ name, rowIndex }) => {
+    const row = rows[rowIndex] || [];
+    const total = parseCurrencyToNumber(row[12] || '');
+    const meta = parseCurrencyToNumber(row[13] || '');
+    return { name, total, meta };
   });
 
   return {
     summary,
-    teams: Array.from(teams.values())
-    .map((team) => {
-      const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
-      const remaining = Math.max(100 - percent, 0);
-      const achieved = team.meta > 0 ? team.total >= team.meta : false;
-      return { ...team, percent, remaining, achieved };
-    })
-    .sort((a, b) => b.total - a.total);
+    teams: teams
+      .map((team) => {
+        const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
+        const remaining = Math.max(100 - percent, 0);
+        const achieved = team.meta > 0 ? team.total >= team.meta : false;
+        return { ...team, percent, remaining, achieved };
+      })
+      .sort((a, b) => b.total - a.total)
   };
 };
 
