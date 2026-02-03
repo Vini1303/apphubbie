@@ -429,7 +429,7 @@ const buildRankingFromRows = (rows) => {
     .filter((entry) => entry.name);
 };
 
-const rankingRefreshMs = 5 * 60 * 1000;
+const rankingRefreshMs = 60 * 1000;
 
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';

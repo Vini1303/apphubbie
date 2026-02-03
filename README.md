@@ -135,17 +135,17 @@ Para o ranking acompanhar as alterações da sua planilha automaticamente, faça
 2. **Garanta acesso público**: a publicação precisa estar visível para “qualquer pessoa com o link”.
 3. O sistema busca o CSV pela aba publicada e atualiza o ranking automaticamente.
 
-> O front-end faz nova leitura a cada 5 minutos. Se você atualizar a planilha, o ranking será atualizado sem precisar reiniciar o servidor (apenas manter o navegador aberto). Se a planilha estiver privada ou não publicada, o sistema vai usar o fallback local.
+> O front-end faz nova leitura a cada 1 minuto. Se você atualizar a planilha, o ranking será atualizado sem precisar reiniciar o servidor (apenas manter o navegador aberto). Se a planilha estiver privada ou não publicada, o sistema vai usar o fallback local.
 
 ### Atualização automática mesmo com o navegador fechado
 Para atualizar o ranking mesmo sem navegador aberto, o servidor agora mantém um **cache do CSV**:
 1. Publique a planilha (mesmos passos acima).
 2. Inicie o servidor normalmente com `npm start`.
-3. O endpoint `/api/ranking` será atualizado a cada 5 minutos e o front-end passa a consumir esse endpoint.
+3. O endpoint `/api/ranking` será atualizado a cada 1 minuto e o front-end passa a consumir esse endpoint.
 
 #### Variáveis de ambiente opcionais
 Você pode configurar a planilha sem alterar código:
 - `SHEETS_CSV_URL`: URL completa do CSV publicado.
 - `SHEETS_ID`: ID da planilha (se não usar a URL completa).
 - `SHEETS_GID`: GID da aba (padrão: Analise Vendas Fevereiro).
-- `RANKING_REFRESH_MS`: intervalo de atualização em ms (padrão: 300000).
+- `RANKING_REFRESH_MS`: intervalo de atualização em ms (padrão: 60000).

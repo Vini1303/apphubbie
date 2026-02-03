@@ -9,7 +9,7 @@ const SHEETS_GID = process.env.SHEETS_GID || '1940056038';
 const SHEETS_CSV_URL =
   process.env.SHEETS_CSV_URL ||
   `https://docs.google.com/spreadsheets/d/${SHEETS_ID}/gviz/tq?tqx=out:csv&gid=${SHEETS_GID}`;
-const RANKING_REFRESH_MS = Number(process.env.RANKING_REFRESH_MS || 5 * 60 * 1000);
+const RANKING_REFRESH_MS = Number(process.env.RANKING_REFRESH_MS || 60 * 1000);
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
