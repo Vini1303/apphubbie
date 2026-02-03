@@ -440,7 +440,7 @@ button:hover {
 }
 
 .team-ranking-visual {
-  background: #7b3bb8;
+  background: #9a6ed3;
   border-radius: 24px;
   padding: 32px;
   color: #fff;
@@ -484,7 +484,7 @@ button:hover {
   width: 130px;
   height: 130px;
   border-radius: 50%;
-  background: #7b3bb8;
+  background: #9a6ed3;
   position: absolute;
 }
 
@@ -567,11 +567,11 @@ button:hover {
 .team-ranking__bar {
   height: 100%;
   transition: width 0.3s ease;
-  background: #facc15;
+  background: #ef4444;
 }
 
 .team-ranking__bar.is-pending {
-  background: #facc15;
+  background: #ef4444;
 }
 
 .team-ranking__bar.is-achieved {
