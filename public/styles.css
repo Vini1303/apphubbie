@@ -439,32 +439,104 @@ button:hover {
   font-weight: 600;
 }
 
+.team-ranking-visual {
+  background: #7b3bb8;
+  border-radius: 24px;
+  padding: 32px;
+  color: #fff;
+  display: grid;
+  gap: 24px;
+}
+
+.team-ranking-visual__header h3 {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.team-ranking-visual__content {
+  display: grid;
+  grid-template-columns: minmax(240px, 320px) 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.team-ranking-visual__summary {
+  display: grid;
+  gap: 20px;
+  justify-items: center;
+  text-align: center;
+}
+
+.team-ranking-visual__ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: conic-gradient(#facc15 var(--percent, 0%), rgba(255, 255, 255, 0.2) 0);
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.team-ranking-visual__ring::after {
+  content: '';
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: #7b3bb8;
+  position: absolute;
+}
+
+.team-ranking-visual__ring span {
+  position: relative;
+  font-size: 2.2rem;
+  font-weight: 800;
+  z-index: 1;
+}
+
+.team-ranking-visual__totals p {
+  margin: 6px 0;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.team-ranking-visual__list {
+  display: grid;
+}
+
 .team-ranking {
-  gap: 16px;
+  list-style: none;
+  display: grid;
+  gap: 14px;
+  padding: 0;
+  margin: 0;
 }
 
 .team-ranking__item {
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  padding: 16px;
+  padding: 16px 18px;
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: 60px 1fr;
   gap: 16px;
   align-items: center;
 }
 
 .team-ranking__rank {
-  font-size: 1.2rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.15);
+  display: grid;
+  place-items: center;
   font-weight: 700;
-  color: #111827;
-  min-width: 48px;
-  text-align: center;
 }
 
 .team-ranking__content {
   display: grid;
-  gap: 10px;
+  gap: 8px;
 }
 
 .team-ranking__header {
@@ -472,16 +544,7 @@ button:hover {
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
-}
-
-.team-ranking__name {
   font-weight: 700;
-  color: #111827;
-}
-
-.team-ranking__value {
-  font-weight: 700;
-  color: #111827;
 }
 
 .team-ranking__meta {
@@ -489,13 +552,13 @@ button:hover {
   justify-content: space-between;
   gap: 12px;
   flex-wrap: wrap;
-  color: #4b5563;
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
   font-size: 0.9rem;
 }
 
 .team-ranking__progress {
-  background: #e5e7eb;
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 999px;
   height: 10px;
   overflow: hidden;
@@ -504,14 +567,21 @@ button:hover {
 .team-ranking__bar {
   height: 100%;
   transition: width 0.3s ease;
+  background: #facc15;
 }
 
 .team-ranking__bar.is-pending {
-  background: #ef4444;
+  background: #facc15;
 }
 
 .team-ranking__bar.is-achieved {
   background: #22c55e;
+}
+
+@media (max-width: 960px) {
+  .team-ranking-visual__content {
+    grid-template-columns: 1fr;
+  }
 }
 
 .badge {

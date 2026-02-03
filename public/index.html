@@ -264,12 +264,25 @@
               </div>
             </div>
             <div class="subsection" data-subsection="ranking-equipes">
-              <div class="grid">
-                <article class="card">
-                  <h3>Ranking equipes</h3>
-                  <ol class="list team-ranking" id="teamRankingList"></ol>
-                </article>
-              </div>
+              <section class="team-ranking-visual">
+                <header class="team-ranking-visual__header">
+                  <h3>Produção mensal</h3>
+                </header>
+                <div class="team-ranking-visual__content">
+                  <div class="team-ranking-visual__summary">
+                    <div class="team-ranking-visual__ring" id="teamRankingRing">
+                      <span id="teamRankingPercent">0%</span>
+                    </div>
+                    <div class="team-ranking-visual__totals">
+                      <p>Meta: <strong id="teamRankingGoal">R$ 0,00</strong></p>
+                      <p>Atualmente: <strong id="teamRankingCurrent">R$ 0,00</strong></p>
+                    </div>
+                  </div>
+                  <div class="team-ranking-visual__list">
+                    <ol class="team-ranking" id="teamRankingList"></ol>
+                  </div>
+                </div>
+              </section>
             </div>
           </div>
 

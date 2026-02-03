@@ -38,6 +38,10 @@ const saveLisboaImageButton = document.getElementById('saveLisboaImage');
 const clearLisboaImageButton = document.getElementById('clearLisboaImage');
 const lisboaStatus = document.getElementById('lisboaStatus');
 const lisboaUploadCard = document.getElementById('lisboaUploadCard');
+const teamRankingRing = document.getElementById('teamRankingRing');
+const teamRankingPercent = document.getElementById('teamRankingPercent');
+const teamRankingGoal = document.getElementById('teamRankingGoal');
+const teamRankingCurrent = document.getElementById('teamRankingCurrent');
 
 let storedOverrides = {};
 try {
@@ -319,6 +323,16 @@ const renderDashboard = () => {
   const progressPercent = Math.round((172500 / 280000) * 100);
   monthlyBar.style.width = `${progressPercent}%`;
   const sortedRanking = getSortedRanking();
+  const totalTeamSales = state.teamRanking.reduce((acc, team) => acc + (team.total || 0), 0);
+  const totalTeamMeta = state.teamRanking.reduce((acc, team) => acc + (team.meta || 0), 0);
+  const totalPercent = totalTeamMeta ? Math.min(Math.round((totalTeamSales / totalTeamMeta) * 100), 100) : 0;
+
+  if (teamRankingRing && teamRankingPercent && teamRankingGoal && teamRankingCurrent) {
+    teamRankingRing.style.setProperty('--percent', `${totalPercent}%`);
+    teamRankingPercent.textContent = `${totalPercent}%`;
+    teamRankingGoal.textContent = formatCurrency(totalTeamMeta);
+    teamRankingCurrent.textContent = formatCurrency(totalTeamSales);
+  }
 
   renderList('pointsBreakdown', state.points, (item) => `<span>${item.label}</span>${item.value}`);
   renderList(
@@ -354,7 +368,7 @@ const renderDashboard = () => {
          </div>
          <div class="team-ranking__meta">
            <span>Meta mensal: ${formatCurrency(item.meta)}</span>
-           <span>${item.percent}% atingido • ${item.remaining}% faltando</span>
+           <span>${item.percent}% de progresso</span>
          </div>
          <div class="team-ranking__progress">
            <div class="team-ranking__bar ${item.achieved ? 'is-achieved' : 'is-pending'}" style="width:${
