@@ -280,50 +280,98 @@ const getSortedRanking = () =>
   [...state.ranking].sort((a, b) => (b.valueNumber || 0) - (a.valueNumber || 0));
 
 const buildTeamRankingFromRows = (rows) => {
-  if (rows.length < 2) {
+  if (rows.length < 8) {
     return { teams: [], summary: { totalMonth: 0, metaFinal: 0 } };
   }
-  const header = rows[0].map((cell) => cell.trim().toLowerCase());
-  const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
-  const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
-  const totalDailyIndex = header.findIndex((cell) => cell === 'total diario');
-  const metaIndex = header.findIndex((cell) => cell === 'meta');
-  const summary = { totalMonth: 0, metaFinal: 0 };
 
-  if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
-    console.warn('Cabeçalhos de equipes não encontrados na planilha.');
-    return { teams: [], summary };
+  const teamRowMap = [
+    { name: 'Tróia', row: 1 },
+    { name: 'Meteor', row: 2 },
+    { name: 'Chronos', row: 3 },
+    { name: 'Constellation', row: 4 },
+    { name: 'Maktub', row: 5 },
+    { name: 'Titan', row: 6 },
+    { name: 'Suits', row: 7 }
+  ];
+
+  const header = rows[0].map((cell) => cell.trim().toLowerCase());
+  const teamHeaderIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
+  const totalHeaderIndex = header.findIndex((cell) => cell === 'total janeiro');
+  const metaHeaderIndex = header.findIndex((cell) => cell === 'meta');
+  const summaryHeaderIndex = header.findIndex(
+    (cell) => cell === 'total diario' || cell === 'total janeiro' || cell === 'total do mês'
+  );
+
+  const totalColumnIndex = totalHeaderIndex === -1 ? 12 : totalHeaderIndex; // Coluna M (Total Mensal)
+  const metaColumnIndex = metaHeaderIndex === -1 ? 13 : metaHeaderIndex; // Coluna N (Meta)
+  const summaryColumnIndex = summaryHeaderIndex === -1 ? 11 : summaryHeaderIndex; // Coluna L
+  const totalMonthRowIndex = 12; // Linha 13
+  const metaFinalRowIndex = 21; // Linha 22
+
+  const fixedSummary = {
+    totalMonth: parseCurrencyToNumber(rows[totalMonthRowIndex]?.[summaryColumnIndex] || ''),
+    metaFinal: parseCurrencyToNumber(rows[metaFinalRowIndex]?.[summaryColumnIndex] || '')
+  };
+
+  const fixedTeams = teamRowMap.map((team) => {
+    const row = rows[team.row] || [];
+    return {
+      name: team.name,
+      total: parseCurrencyToNumber(row[totalColumnIndex] || ''),
+      meta: parseCurrencyToNumber(row[metaColumnIndex] || '')
+    };
+  });
+
+  const hasFixedData =
+    fixedTeams.some((team) => team.total > 0 || team.meta > 0) ||
+    fixedSummary.totalMonth > 0 ||
+    fixedSummary.metaFinal > 0;
+
+  if (hasFixedData) {
+    return {
+      summary: fixedSummary,
+      teams: fixedTeams
+        .map((team) => {
+          const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
+          const remaining = Math.max(100 - percent, 0);
+          const achieved = team.meta > 0 ? team.total >= team.meta : false;
+          return { ...team, percent, remaining, achieved };
+        })
+        .sort((a, b) => b.total - a.total)
+    };
   }
 
-  const summaryIndex = totalDailyIndex === -1 ? totalIndex : totalDailyIndex;
+  if (teamHeaderIndex === -1 || totalHeaderIndex === -1 || metaHeaderIndex === -1) {
+    console.warn('Cabeçalhos de equipes não encontrados na planilha.');
+    return { teams: fixedTeams, summary: fixedSummary };
+  }
+
   const teamNames = new Set(['tróia', 'troia', 'meteor', 'chronos', 'constellation', 'maktub', 'titan', 'suits']);
-  const teams = rows.slice(1)
+  const fallbackSummary = { ...fixedSummary };
+  const fallbackTeams = rows.slice(1)
     .map((row) => {
-      const name = (row[teamIndex] || '').trim();
-      if (!name) {
-        return null;
-      }
+      const name = (row[teamHeaderIndex] || '').toString().trim();
       const normalized = name.toLowerCase();
-      if (normalized === 'total fevereiro') {
-        summary.totalMonth = parseCurrencyToNumber(row[summaryIndex] || '');
+      if (normalized === 'total fevereiro' && summaryHeaderIndex !== -1) {
+        fallbackSummary.totalMonth = parseCurrencyToNumber(row[summaryHeaderIndex] || '');
       }
-      if (normalized === 'meta') {
-        summary.metaFinal = parseCurrencyToNumber(row[summaryIndex] || '');
+      if (normalized === 'meta' && summaryHeaderIndex !== -1) {
+        fallbackSummary.metaFinal = parseCurrencyToNumber(row[summaryHeaderIndex] || '');
       }
       if (!teamNames.has(normalized)) {
         return null;
       }
       return {
         name,
-        total: parseCurrencyToNumber(row[totalIndex] || ''),
-        meta: parseCurrencyToNumber(row[metaIndex] || '')
+        total: parseCurrencyToNumber(row[totalHeaderIndex] || ''),
+        meta: parseCurrencyToNumber(row[metaHeaderIndex] || '')
       };
     })
     .filter(Boolean);
 
   return {
-    summary,
-    teams: teams
+    summary: fallbackSummary,
+    teams: fallbackTeams
       .map((team) => {
         const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
         const remaining = Math.max(100 - percent, 0);
