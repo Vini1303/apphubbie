@@ -274,6 +274,106 @@ const renderDashboard = () => {
   renderReminders();
 };
 
+const parseCsv = (text) => {
+  const rows = [];
+  let row = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < text.length; i += 1) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"' && inQuotes && nextChar === '"') {
+      current += '"';
+      i += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      row.push(current);
+      current = '';
+      continue;
+    }
+
+    if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && nextChar === '\n') {
+        i += 1;
+      }
+      row.push(current);
+      if (row.length > 1 || row[0] !== '') {
+        rows.push(row);
+      }
+      row = [];
+      current = '';
+      continue;
+    }
+
+    current += char;
+  }
+
+  if (current.length > 0 || row.length > 0) {
+    row.push(current);
+    rows.push(row);
+  }
+
+  return rows;
+};
+
+const fetchRankingFromSheets = async () => {
+  const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
+  const gid = '1940056038';
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`Falha ao carregar planilha: ${response.status}`);
+    }
+    const text = await response.text();
+    const rows = parseCsv(text);
+    if (rows.length < 2) {
+      return;
+    }
+    const header = rows[0].map((cell) => cell.trim().toLowerCase());
+    const nameIndex = header.findIndex((cell) => cell === 'nome do consultor');
+    const quotaIndex = header.findIndex(
+      (cell) => cell === 'vendas janeiro' || cell === 'cotas'
+    );
+    const valueIndex = header.findIndex(
+      (cell) => cell === 'valor vendido' || cell === 'r$'
+    );
+
+    if (nameIndex === -1 || quotaIndex === -1 || valueIndex === -1) {
+      console.warn('Cabeçalhos esperados não encontrados na planilha.');
+      return;
+    }
+
+    const rankingEntries = rows
+      .slice(1)
+      .map((row) => ({
+        name: (row[nameIndex] || '').trim(),
+        quotas: (row[quotaIndex] || '').toString().trim(),
+        value: (row[valueIndex] || '').toString().trim()
+      }))
+      .filter((entry) => entry.name);
+
+    if (rankingEntries.length) {
+      state.ranking = rankingEntries;
+      if (state.user) {
+        renderDashboard();
+      }
+    }
+  } catch (error) {
+    console.warn('Não foi possível carregar o ranking do Google Sheets.', error);
+  }
+};
+
 const renderIndividualCampaigns = () => {
   const container = document.getElementById('individualCampaigns');
   container.innerHTML = '';
@@ -596,6 +696,7 @@ reminderForm.addEventListener('submit', (event) => {
 
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
+fetchRankingFromSheets();
 loadSession();
 initializeLoginHero();
 initializeLoginHeroUpload();
