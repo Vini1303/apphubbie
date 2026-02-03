@@ -325,6 +325,110 @@ const parseCsv = (text) => {
   return rows;
 };
 
+const fallbackRankingCsv = `Equipe,Consultor,Vendas Janeiro,Valor Vendido,Pendentes,Ok,Equipe ,Supervisor,,,Equipes,Total Diario,Total Janeiro,Meta,Falta,MÃ©dia,ProjeÃ§Ã£o, Cotas,Seguro,% Seguro
+Meteor - Solange,Ygor Motta,2,110000,1,1,Meteor,Solange,,,TrÃ³ia,"R$ 0,00","R$ 0,00","R$ 5.500.000,00","R$ 5.500.000,00","R$ 0,00","R$ 0,00",0,0,#DIV/0!
+Maktub - Helio,Thaiane Vanderlei,1,80000,,1,Maktub,Helio,,,Meteor,"R$ 0,00","R$ 110.000,00","R$ 5.250.000,00","R$ 5.140.000,00","R$ 55.000,00","R$ 990.000,00",2,2,"100,00%"
+Troia - Renato,Izabelle Compagnone,,,,,TrÃ³ia,Renato,,,Chronos,"R$ 0,00","R$ 0,00","R$ 5.500.000,00","R$ 5.500.000,00","R$ 0,00","R$ 0,00",0,0,#DIV/0!
+Titan - Jovana,Pietra Ferreira,,,,,Titan,Jovana,,,Constellation,"R$ 0,00","R$ 0,00","R$ 5.000.000,00","R$ 5.000.000,00","R$ 0,00","R$ 0,00",0,0,#DIV/0!
+Meteor - Solange,Pedro Canezin,,,,,Meteor,Solange,,,Maktub,"R$ 0,00","R$ 80.000,00","R$ 5.500.000,00","R$ 5.420.000,00","R$ 40.000,00","R$ 720.000,00",1,1,"100,00%"
+Troia - Renato,Renan Souza,,,,,TrÃ³ia,Renato,,,Titan,"R$ 0,00","R$ 0,00","R$ 4.750.000,00","R$ 4.750.000,00","R$ 0,00","R$ 0,00",0,0,#DIV/0!
+Constellation - Carraro,Anna Queiroz,,,,,Constellation,Carraro,,,Suits,"R$ 0,00","R$ 0,00","R$ 5.250.000,00","R$ 5.250.000,00","R$ 0,00","R$ 0,00",0,0,#DIV/0!
+Chronos- Wesley,Morgana Coelho,,,,,Chronos,Wesley,,,,,,,,,,,,
+Constellation - Carraro,Jonathan Silva,,,,,Constellation,Carraro,,,Totais,"R$ 0,00","R$ 190.000,00","R$ 36.750.000,00","R$ 36.560.000,00","R$ 95.000,00","R$ 1.710.000,00",3,3,"100,00%"
+Meteor - Solange,Eduardo Tadeu,,,,,Meteor,Solange,,,,,,,,,,,,
+Troia - Renato,Sandra Barros,,,,,TrÃ³ia,Renato,,,Total dia:,"R$ 0,00",,,,,,,,
+Chronos- Wesley,Suzane Almeida,,,,,Chronos,Wesley,,,Total Fevereiro,"R$ 190.000,00",,,,,,,,
+Troia - Renato,Cristian Ribeiro,,,,,TrÃ³ia,Renato,,,MÃ©dia atual:,"R$ 95.000,00",,,,,,,,
+Suits - Cicero,Fabiana Alves,,,,,Suits,Cicero,,,Falta pra 40M:,"R$ 39.810.000,00",,,,,,,,
+Maktub - Helio,Adriana Silva,,,,,Maktub,Helio,,,Falta pra 36.5M,"R$ 36.560.000,00",,,,,,,,
+Chronos- Wesley,Kaue Pereira,,,,,Chronos,Wesley,,,,,,,,,,,,
+Chronos- Wesley,Marco Roberto,,,,,Chronos,Wesley,,,Dias Ãºteis total,18,,,,,,,,
+Constellation - Carraro,Jose Eberson,,,,,Constellation,Carraro,,,Dias Ãºteis faltantes,16,,,,,,,,
+Maktub - Helio,Richard Lima,,,,,Maktub,Helio,,,Dias Ãºteis jÃ¡ trabalhados,2,,,,,,,,
+Meteor - Solange,Alleck Santana,,,,,Meteor,Solange,,,,,,,,,,,,
+Constellation - Carraro,Stephanie Barrach,,,,,Constellation,Carraro,,,Meta ,"R$ 40.000.000,00",,,,,,,,
+Meteor - Solange,Victor Souza,,,,,Meteor,Solange,,,,,,,,,,,,
+Suits - Cicero,Mauricio Mendes,,,,,Suits,Cicero,,,,,,,,,,,,
+Troia - Renato,Carolina Pinheiro,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Troia - Renato,Carolyne Leticia,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Maktub - Helio,Guilherme Moreira,,,,,Maktub,Helio,,,,,,,,,,,,
+Chronos- Wesley,Vitoria Alice,,,,,Chronos,Wesley,,,,,,,,,,,,
+Titan - Jovana,Alison Rafael,,,,,Titan,Jovana,,,,,,,,,,,,
+Chronos- Wesley,Jamile Oliveira,,,,,Chronos,Wesley,,,,,,,,,,,,
+Meteor - Solange,Yasmin Maria,,,,,Meteor,Solange,,,,,,,,,,,,
+Maktub - Helio,Isabella Camargo,,,,,Maktub,Helio,,,,,,,,,,,,
+Constellation - Carraro,Gustavo Machado,,,,,Constellation,Carraro,,,,,,,,,,,,
+Troia - Renato,Felippe Sousa,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Titan - Jovana,Flavio Camargo,,,,,Titan,Jovana,,,,,,,,,,,,
+Troia - Renato,Vanessa Vallim,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Constellation - Carraro,Isabelly Ferreira,,,,,Constellation,Carraro,,,,,,,,,,,,
+Constellation - Carraro,Leila Silva,,,,,Constellation,Carraro,,,,,,,,,,,,
+Meteor - Solange,Larissa Fernandes,,,,,Meteor,Solange,,,,,,,,,,,,
+Meteor - Solange,Matheus Sacramento,,,,,Meteor,Solange,,,,,,,,,,,,
+Constellation - Carraro,Felipe Borges,,,,,Constellation,Carraro,,,,,,,,,,,,
+Troia - Renato,Melissa Cavalcanti,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Maktub - Helio,Tauani Cavilha,,,,,Maktub,Helio,,,,,,,,,,,,
+Chronos- Wesley,Alexandre Junior,,,,,Chronos,Wesley,,,,,,,,,,,,
+Suits - Cicero,Beatriz Damasceno,,,,,Suits,Cicero,,,,,,,,,,,,
+Meteor - Solange,JoÃ£o Vitor,,,,,Meteor,Solange,,,,,,,,,,,,
+Maktub - Helio,Estefani Darlen,,,,,Maktub,Helio,,,,,,,,,,,,
+Titan - Jovana,Ketlyn Oliveira,,,,,Titan,Jovana,,,,,,,,,,,,
+Chronos- Wesley,Luciana Pinheiro,,,,,Chronos,Wesley,,,,,,,,,,,,
+Meteor - Solange,Luiz Oliveira,,,,,Meteor,Solange,,,,,,,,,,,,
+Troia - Renato,Raquel Lopes,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Titan - Jovana,Ana Biude,,,,,Titan,Jovana,,,,,,,,,,,,
+Meteor - Solange,Ruan Mendes,,,,,Meteor,Solange,,,,,,,,,,,,
+Troia - Renato,Jessica Vicchini,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Chronos- Wesley,Lucas Silva,,,,,Chronos,Wesley,,,,,,,,,,,,
+Maktub - Helio,Vinicius Tassitani,,,,,Maktub,Helio,,,,,,,,,,,,
+Maktub - Helio,Helio Donizeti,,,,,Maktub,Helio,,,,,,,,,,,,
+Maktub - Helio,Thaynara Silva,,,,,Maktub,Helio,,,,,,,,,,,,
+Chronos- Wesley,Gabriella Teodoro,,,,,Chronos,Wesley,,,,,,,,,,,,
+Chronos- Wesley,Rafael GonÃ§alves,,,,,Chronos,Wesley,,,,,,,,,,,,
+Meteor - Solange,Gabriella Andrade,,,,,Meteor,Solange,,,,,,,,,,,,
+Maktub - Helio,Ana Luiza,,,,,Maktub,Helio,,,,,,,,,,,,
+Titan - Jovana,Ryan Marques,,,,,Titan,Jovana,,,,,,,,,,,,
+Chronos- Wesley,Maximiliano Oliveira,,,,,Chronos,Wesley,,,,,,,,,,,,
+Titan - Jovana,Juliane Santos,,,,,Titan,Jovana,,,,,,,,,,,,
+Maktub - Helio,Kelly Silva,,,,,Maktub,Helio,,,,,,,,,,,,
+Titan - Jovana,Beatriz Macedo,,,,,Titan,Jovana,,,,,,,,,,,,
+Troia - Renato,Marcia Regina,,,,,TrÃ³ia,Renato,,,,,,,,,,,,
+Meteor - Solange,Gustavo Oliveira,,,,,Meteor,Solange,,,,,,,,,,,,
+Maktub - Helio,Sabrina Dias,,,,,Maktub,Helio,,,,,,,,,,,,
+Suits - Cicero,Carla Lorensetti,,,,,Suits,Cicero,,,,,,,,,,,,
+Suits - Cicero,Yasmin Tavares,,,,,Suits,Cicero,,,,,,,,,,,,
+Suits - Cicero,Patricia Romero,,,,,Suits,Cicero,,,,,,,,,,,,
+Suits - Cicero,Juliana Macedo,,,,,Suits,Cicero,,,,,,,,,,,,
+`;
+
+const buildRankingFromRows = (rows) => {
+  if (rows.length < 2) {
+    return [];
+  }
+  const header = rows[0].map((cell) => cell.trim().toLowerCase());
+  const nameIndex = header.findIndex((cell) => cell === 'consultor' || cell === 'nome do consultor');
+  const quotaIndex = header.findIndex(
+    (cell) => cell === 'vendas janeiro' || cell === 'cotas'
+  );
+  const valueIndex = header.findIndex(
+    (cell) => cell === 'valor vendido' || cell === 'r$'
+  );
+
+  if (nameIndex === -1 || quotaIndex === -1 || valueIndex === -1) {
+    console.warn('Cabeçalhos esperados não encontrados na planilha.');
+    return [];
+  }
+
+  return rows
+    .slice(1)
+    .map((row) => ({
+      name: (row[nameIndex] || '').trim(),
+      quotas: (row[quotaIndex] || '').toString().trim(),
+      value: (row[valueIndex] || '').toString().trim()
+    }))
+    .filter((entry) => entry.name);
+};
+
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
   const gid = '1940056038';
@@ -337,40 +441,24 @@ const fetchRankingFromSheets = async () => {
     }
     const text = await response.text();
     const rows = parseCsv(text);
-    if (rows.length < 2) {
-      return;
+    const rankingEntries = buildRankingFromRows(rows);
+    if (!rankingEntries.length) {
+      throw new Error('Ranking vazio após parse do CSV.');
     }
-    const header = rows[0].map((cell) => cell.trim().toLowerCase());
-    const nameIndex = header.findIndex((cell) => cell === 'nome do consultor');
-    const quotaIndex = header.findIndex(
-      (cell) => cell === 'vendas janeiro' || cell === 'cotas'
-    );
-    const valueIndex = header.findIndex(
-      (cell) => cell === 'valor vendido' || cell === 'r$'
-    );
-
-    if (nameIndex === -1 || quotaIndex === -1 || valueIndex === -1) {
-      console.warn('Cabeçalhos esperados não encontrados na planilha.');
-      return;
+    state.ranking = rankingEntries;
+    if (state.user) {
+      renderDashboard();
     }
-
-    const rankingEntries = rows
-      .slice(1)
-      .map((row) => ({
-        name: (row[nameIndex] || '').trim(),
-        quotas: (row[quotaIndex] || '').toString().trim(),
-        value: (row[valueIndex] || '').toString().trim()
-      }))
-      .filter((entry) => entry.name);
-
-    if (rankingEntries.length) {
-      state.ranking = rankingEntries;
+  } catch (error) {
+    console.warn('Não foi possível carregar o ranking do Google Sheets.', error);
+    const fallbackRows = parseCsv(fallbackRankingCsv);
+    const fallbackEntries = buildRankingFromRows(fallbackRows);
+    if (fallbackEntries.length) {
+      state.ranking = fallbackEntries;
       if (state.user) {
         renderDashboard();
       }
     }
-  } catch (error) {
-    console.warn('Não foi possível carregar o ranking do Google Sheets.', error);
   }
 };
 
