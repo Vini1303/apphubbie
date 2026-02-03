@@ -314,17 +314,8 @@ const buildTeamRankingFromRows = (rows) => {
     teams.set(name, current);
   });
 
-  const summaryTotals = Array.from(teams.values()).reduce(
-    (acc, team) => {
-      acc.totalMonth += team.total || 0;
-      acc.metaFinal += team.meta || 0;
-      return acc;
-    },
-    { totalMonth: 0, metaFinal: 0 }
-  );
-
   return {
-    summary: summaryTotals,
+    summary,
     teams: Array.from(teams.values())
     .map((team) => {
       const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
