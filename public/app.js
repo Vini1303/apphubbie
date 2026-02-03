@@ -67,9 +67,86 @@ const state = {
     { label: 'Follow-ups (12)', value: '30 pts' }
   ],
   ranking: [
-    { name: 'Ana Souza', value: '520 pts' },
-    { name: 'Você', value: '420 pts' },
-    { name: 'Bruno Lima', value: '390 pts' }
+    { name: 'Ygor Motta', value: 'R$ 1.900.000,00', quotas: 36 },
+    { name: 'Estephanie Barrach', value: 'R$ 1.820.000,00', quotas: 34 },
+    { name: 'Caroline Letícia', value: 'R$ 1.760.000,00', quotas: 33 },
+    { name: 'José Eberson', value: 'R$ 1.740.000,00', quotas: 32 },
+    { name: 'Eduardo Tadeu', value: 'R$ 1.700.000,00', quotas: 31 },
+    { name: 'Guilherme Moreira', value: 'R$ 1.680.000,00', quotas: 30 },
+    { name: 'Vinicius Tassitani', value: 'R$ 1.650.000,00', quotas: 29 },
+    { name: 'Consultor 08', value: 'R$ 1.620.000,00', quotas: 28 },
+    { name: 'Consultor 09', value: 'R$ 1.600.000,00', quotas: 28 },
+    { name: 'Consultor 10', value: 'R$ 1.580.000,00', quotas: 27 },
+    { name: 'Consultor 11', value: 'R$ 1.560.000,00', quotas: 27 },
+    { name: 'Consultor 12', value: 'R$ 1.540.000,00', quotas: 26 },
+    { name: 'Consultor 13', value: 'R$ 1.520.000,00', quotas: 26 },
+    { name: 'Consultor 14', value: 'R$ 1.500.000,00', quotas: 25 },
+    { name: 'Consultor 15', value: 'R$ 1.480.000,00', quotas: 25 },
+    { name: 'Consultor 16', value: 'R$ 1.460.000,00', quotas: 24 },
+    { name: 'Consultor 17', value: 'R$ 1.440.000,00', quotas: 24 },
+    { name: 'Consultor 18', value: 'R$ 1.420.000,00', quotas: 23 },
+    { name: 'Consultor 19', value: 'R$ 1.400.000,00', quotas: 23 },
+    { name: 'Consultor 20', value: 'R$ 1.380.000,00', quotas: 22 },
+    { name: 'Consultor 21', value: 'R$ 1.360.000,00', quotas: 22 },
+    { name: 'Consultor 22', value: 'R$ 1.340.000,00', quotas: 21 },
+    { name: 'Consultor 23', value: 'R$ 1.320.000,00', quotas: 21 },
+    { name: 'Consultor 24', value: 'R$ 1.300.000,00', quotas: 20 },
+    { name: 'Consultor 25', value: 'R$ 1.280.000,00', quotas: 20 },
+    { name: 'Consultor 26', value: 'R$ 1.260.000,00', quotas: 19 },
+    { name: 'Consultor 27', value: 'R$ 1.240.000,00', quotas: 19 },
+    { name: 'Consultor 28', value: 'R$ 1.220.000,00', quotas: 18 },
+    { name: 'Consultor 29', value: 'R$ 1.200.000,00', quotas: 18 },
+    { name: 'Consultor 30', value: 'R$ 1.180.000,00', quotas: 17 },
+    { name: 'Consultor 31', value: 'R$ 1.160.000,00', quotas: 17 },
+    { name: 'Consultor 32', value: 'R$ 1.140.000,00', quotas: 16 },
+    { name: 'Consultor 33', value: 'R$ 1.120.000,00', quotas: 16 },
+    { name: 'Consultor 34', value: 'R$ 1.100.000,00', quotas: 15 },
+    { name: 'Consultor 35', value: 'R$ 1.080.000,00', quotas: 15 },
+    { name: 'Consultor 36', value: 'R$ 1.060.000,00', quotas: 14 },
+    { name: 'Consultor 37', value: 'R$ 1.040.000,00', quotas: 14 },
+    { name: 'Consultor 38', value: 'R$ 1.020.000,00', quotas: 13 },
+    { name: 'Consultor 39', value: 'R$ 1.000.000,00', quotas: 13 },
+    { name: 'Consultor 40', value: 'R$ 980.000,00', quotas: 12 },
+    { name: 'Consultor 41', value: 'R$ 960.000,00', quotas: 12 },
+    { name: 'Consultor 42', value: 'R$ 940.000,00', quotas: 11 },
+    { name: 'Consultor 43', value: 'R$ 920.000,00', quotas: 11 },
+    { name: 'Consultor 44', value: 'R$ 900.000,00', quotas: 10 },
+    { name: 'Consultor 45', value: 'R$ 880.000,00', quotas: 10 },
+    { name: 'Consultor 46', value: 'R$ 860.000,00', quotas: 9 },
+    { name: 'Consultor 47', value: 'R$ 840.000,00', quotas: 9 },
+    { name: 'Consultor 48', value: 'R$ 820.000,00', quotas: 8 },
+    { name: 'Consultor 49', value: 'R$ 800.000,00', quotas: 8 },
+    { name: 'Consultor 50', value: 'R$ 780.000,00', quotas: 7 },
+    { name: 'Consultor 51', value: 'R$ 760.000,00', quotas: 7 },
+    { name: 'Consultor 52', value: 'R$ 740.000,00', quotas: 6 },
+    { name: 'Consultor 53', value: 'R$ 720.000,00', quotas: 6 },
+    { name: 'Consultor 54', value: 'R$ 700.000,00', quotas: 5 },
+    { name: 'Consultor 55', value: 'R$ 680.000,00', quotas: 5 },
+    { name: 'Consultor 56', value: 'R$ 660.000,00', quotas: 4 },
+    { name: 'Consultor 57', value: 'R$ 640.000,00', quotas: 4 },
+    { name: 'Consultor 58', value: 'R$ 620.000,00', quotas: 4 },
+    { name: 'Consultor 59', value: 'R$ 600.000,00', quotas: 3 },
+    { name: 'Consultor 60', value: 'R$ 580.000,00', quotas: 3 },
+    { name: 'Consultor 61', value: 'R$ 560.000,00', quotas: 3 },
+    { name: 'Consultor 62', value: 'R$ 540.000,00', quotas: 2 },
+    { name: 'Consultor 63', value: 'R$ 520.000,00', quotas: 2 },
+    { name: 'Consultor 64', value: 'R$ 500.000,00', quotas: 2 },
+    { name: 'Consultor 65', value: 'R$ 480.000,00', quotas: 2 },
+    { name: 'Consultor 66', value: 'R$ 460.000,00', quotas: 1 },
+    { name: 'Consultor 67', value: 'R$ 440.000,00', quotas: 1 },
+    { name: 'Consultor 68', value: 'R$ 420.000,00', quotas: 1 },
+    { name: 'Consultor 69', value: 'R$ 400.000,00', quotas: 1 },
+    { name: 'Consultor 70', value: 'R$ 380.000,00', quotas: 1 },
+    { name: 'Consultor 71', value: 'R$ 360.000,00', quotas: 1 },
+    { name: 'Consultor 72', value: 'R$ 340.000,00', quotas: 1 },
+    { name: 'Consultor 73', value: 'R$ 320.000,00', quotas: 1 },
+    { name: 'Consultor 74', value: 'R$ 300.000,00', quotas: 1 },
+    { name: 'Consultor 75', value: 'R$ 280.000,00', quotas: 1 },
+    { name: 'Consultor 76', value: 'R$ 260.000,00', quotas: 1 },
+    { name: 'Consultor 77', value: 'R$ 240.000,00', quotas: 1 },
+    { name: 'Consultor 78', value: 'R$ 220.000,00', quotas: 1 },
+    { name: 'Consultor 79', value: 'R$ 200.000,00', quotas: 1 },
+    { name: 'Consultor 80', value: 'R$ 180.000,00', quotas: 1 }
   ],
   bills: [
     { name: 'Carlos Andrade', status: 'Atrasado 3 dias', detail: 'R$ 980 • Venc. 12/11' },
@@ -171,8 +248,16 @@ const renderDashboard = () => {
   monthlyBar.style.width = `${progressPercent}%`;
 
   renderList('pointsBreakdown', state.points, (item) => `<span>${item.label}</span>${item.value}`);
-  renderList('rankingList', state.ranking, (item) => `<span>${item.name}</span>${item.value}`);
-  renderList('rankingFull', state.ranking, (item) => `<span>${item.name}</span>${item.value}`);
+  renderList(
+    'rankingList',
+    state.ranking,
+    (item) => `<span>${item.name}</span>${item.value} • ${item.quotas} cotas`
+  );
+  renderList(
+    'rankingFull',
+    state.ranking,
+    (item) => `<span>${item.name}</span>${item.value} • ${item.quotas} cotas`
+  );
   renderList('billAlerts', state.bills, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('billDetails', state.bills, (item) => `<span>${item.name}</span>${item.detail}`);
   renderList('robotList', state.robots, (item) => `<span>${item.name}</span>${item.status}`);
