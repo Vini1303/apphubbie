@@ -247,15 +247,29 @@
           </div>
 
           <div class="section" data-section="ranking">
-            <div class="grid">
-              <article class="card">
-                <h3>Ranking geral</h3>
-                <ol class="list" id="rankingFull"></ol>
-              </article>
-              <article class="card">
-                <h3>Ranking equipes</h3>
-                <ol class="list" id="teamRankingList"></ol>
-              </article>
+            <div class="subnav">
+              <button class="subnav__item is-active" data-subsection="ranking-geral">
+                Ranking geral
+              </button>
+              <button class="subnav__item" data-subsection="ranking-equipes">
+                Ranking equipes
+              </button>
+            </div>
+            <div class="subsection is-active" data-subsection="ranking-geral">
+              <div class="grid">
+                <article class="card">
+                  <h3>Ranking geral</h3>
+                  <ol class="list" id="rankingFull"></ol>
+                </article>
+              </div>
+            </div>
+            <div class="subsection" data-subsection="ranking-equipes">
+              <div class="grid">
+                <article class="card">
+                  <h3>Ranking equipes</h3>
+                  <ol class="list" id="teamRankingList"></ol>
+                </article>
+              </div>
             </div>
           </div>
 

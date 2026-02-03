@@ -809,6 +809,12 @@ menuButtons.forEach((button) => {
       setActiveSubsection('campanhas-individuais');
       return;
     }
+    if (section === 'ranking') {
+      setActiveSubsection('ranking-geral');
+    }
+    if (section === 'campanhas') {
+      setActiveSubsection('campanhas-individuais');
+    }
     setActiveSection(section);
   });
 });
