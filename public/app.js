@@ -235,10 +235,10 @@ const setLoggedInView = () => {
 const setLoggedOutView = () => {
   loginCard.style.display = 'grid';
   content.style.display = 'none';
-  sidebar.style.display = 'flex';
-  document.body.classList.remove('is-login');
+  sidebar.style.display = 'none';
+  document.body.classList.add('is-login');
   if (topbar) {
-    topbar.style.display = 'flex';
+    topbar.style.display = 'none';
   }
 };
 
@@ -287,9 +287,7 @@ const buildTeamRankingFromRows = (rows) => {
   const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
   const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
   const metaIndex = header.findIndex((cell) => cell === 'meta');
-  const summaryTotalMonth = parseCurrencyToNumber(rows[12]?.[11] || '');
-  const summaryMetaFinal = parseCurrencyToNumber(rows[21]?.[11] || '');
-  const summary = { totalMonth: summaryTotalMonth, metaFinal: summaryMetaFinal };
+  const summary = { totalMonth: 0, metaFinal: 0 };
 
   if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
     console.warn('Cabeçalhos de equipes não encontrados na planilha.');
@@ -308,7 +306,7 @@ const buildTeamRankingFromRows = (rows) => {
     const current = teams.get(name) || { name, total: 0, meta: 0 };
 
     if (totalValue) {
-      current.total = Math.max(current.total, totalValue);
+      current.total += totalValue;
     }
     if (metaValue) {
       current.meta = Math.max(current.meta, metaValue);
@@ -316,8 +314,17 @@ const buildTeamRankingFromRows = (rows) => {
     teams.set(name, current);
   });
 
+  const summaryTotals = Array.from(teams.values()).reduce(
+    (acc, team) => {
+      acc.totalMonth += team.total || 0;
+      acc.metaFinal += team.meta || 0;
+      return acc;
+    },
+    { totalMonth: 0, metaFinal: 0 }
+  );
+
   return {
-    summary,
+    summary: summaryTotals,
     teams: Array.from(teams.values())
     .map((team) => {
       const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
