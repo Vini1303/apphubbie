@@ -70,6 +70,10 @@ const state = {
     { label: 'Reativações (3)', value: '90 pts' },
     { label: 'Follow-ups (12)', value: '30 pts' }
   ],
+  teamSummary: {
+    totalMonth: 0,
+    metaFinal: 0
+  },
   ranking: [
     { name: 'Ygor Motta', value: 'R$ 1.900.000,00', quotas: 36 },
     { name: 'Estephanie Barrach', value: 'R$ 1.820.000,00', quotas: 34 },
@@ -277,16 +281,19 @@ const getSortedRanking = () =>
 
 const buildTeamRankingFromRows = (rows) => {
   if (rows.length < 2) {
-    return [];
+    return { teams: [], summary: { totalMonth: 0, metaFinal: 0 } };
   }
   const header = rows[0].map((cell) => cell.trim().toLowerCase());
   const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
   const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
   const metaIndex = header.findIndex((cell) => cell === 'meta');
+  const summaryTotalMonth = parseCurrencyToNumber(rows[12]?.[11] || '');
+  const summaryMetaFinal = parseCurrencyToNumber(rows[21]?.[11] || '');
+  const summary = { totalMonth: summaryTotalMonth, metaFinal: summaryMetaFinal };
 
   if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
     console.warn('Cabeçalhos de equipes não encontrados na planilha.');
-    return [];
+    return { teams: [], summary };
   }
 
   const teams = new Map();
@@ -301,7 +308,7 @@ const buildTeamRankingFromRows = (rows) => {
     const current = teams.get(name) || { name, total: 0, meta: 0 };
 
     if (totalValue) {
-      current.total += totalValue;
+      current.total = Math.max(current.total, totalValue);
     }
     if (metaValue) {
       current.meta = Math.max(current.meta, metaValue);
@@ -309,7 +316,9 @@ const buildTeamRankingFromRows = (rows) => {
     teams.set(name, current);
   });
 
-  return Array.from(teams.values())
+  return {
+    summary,
+    teams: Array.from(teams.values())
     .map((team) => {
       const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
       const remaining = Math.max(100 - percent, 0);
@@ -317,14 +326,17 @@ const buildTeamRankingFromRows = (rows) => {
       return { ...team, percent, remaining, achieved };
     })
     .sort((a, b) => b.total - a.total);
+  };
 };
 
 const renderDashboard = () => {
   const progressPercent = Math.round((172500 / 280000) * 100);
   monthlyBar.style.width = `${progressPercent}%`;
   const sortedRanking = getSortedRanking();
-  const totalTeamSales = state.teamRanking.reduce((acc, team) => acc + (team.total || 0), 0);
-  const totalTeamMeta = state.teamRanking.reduce((acc, team) => acc + (team.meta || 0), 0);
+  const fallbackTeamSales = state.teamRanking.reduce((acc, team) => acc + (team.total || 0), 0);
+  const fallbackTeamMeta = state.teamRanking.reduce((acc, team) => acc + (team.meta || 0), 0);
+  const totalTeamSales = state.teamSummary.totalMonth || fallbackTeamSales;
+  const totalTeamMeta = state.teamSummary.metaFinal || fallbackTeamMeta;
   const totalPercent = totalTeamMeta ? Math.min(Math.round((totalTeamSales / totalTeamMeta) * 100), 100) : 0;
 
   if (teamRankingRing && teamRankingPercent && teamRankingGoal && teamRankingCurrent) {
@@ -565,12 +577,13 @@ const fetchRankingFromSheets = async () => {
     const text = await response.text();
     const rows = parseCsv(text);
     const rankingEntries = buildRankingFromRows(rows);
-    const teamEntries = buildTeamRankingFromRows(rows);
+    const teamPayload = buildTeamRankingFromRows(rows);
     if (!rankingEntries.length) {
       throw new Error('Ranking vazio após parse do CSV.');
     }
     state.ranking = rankingEntries;
-    state.teamRanking = teamEntries;
+    state.teamRanking = teamPayload.teams;
+    state.teamSummary = teamPayload.summary;
     if (state.user) {
       renderDashboard();
     }
@@ -578,10 +591,11 @@ const fetchRankingFromSheets = async () => {
     console.warn('Não foi possível carregar o ranking do Google Sheets.', error);
     const fallbackRows = parseCsv(fallbackRankingCsv);
     const fallbackEntries = buildRankingFromRows(fallbackRows);
-    const fallbackTeamEntries = buildTeamRankingFromRows(fallbackRows);
+    const fallbackTeamPayload = buildTeamRankingFromRows(fallbackRows);
     if (fallbackEntries.length) {
       state.ranking = fallbackEntries;
-      state.teamRanking = fallbackTeamEntries;
+      state.teamRanking = fallbackTeamPayload.teams;
+      state.teamSummary = fallbackTeamPayload.summary;
       if (state.user) {
         renderDashboard();
       }
