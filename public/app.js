@@ -434,10 +434,14 @@ const rankingRefreshMs = 5 * 60 * 1000;
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
   const gid = '1940056038';
-  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+  const fallbackUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&gid=${gid}`;
+  const apiUrl = '/api/ranking';
 
   try {
-    const response = await fetch(url);
+    let response = await fetch(apiUrl);
+    if (!response.ok) {
+      response = await fetch(fallbackUrl);
+    }
     if (!response.ok) {
       throw new Error(`Falha ao carregar planilha: ${response.status}`);
     }
