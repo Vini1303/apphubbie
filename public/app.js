@@ -286,6 +286,7 @@ const buildTeamRankingFromRows = (rows) => {
   const header = rows[0].map((cell) => cell.trim().toLowerCase());
   const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
   const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
+  const totalDailyIndex = header.findIndex((cell) => cell === 'total diario');
   const metaIndex = header.findIndex((cell) => cell === 'meta');
   const summary = { totalMonth: 0, metaFinal: 0 };
 
@@ -294,6 +295,7 @@ const buildTeamRankingFromRows = (rows) => {
     return { teams: [], summary };
   }
 
+  const summaryIndex = totalDailyIndex === -1 ? totalIndex : totalDailyIndex;
   const teamNames = new Set(['tróia', 'troia', 'meteor', 'chronos', 'constellation', 'maktub', 'titan', 'suits']);
   const teams = rows.slice(1)
     .map((row) => {
@@ -303,10 +305,10 @@ const buildTeamRankingFromRows = (rows) => {
       }
       const normalized = name.toLowerCase();
       if (normalized === 'total fevereiro') {
-        summary.totalMonth = parseCurrencyToNumber(row[totalIndex] || '');
+        summary.totalMonth = parseCurrencyToNumber(row[summaryIndex] || '');
       }
       if (normalized === 'meta') {
-        summary.metaFinal = parseCurrencyToNumber(row[totalIndex] || '');
+        summary.metaFinal = parseCurrencyToNumber(row[summaryIndex] || '');
       }
       if (!teamNames.has(normalized)) {
         return null;

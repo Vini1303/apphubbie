@@ -140,8 +140,8 @@ Para o ranking acompanhar as alterações da sua planilha automaticamente, faça
 ### Mapeamento da Produção mensal
 O bloco **Produção mensal** lê valores pela **coluna de rótulos** da planilha:
 - **Equipes**: linhas onde a coluna **Equipes** contém Tróia, Meteor, Chronos, Constellation, Maktub, Titan e Suits.
-- **Vendas do mês**: coluna **Total Janeiro** na linha **Total Fevereiro**.
-- **Meta final**: coluna **Total Janeiro** na linha **Meta**.
+- **Vendas do mês**: coluna **Total Diario** na linha **Total Fevereiro**.
+- **Meta final**: coluna **Total Diario** na linha **Meta**.
 
 ### Atualização automática mesmo com o navegador fechado
 Para atualizar o ranking mesmo sem navegador aberto, o servidor agora mantém um **cache do CSV**:
