@@ -439,6 +439,81 @@ button:hover {
   font-weight: 600;
 }
 
+.team-ranking {
+  gap: 16px;
+}
+
+.team-ranking__item {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  align-items: center;
+}
+
+.team-ranking__rank {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #111827;
+  min-width: 48px;
+  text-align: center;
+}
+
+.team-ranking__content {
+  display: grid;
+  gap: 10px;
+}
+
+.team-ranking__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.team-ranking__name {
+  font-weight: 700;
+  color: #111827;
+}
+
+.team-ranking__value {
+  font-weight: 700;
+  color: #111827;
+}
+
+.team-ranking__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  color: #4b5563;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.team-ranking__progress {
+  background: #e5e7eb;
+  border-radius: 999px;
+  height: 10px;
+  overflow: hidden;
+}
+
+.team-ranking__bar {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.team-ranking__bar.is-pending {
+  background: #ef4444;
+}
+
+.team-ranking__bar.is-achieved {
+  background: #22c55e;
+}
+
 .badge {
   background: #dbeafe;
   color: #1b5cff;

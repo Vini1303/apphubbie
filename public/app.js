@@ -239,6 +239,9 @@ const renderList = (elementId, items, formatter) => {
   list.innerHTML = '';
   items.forEach((item, index) => {
     const li = document.createElement('li');
+    if (elementId === 'teamRankingList') {
+      li.classList.add('team-ranking__item');
+    }
     li.innerHTML = formatter(item, index);
     list.appendChild(li);
   });
@@ -306,7 +309,8 @@ const buildTeamRankingFromRows = (rows) => {
     .map((team) => {
       const percent = team.meta ? Math.min(Math.round((team.total / team.meta) * 100), 100) : 0;
       const remaining = Math.max(100 - percent, 0);
-      return { ...team, percent, remaining };
+      const achieved = team.meta > 0 ? team.total >= team.meta : false;
+      return { ...team, percent, remaining, achieved };
     })
     .sort((a, b) => b.total - a.total);
 };
@@ -342,9 +346,22 @@ const renderDashboard = () => {
     'teamRankingList',
     state.teamRanking,
     (item, index) =>
-      `<span>${index + 1}° ${item.name}</span>${formatCurrency(item.total)} • Meta ${formatCurrency(
-        item.meta
-      )} • ${item.percent}% atingido • ${item.remaining}% faltando`
+      `<div class="team-ranking__rank">${index + 1}°</div>
+       <div class="team-ranking__content">
+         <div class="team-ranking__header">
+           <span class="team-ranking__name">${item.name}</span>
+           <span class="team-ranking__value">${formatCurrency(item.total)}</span>
+         </div>
+         <div class="team-ranking__meta">
+           <span>Meta mensal: ${formatCurrency(item.meta)}</span>
+           <span>${item.percent}% atingido • ${item.remaining}% faltando</span>
+         </div>
+         <div class="team-ranking__progress">
+           <div class="team-ranking__bar ${item.achieved ? 'is-achieved' : 'is-pending'}" style="width:${
+             item.percent
+           }%"></div>
+         </div>
+       </div>`
   );
   renderIndividualCampaigns();
 
