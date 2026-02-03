@@ -283,27 +283,41 @@ const buildTeamRankingFromRows = (rows) => {
   if (rows.length < 2) {
     return { teams: [], summary: { totalMonth: 0, metaFinal: 0 } };
   }
-  const summary = {
-    totalMonth: parseCurrencyToNumber(rows[12]?.[11] || ''),
-    metaFinal: parseCurrencyToNumber(rows[21]?.[11] || '')
-  };
+  const header = rows[0].map((cell) => cell.trim().toLowerCase());
+  const teamIndex = header.findIndex((cell) => cell === 'equipes' || cell === 'equipe');
+  const totalIndex = header.findIndex((cell) => cell === 'total janeiro');
+  const metaIndex = header.findIndex((cell) => cell === 'meta');
+  const summary = { totalMonth: 0, metaFinal: 0 };
 
-  const teamRows = [
-    { name: 'Tróia', rowIndex: 1 },
-    { name: 'Meteor', rowIndex: 2 },
-    { name: 'Chronos', rowIndex: 3 },
-    { name: 'Constellation', rowIndex: 4 },
-    { name: 'Maktub', rowIndex: 5 },
-    { name: 'Titan', rowIndex: 6 },
-    { name: 'Suits', rowIndex: 7 }
-  ];
+  if (teamIndex === -1 || totalIndex === -1 || metaIndex === -1) {
+    console.warn('Cabeçalhos de equipes não encontrados na planilha.');
+    return { teams: [], summary };
+  }
 
-  const teams = teamRows.map(({ name, rowIndex }) => {
-    const row = rows[rowIndex] || [];
-    const total = parseCurrencyToNumber(row[12] || '');
-    const meta = parseCurrencyToNumber(row[13] || '');
-    return { name, total, meta };
-  });
+  const teamNames = new Set(['tróia', 'troia', 'meteor', 'chronos', 'constellation', 'maktub', 'titan', 'suits']);
+  const teams = rows.slice(1)
+    .map((row) => {
+      const name = (row[teamIndex] || '').trim();
+      if (!name) {
+        return null;
+      }
+      const normalized = name.toLowerCase();
+      if (normalized === 'total fevereiro') {
+        summary.totalMonth = parseCurrencyToNumber(row[totalIndex] || '');
+      }
+      if (normalized === 'meta') {
+        summary.metaFinal = parseCurrencyToNumber(row[totalIndex] || '');
+      }
+      if (!teamNames.has(normalized)) {
+        return null;
+      }
+      return {
+        name,
+        total: parseCurrencyToNumber(row[totalIndex] || ''),
+        meta: parseCurrencyToNumber(row[metaIndex] || '')
+      };
+    })
+    .filter(Boolean);
 
   return {
     summary,
