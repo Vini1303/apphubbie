@@ -287,10 +287,81 @@
           </div>
 
           <div class="section" data-section="robos">
-            <div class="card">
-              <h3>Robôs disponíveis</h3>
-              <p class="sub">Acesso somente para execução autorizada.</p>
-              <ul class="list" id="robotList"></ul>
+            <div class="card robot-panel">
+              <header class="robot-panel__header">
+                <div>
+                  <h3>Robôs</h3>
+                  <p class="sub">Selecione a automação que deseja executar.</p>
+                </div>
+                <div class="robot-panel__tabs">
+                  <button class="robot-tab is-active" data-robot-tab="contratos">Contratos</button>
+                  <button class="robot-tab" data-robot-tab="boletos">Boletos</button>
+                  <button class="robot-tab" data-robot-tab="contemplados">Contemplados</button>
+                </div>
+              </header>
+
+              <div class="robot-tab__content is-active" data-robot-content="contratos">
+                <div class="robot-search">
+                  <label>
+                    Número do contrato
+                    <div class="robot-search__field">
+                      <input type="text" id="contractSearch" placeholder="Ex: 40411213" />
+                      <button type="button" class="ghost" id="contractSearchButton">Buscar</button>
+                    </div>
+                  </label>
+                  <label>
+                    Conta
+                    <select id="contractAccount">
+                      <option value="ATGGOLD">ATGGOLD</option>
+                      <option value="USECRED FIAT">USECRED FIAT</option>
+                      <option value="SOLAR PRIME">SOLAR PRIME</option>
+                    </select>
+                  </label>
+                  <div class="robot-search__actions">
+                    <button type="button" id="contractEmitButton">Emitir contrato</button>
+                    <small class="robot-status" id="contractStatus"></small>
+                  </div>
+                </div>
+                <div class="robot-files">
+                  <h4>Arquivos encontrados</h4>
+                  <ul class="robot-file-list" id="contractFiles"></ul>
+                </div>
+              </div>
+
+              <div class="robot-tab__content" data-robot-content="boletos">
+                <div class="robot-search">
+                  <label>
+                    Número do contrato
+                    <div class="robot-search__field">
+                      <input type="text" id="boletoSearch" placeholder="Ex: 40311211" />
+                      <button type="button" class="ghost" id="boletoSearchButton">Buscar</button>
+                    </div>
+                  </label>
+                  <label>
+                    Conta
+                    <select id="boletoAccount">
+                      <option value="USECRED FIAT">USECRED FIAT</option>
+                      <option value="ATGGOLD">ATGGOLD</option>
+                      <option value="SOLAR PRIME">SOLAR PRIME</option>
+                    </select>
+                  </label>
+                  <div class="robot-search__actions">
+                    <button type="button" id="boletoEmitButton">Emitir boleto</button>
+                    <small class="robot-status" id="boletoStatus"></small>
+                  </div>
+                </div>
+                <div class="robot-files">
+                  <h4>Arquivos encontrados</h4>
+                  <ul class="robot-file-list" id="boletoFiles"></ul>
+                </div>
+              </div>
+
+              <div class="robot-tab__content" data-robot-content="contemplados">
+                <div class="robot-files">
+                  <h4>Contemplados do mês</h4>
+                  <ul class="robot-contemplados" id="contempladosList"></ul>
+                </div>
+              </div>
             </div>
           </div>
 

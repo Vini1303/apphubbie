@@ -42,6 +42,21 @@ const teamRankingRing = document.getElementById('teamRankingRing');
 const teamRankingPercent = document.getElementById('teamRankingPercent');
 const teamRankingGoal = document.getElementById('teamRankingGoal');
 const teamRankingCurrent = document.getElementById('teamRankingCurrent');
+const robotTabs = document.querySelectorAll('.robot-tab');
+const robotTabContents = document.querySelectorAll('.robot-tab__content');
+const contractSearchInput = document.getElementById('contractSearch');
+const contractAccountSelect = document.getElementById('contractAccount');
+const contractSearchButton = document.getElementById('contractSearchButton');
+const contractEmitButton = document.getElementById('contractEmitButton');
+const contractFilesList = document.getElementById('contractFiles');
+const contractStatus = document.getElementById('contractStatus');
+const boletoSearchInput = document.getElementById('boletoSearch');
+const boletoAccountSelect = document.getElementById('boletoAccount');
+const boletoSearchButton = document.getElementById('boletoSearchButton');
+const boletoEmitButton = document.getElementById('boletoEmitButton');
+const boletoFilesList = document.getElementById('boletoFiles');
+const boletoStatus = document.getElementById('boletoStatus');
+const contempladosList = document.getElementById('contempladosList');
 
 let storedOverrides = {};
 try {
@@ -165,6 +180,24 @@ const state = {
     { name: 'Robô de emissão de boletos', status: 'Pronto para executar' },
     { name: 'Robô de atualização de CRM', status: 'Agendado às 18h' },
     { name: 'Robô de cobrança leve', status: 'Disponível' }
+  ],
+  robotContracts: [
+    { id: '40411213', file: '40411213.pdf', status: 'Arquivo pronto para download' },
+    { id: '40411213', file: '40411213_aditivo.pdf', status: 'Arquivo pronto para download' },
+    { id: '40188720', file: '40188720.pdf', status: 'Arquivo pronto para download' }
+  ],
+  robotBoletos: [
+    { id: '40311211', file: '40311211_02.pdf', status: 'Clique para baixar' },
+    { id: '40311211', file: '40311211_03.pdf', status: 'Clique para baixar' },
+    { id: '40311211', file: '40311211_04.pdf', status: 'Clique para baixar' },
+    { id: '40100222', file: '40100222_01.pdf', status: 'Clique para baixar' }
+  ],
+  contemplados: [
+    { name: 'Ana Luiza Pereira', plan: 'Plano 310', value: 'R$ 180.000,00' },
+    { name: 'Gustavo Almeida', plan: 'Plano 240', value: 'R$ 220.000,00' },
+    { name: 'Isabella Costa', plan: 'Plano 180', value: 'R$ 140.000,00' },
+    { name: 'Lucas Martins', plan: 'Plano 360', value: 'R$ 320.000,00' },
+    { name: 'Mariana Ferreira', plan: 'Plano 200', value: 'R$ 190.000,00' }
   ],
   campaigns: [
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
@@ -414,7 +447,6 @@ const renderDashboard = () => {
   );
   renderList('billAlerts', state.bills, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('billDetails', state.bills, (item) => `<span>${item.name}</span>${item.detail}`);
-  renderList('robotList', state.robots, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('campaignList', state.campaigns, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('companyGoals', state.companyGoals, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('quickIndicators', state.indicators, (item) => `<span>${item.name}</span>${item.value}`);
@@ -446,6 +478,9 @@ const renderDashboard = () => {
 
   applyClientFilter();
   renderReminders();
+  renderRobotFiles(contractFilesList, state.robotContracts);
+  renderRobotFiles(boletoFilesList, state.robotBoletos);
+  renderContemplados();
 };
 
 const parseCsv = (text) => {
@@ -708,6 +743,58 @@ const renderReminders = () => {
   renderList('reminderList', state.reminders, (item) =>
     `<span>${item.client}</span>${item.time} • ${item.note || 'Sem observações'}`
   );
+};
+
+const renderRobotFiles = (listElement, items) => {
+  if (!listElement) {
+    return;
+  }
+  listElement.innerHTML = '';
+  if (!items.length) {
+    const empty = document.createElement('li');
+    empty.className = 'robot-file robot-file--empty';
+    empty.textContent = 'Nenhum arquivo encontrado para esse contrato.';
+    listElement.appendChild(empty);
+    return;
+  }
+  items.forEach((item) => {
+    const li = document.createElement('li');
+    li.className = 'robot-file';
+    li.innerHTML = `
+      <div>
+        <strong>${item.file}</strong>
+        <span>${item.status}</span>
+      </div>
+      <button type="button" class="ghost">Baixar</button>
+    `;
+    listElement.appendChild(li);
+  });
+};
+
+const renderContemplados = () => {
+  if (!contempladosList) {
+    return;
+  }
+  contempladosList.innerHTML = '';
+  state.contemplados.forEach((item) => {
+    const li = document.createElement('li');
+    li.className = 'robot-contemplado';
+    li.innerHTML = `
+      <span>${item.name}</span>
+      <span>${item.plan}</span>
+      <strong>${item.value}</strong>
+    `;
+    contempladosList.appendChild(li);
+  });
+};
+
+const setActiveRobotTab = (tabId) => {
+  robotTabs.forEach((tab) => {
+    tab.classList.toggle('is-active', tab.dataset.robotTab === tabId);
+  });
+  robotTabContents.forEach((content) => {
+    content.classList.toggle('is-active', content.dataset.robotContent === tabId);
+  });
 };
 
 const persistImageOverrides = (overrides) => {
@@ -982,8 +1069,64 @@ reminderForm.addEventListener('submit', (event) => {
   renderReminders();
 });
 
+robotTabs.forEach((tab) => {
+  tab.addEventListener('click', () => {
+    setActiveRobotTab(tab.dataset.robotTab);
+  });
+});
+
+const filterRobotFiles = (items, query) =>
+  items.filter((item) => item.id.toLowerCase().includes(query));
+
+if (contractSearchButton) {
+  contractSearchButton.addEventListener('click', () => {
+    const query = (contractSearchInput?.value || '').trim().toLowerCase();
+    const matches = query ? filterRobotFiles(state.robotContracts, query) : state.robotContracts;
+    renderRobotFiles(contractFilesList, matches);
+    if (contractStatus) {
+      contractStatus.textContent = query ? `Busca realizada para ${query}.` : '';
+    }
+  });
+}
+
+if (contractEmitButton) {
+  contractEmitButton.addEventListener('click', () => {
+    const contractNumber = (contractSearchInput?.value || '').trim();
+    const account = contractAccountSelect?.value || '';
+    if (contractStatus) {
+      contractStatus.textContent = contractNumber
+        ? `Robô de contratos acionado para ${contractNumber} (${account}).`
+        : 'Informe um número de contrato antes de emitir.';
+    }
+  });
+}
+
+if (boletoSearchButton) {
+  boletoSearchButton.addEventListener('click', () => {
+    const query = (boletoSearchInput?.value || '').trim().toLowerCase();
+    const matches = query ? filterRobotFiles(state.robotBoletos, query) : state.robotBoletos;
+    renderRobotFiles(boletoFilesList, matches);
+    if (boletoStatus) {
+      boletoStatus.textContent = query ? `Busca realizada para ${query}.` : '';
+    }
+  });
+}
+
+if (boletoEmitButton) {
+  boletoEmitButton.addEventListener('click', () => {
+    const boletoNumber = (boletoSearchInput?.value || '').trim();
+    const account = boletoAccountSelect?.value || '';
+    if (boletoStatus) {
+      boletoStatus.textContent = boletoNumber
+        ? `Robô de boletos acionado para ${boletoNumber} (${account}).`
+        : 'Informe um número de contrato antes de emitir.';
+    }
+  });
+}
+
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
+setActiveRobotTab('contratos');
 fetchRankingFromSheets();
 setInterval(fetchRankingFromSheets, rankingRefreshMs);
 loadSession();
