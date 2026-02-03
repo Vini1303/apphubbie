@@ -236,27 +236,54 @@ const setLoggedOutView = () => {
 const renderList = (elementId, items, formatter) => {
   const list = document.getElementById(elementId);
   list.innerHTML = '';
-  items.forEach((item) => {
+  items.forEach((item, index) => {
     const li = document.createElement('li');
-    li.innerHTML = formatter(item);
+    li.innerHTML = formatter(item, index);
     list.appendChild(li);
   });
 };
 
+const parseCurrencyToNumber = (value) => {
+  if (value === null || value === undefined) {
+    return 0;
+  }
+  const cleaned = value
+    .toString()
+    .replace(/[^\d,.-]/g, '')
+    .replace(/\./g, '')
+    .replace(/,/g, '.');
+  const parsed = Number(cleaned);
+  return Number.isNaN(parsed) ? 0 : parsed;
+};
+
+const formatCurrency = (value) => {
+  const amount = typeof value === 'number' ? value : parseCurrencyToNumber(value);
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL'
+  }).format(amount);
+};
+
+const getSortedRanking = () =>
+  [...state.ranking].sort((a, b) => (b.valueNumber || 0) - (a.valueNumber || 0));
+
 const renderDashboard = () => {
   const progressPercent = Math.round((172500 / 280000) * 100);
   monthlyBar.style.width = `${progressPercent}%`;
+  const sortedRanking = getSortedRanking();
 
   renderList('pointsBreakdown', state.points, (item) => `<span>${item.label}</span>${item.value}`);
   renderList(
     'rankingList',
-    state.ranking,
-    (item) => `<span>${item.name}</span>${item.value} • ${item.quotas} cotas`
+    sortedRanking,
+    (item, index) =>
+      `<span>${index + 1}° ${item.name}</span>${formatCurrency(item.valueNumber || item.value)} • ${item.quotas} cotas`
   );
   renderList(
     'rankingFull',
-    state.ranking,
-    (item) => `<span>${item.name}</span>${item.value} • ${item.quotas} cotas`
+    sortedRanking,
+    (item, index) =>
+      `<span>${index + 1}° ${item.name}</span>${formatCurrency(item.valueNumber || item.value)} • ${item.quotas} cotas`
   );
   renderList('billAlerts', state.bills, (item) => `<span>${item.name}</span>${item.status}`);
   renderList('billDetails', state.bills, (item) => `<span>${item.name}</span>${item.detail}`);
@@ -424,7 +451,8 @@ const buildRankingFromRows = (rows) => {
     .map((row) => ({
       name: (row[nameIndex] || '').trim(),
       quotas: (row[quotaIndex] || '').toString().trim(),
-      value: (row[valueIndex] || '').toString().trim()
+      value: (row[valueIndex] || '').toString().trim(),
+      valueNumber: parseCurrencyToNumber(row[valueIndex] || '')
     }))
     .filter((entry) => entry.name);
 };
