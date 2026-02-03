@@ -128,3 +128,11 @@ No menu **Metas e campanhas → Campanhas individuais**, use o cartão “Imagem
 - **Selecionar um arquivo** e gerar o base64 automaticamente, ou
 - **Colar o base64** direto no campo e clicar em **Salvar imagem**.
 Isso salva localmente no navegador, sem adicionar arquivos binários ao Git.
+
+## Como manter o ranking atualizado com Google Sheets
+Para o ranking acompanhar as alterações da sua planilha automaticamente, faça:
+1. **Publique a planilha**: no Google Sheets vá em **Arquivo → Publicar na web** e publique a aba **Analise Vendas Fevereiro**.
+2. **Garanta acesso público**: a publicação precisa estar visível para “qualquer pessoa com o link”.
+3. O sistema busca o CSV pela aba publicada e atualiza o ranking automaticamente.
+
+> O front-end faz nova leitura a cada 5 minutos. Se você atualizar a planilha, o ranking será atualizado sem precisar reiniciar o servidor (apenas manter o navegador aberto). Se a planilha estiver privada ou não publicada, o sistema vai usar o fallback local.

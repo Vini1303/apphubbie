@@ -429,6 +429,8 @@ const buildRankingFromRows = (rows) => {
     .filter((entry) => entry.name);
 };
 
+const rankingRefreshMs = 5 * 60 * 1000;
+
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
   const gid = '1940056038';
@@ -785,6 +787,7 @@ reminderForm.addEventListener('submit', (event) => {
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 fetchRankingFromSheets();
+setInterval(fetchRankingFromSheets, rankingRefreshMs);
 loadSession();
 initializeLoginHero();
 initializeLoginHeroUpload();
