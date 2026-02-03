@@ -235,10 +235,10 @@ const setLoggedInView = () => {
 const setLoggedOutView = () => {
   loginCard.style.display = 'grid';
   content.style.display = 'none';
-  sidebar.style.display = 'none';
-  document.body.classList.add('is-login');
+  sidebar.style.display = 'flex';
+  document.body.classList.remove('is-login');
   if (topbar) {
-    topbar.style.display = 'none';
+    topbar.style.display = 'flex';
   }
 };
 
