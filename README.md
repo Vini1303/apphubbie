@@ -137,6 +137,12 @@ Para o ranking acompanhar as alterações da sua planilha automaticamente, faça
 
 > O front-end faz nova leitura a cada 1 minuto. Se você atualizar a planilha, o ranking será atualizado sem precisar reiniciar o servidor (apenas manter o navegador aberto). Se a planilha estiver privada ou não publicada, o sistema vai usar o fallback local.
 
+### Mapeamento das células da Produção mensal
+O bloco **Produção mensal** lê valores fixos da planilha:
+- **Equipes**: linha 2 a 8, com **Total mensal** na coluna **M** e **Meta** na coluna **N** (Tróia, Meteor, Chronos, Constellation, Maktub, Titan, Suits).
+- **Total do mês**: coluna **L**, linha **13**.
+- **Meta final**: coluna **L**, linha **22**.
+
 ### Atualização automática mesmo com o navegador fechado
 Para atualizar o ranking mesmo sem navegador aberto, o servidor agora mantém um **cache do CSV**:
 1. Publique a planilha (mesmos passos acima).
