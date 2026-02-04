@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hubbie Consórcio - Painel Comercial</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <aside class="sidebar" id="sidebar">
+        <button class="brand" id="brandToggle" type="button">
+          <img src="hubbie-logo.svg" alt="Logo Hubbie" />
+          <span>Hubbie</span>
+        </button>
+        <nav class="menu" id="menu">
+          <button class="menu__item is-active" data-section="inicio" data-roles="Comercial,Gestor,TI">
+            Início
+          </button>
+          <button class="menu__item" data-section="carteira" data-roles="Comercial,TI">
+            Carteira de clientes
+          </button>
+          <button class="menu__item" data-section="boletos" data-roles="Comercial,Gestor,TI">
+            Boletos e vencimentos
+          </button>
+          <button class="menu__item" data-section="metas" data-roles="Comercial,Gestor,TI">
+            Metas e campanhas
+          </button>
+          <button class="menu__item" data-section="ranking" data-roles="Comercial,Gestor,TI">
+            Ranking e pontuação
+          </button>
+          <button class="menu__item" data-section="robos" data-roles="Comercial,Gestor,TI">
+            Robôs
+          </button>
+          <button class="menu__item" data-section="agenda" data-roles="Comercial,Gestor,TI">
+            Agenda e lembretes
+          </button>
+          <button class="menu__item" data-section="relatorio-consultor" data-roles="Gestor,TI">
+            Relatório de consultor
+          </button>
+          <button class="menu__item" data-section="minha-operacao" data-roles="Gestor,TI">
+            Minha operação
+          </button>
+          <button class="menu__item" data-section="comunicacao" data-roles="TI">
+            Comunicação
+          </button>
+          <button class="menu__item" data-section="relatorios" data-roles="TI">
+            Relatórios
+          </button>
+          <button class="menu__item menu__item--logout" data-section="logout" data-roles="Comercial,Gestor,TI">
+            Sair
+          </button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar" id="topbar">
+          <div>
+            <h1>Painel Comercial</h1>
+            <p>Gestão da equipe e performance em tempo real.</p>
+          </div>
+          <div class="user-summary" id="userSummary">
+            <span class="badge" id="userRole">Comercial</span>
+            <span id="userName">Convidado</span>
+          </div>
+        </header>
+
+        <section class="login" id="loginCard">
+          <div class="login__media" id="loginMedia" aria-hidden="true"></div>
+          <div class="login__panel">
+            <div class="card login__card">
+              <h2>Login</h2>
+              <p>Acesse com seu usuário e senha para ver sua carteira e metas.</p>
+              <form id="loginForm">
+                <label>
+                  Usuário
+                  <input type="text" id="loginUser" placeholder="ex: ana.souza" required />
+                </label>
+                <label>
+                  Senha
+                  <input type="password" id="loginPass" placeholder="••••••" required />
+                </label>
+                <label>
+                  Perfil
+                  <select id="loginRole">
+                    <option value="Comercial">Comercial</option>
+                    <option value="Gestor">Gestor</option>
+                    <option value="TI">TI/Administrador</option>
+                  </select>
+                </label>
+                <button type="submit">Entrar</button>
+              </form>
+            </div>
+            <div class="card login__upload" id="loginHeroUpload">
+              <h3>Imagem do login</h3>
+              <p class="sub">Cole a imagem em base64 para aparecer ao lado do login.</p>
+              <div class="upload-grid">
+                <label class="upload-field">
+                  <span>Arquivo</span>
+                  <input type="file" id="loginHeroFile" accept="image/*" />
+                </label>
+                <label class="upload-field">
+                  <span>Base64</span>
+                  <textarea
+                    id="loginHeroBase64"
+                    rows="4"
+                    placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                  ></textarea>
+                </label>
+              </div>
+              <div class="upload-actions">
+                <button type="button" class="btn" id="saveLoginHeroImage">Salvar imagem</button>
+                <button type="button" class="btn btn--ghost" id="clearLoginHeroImage">Limpar</button>
+              </div>
+              <small class="upload-hint" id="loginHeroStatus"></small>
+            </div>
+          </div>
+        </section>
+
+        <section class="content" id="content">
+          <div class="section" data-section="inicio">
+            <div class="grid">
+              <article class="card">
+                <h3>Meta mensal</h3>
+                <p class="metric" id="monthlyGoal">R$ 280.000</p>
+                <p class="sub">Realizado: <strong id="monthlyProgress">R$ 172.500</strong></p>
+                <div class="progress">
+                  <div class="progress__bar" id="monthlyBar"></div>
+                </div>
+              </article>
+
+              <article class="card">
+                <h3>Pontuação individual</h3>
+                <p class="metric" id="userPoints">420 pts</p>
+                <p class="sub">Faltam <strong id="pointsRemaining">80 pts</strong> para a campanha Ouro.</p>
+                <ul class="list" id="pointsBreakdown"></ul>
+              </article>
+
+              <article class="card">
+                <h3>Ranking geral</h3>
+                <ol class="list" id="rankingList"></ol>
+              </article>
+
+              <article class="card">
+                <h3>Alertas de boletos</h3>
+                <ul class="list" id="billAlerts"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="carteira">
+            <div class="card">
+              <h3>Carteira de clientes</h3>
+              <div class="filters">
+                <input type="search" id="clientSearch" placeholder="Buscar cliente" />
+                <select id="clientStatusFilter">
+                  <option value="">Todos os status</option>
+                  <option value="Em negociação">Em negociação</option>
+                  <option value="Aguardando pagamento">Aguardando pagamento</option>
+                  <option value="Pago">Pago</option>
+                  <option value="Inadimplente">Inadimplente</option>
+                  <option value="Cancelado">Cancelado</option>
+                  <option value="Tentando contato">Tentando contato</option>
+                </select>
+              </div>
+              <ul class="list" id="clientList"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="boletos">
+            <div class="card">
+              <h3>Boletos e vencimentos</h3>
+              <p class="sub">Acompanhe status, atrasos e próximos vencimentos.</p>
+              <ul class="list" id="billDetails"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="metas">
+            <div class="subnav">
+              <button class="subnav__item is-active" data-subsection="campanhas-individuais">
+                Campanhas individuais
+              </button>
+              <button class="subnav__item" data-subsection="campanhas-coletivas">
+                Campanhas coletivas
+              </button>
+            </div>
+
+            <div class="subsection is-active" data-subsection="campanhas-individuais">
+              <div class="card campaign-upload" id="puntaCanaUploadCard">
+                <h3>Imagem da campanha: Punta Cana</h3>
+                <p class="sub">Cole uma imagem em base64 ou selecione um arquivo para gerar localmente.</p>
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Arquivo</span>
+                    <input type="file" id="puntaCanaFile" accept="image/*" />
+                  </label>
+                  <label class="upload-field">
+                    <span>Base64</span>
+                    <textarea
+                      id="puntaCanaBase64"
+                      rows="4"
+                      placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="btn" id="savePuntaCanaImage">Salvar imagem</button>
+                  <button type="button" class="btn btn--ghost" id="clearPuntaCanaImage">Limpar</button>
+                </div>
+                <small class="upload-hint" id="puntaCanaStatus"></small>
+              </div>
+              <div class="card campaign-upload" id="gramadoUploadCard">
+                <h3>Imagem da campanha: Gramado</h3>
+                <p class="sub">Cole uma imagem em base64 ou selecione um arquivo para gerar localmente.</p>
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Arquivo</span>
+                    <input type="file" id="gramadoFile" accept="image/*" />
+                  </label>
+                  <label class="upload-field">
+                    <span>Base64</span>
+                    <textarea
+                      id="gramadoBase64"
+                      rows="4"
+                      placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="btn" id="saveGramadoImage">Salvar imagem</button>
+                  <button type="button" class="btn btn--ghost" id="clearGramadoImage">Limpar</button>
+                </div>
+                <small class="upload-hint" id="gramadoStatus"></small>
+              </div>
+              <div class="card campaign-upload" id="lisboaUploadCard">
+                <h3>Imagem da campanha: Lisboa</h3>
+                <p class="sub">Cole uma imagem em base64 ou selecione um arquivo para gerar localmente.</p>
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Arquivo</span>
+                    <input type="file" id="lisboaFile" accept="image/*" />
+                  </label>
+                  <label class="upload-field">
+                    <span>Base64</span>
+                    <textarea
+                      id="lisboaBase64"
+                      rows="4"
+                      placeholder="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD..."
+                    ></textarea>
+                  </label>
+                </div>
+                <div class="upload-actions">
+                  <button type="button" class="btn" id="saveLisboaImage">Salvar imagem</button>
+                  <button type="button" class="btn btn--ghost" id="clearLisboaImage">Limpar</button>
+                </div>
+                <small class="upload-hint" id="lisboaStatus"></small>
+              </div>
+              <div class="campaign-grid" id="individualCampaigns"></div>
+            </div>
+
+            <div class="subsection" data-subsection="campanhas-coletivas">
+              <div class="grid">
+                <article class="card">
+                  <h3>Metas da empresa</h3>
+                  <ul class="list" id="companyGoals"></ul>
+                </article>
+                <article class="card">
+                  <h3>Campanhas em andamento</h3>
+                  <ul class="list" id="campaignList"></ul>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" data-section="ranking">
+            <div class="subnav">
+              <button class="subnav__item is-active" data-subsection="ranking-geral">
+                Ranking geral
+              </button>
+              <button class="subnav__item" data-subsection="ranking-equipes">
+                Ranking equipes
+              </button>
+            </div>
+            <div class="subsection is-active" data-subsection="ranking-geral">
+              <div class="grid">
+                <article class="card">
+                  <h3>Ranking geral</h3>
+                  <ol class="list" id="rankingFull"></ol>
+                </article>
+              </div>
+            </div>
+            <div class="subsection" data-subsection="ranking-equipes">
+              <section class="team-ranking-visual">
+                <header class="team-ranking-visual__header">
+                  <h3>Produção mensal</h3>
+                </header>
+                <div class="team-ranking-visual__content">
+                  <div class="team-ranking-visual__summary">
+                    <div class="team-ranking-visual__ring" id="teamRankingRing">
+                      <span id="teamRankingPercent">0%</span>
+                    </div>
+                    <div class="team-ranking-visual__totals">
+                      <p>Meta: <strong id="teamRankingGoal">R$ 0,00</strong></p>
+                      <p>Atualmente: <strong id="teamRankingCurrent">R$ 0,00</strong></p>
+                    </div>
+                  </div>
+                  <div class="team-ranking-visual__list">
+                    <ol class="team-ranking" id="teamRankingList"></ol>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+
+          <div class="section" data-section="robos">
+            <div class="card robot-panel">
+              <header class="robot-panel__header">
+                <div>
+                  <h3>Robôs</h3>
+                  <p class="sub">Selecione a automação que deseja executar.</p>
+                </div>
+                <div class="robot-panel__tabs">
+                  <button class="robot-tab is-active" data-robot-tab="contratos">Contratos</button>
+                  <button class="robot-tab" data-robot-tab="boletos">Boletos</button>
+                  <button class="robot-tab" data-robot-tab="contemplados">Contemplados</button>
+                </div>
+              </header>
+
+              <div class="robot-tab__content is-active" data-robot-content="contratos">
+                <div class="robot-search">
+                  <label>
+                    Número do contrato
+                    <div class="robot-search__field">
+                      <input type="text" id="contractSearch" placeholder="Ex: 40411213" />
+                      <button type="button" class="ghost" id="contractSearchButton">Buscar</button>
+                    </div>
+                  </label>
+                  <label>
+                    Conta
+                    <select id="contractAccount">
+                      <option value="ATGGOLD">ATGGOLD</option>
+                      <option value="USECRED FIAT">USECRED FIAT</option>
+                      <option value="SOLAR PRIME">SOLAR PRIME</option>
+                    </select>
+                  </label>
+                  <div class="robot-search__actions">
+                    <button type="button" id="contractEmitButton">Emitir contrato</button>
+                    <small class="robot-status" id="contractStatus"></small>
+                  </div>
+                </div>
+                <div class="robot-files">
+                  <h4>Arquivos encontrados</h4>
+                  <ul class="robot-file-list" id="contractFiles"></ul>
+                </div>
+              </div>
+
+              <div class="robot-tab__content" data-robot-content="boletos">
+                <div class="robot-search">
+                  <label>
+                    Número do contrato
+                    <div class="robot-search__field">
+                      <input type="text" id="boletoSearch" placeholder="Ex: 40311211" />
+                      <button type="button" class="ghost" id="boletoSearchButton">Buscar</button>
+                    </div>
+                  </label>
+                  <label>
+                    Conta
+                    <select id="boletoAccount">
+                      <option value="USECRED FIAT">USECRED FIAT</option>
+                      <option value="ATGGOLD">ATGGOLD</option>
+                      <option value="SOLAR PRIME">SOLAR PRIME</option>
+                    </select>
+                  </label>
+                  <div class="robot-search__actions">
+                    <button type="button" id="boletoEmitButton">Emitir boleto</button>
+                    <small class="robot-status" id="boletoStatus"></small>
+                  </div>
+                </div>
+                <div class="robot-files">
+                  <h4>Arquivos encontrados</h4>
+                  <ul class="robot-file-list" id="boletoFiles"></ul>
+                </div>
+              </div>
+
+              <div class="robot-tab__content" data-robot-content="contemplados">
+                <div class="robot-files">
+                  <h4>Contemplados do mês</h4>
+                  <ul class="robot-contemplados" id="contempladosList"></ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" data-section="agenda">
+            <div class="grid">
+              <article class="card">
+                <h3>Agenda e lembretes</h3>
+                <form id="reminderForm">
+                  <label>
+                    Cliente
+                    <input type="text" id="reminderClient" placeholder="Nome do cliente" required />
+                  </label>
+                  <label>
+                    Horário
+                    <input type="time" id="reminderTime" required />
+                  </label>
+                  <label>
+                    Nota
+                    <input type="text" id="reminderNote" placeholder="Ex: Enviar boleto atualizado" />
+                  </label>
+                  <button type="submit">Adicionar lembrete</button>
+                </form>
+                <ul class="list" id="reminderList"></ul>
+              </article>
+              <article class="card">
+                <h3>Indicadores rápidos</h3>
+                <ul class="list" id="quickIndicators"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="comunicacao">
+            <div class="card">
+              <h3>Comunicação com clientes</h3>
+              <ul class="list" id="communicationList"></ul>
+            </div>
+          </div>
+
+          <div class="section" data-section="relatorios">
+            <div class="grid">
+              <article class="card">
+                <h3>Relatórios e auditoria</h3>
+                <ul class="list" id="reportList"></ul>
+              </article>
+              <article class="card">
+                <h3>Gráficos de meta mensal</h3>
+                <ul class="list" id="chartsList"></ul>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="relatorio-consultor">
+            <div class="grid">
+              <article class="card">
+                <h3>Relatório de consultor</h3>
+                <p class="sub">Avaliação interna do consultor (0 a 10).</p>
+                <form class="consultor-form" id="consultorForm">
+                  <label>
+                    Consultor
+                    <input type="text" id="consultorNome" placeholder="Nome do consultor" />
+                  </label>
+                  <div class="consultor-scores">
+                    <label>Comprometimento <input type="number" min="0" max="10" value="8" id="scoreComprometimento" /></label>
+                    <label>Faltas <input type="number" min="0" max="10" value="9" id="scoreFaltas" /></label>
+                    <label>Pontualidade <input type="number" min="0" max="10" value="8" id="scorePontualidade" /></label>
+                    <label>Desempenho <input type="number" min="0" max="10" value="7" id="scoreDesempenho" /></label>
+                    <label>Números <input type="number" min="0" max="10" value="7" id="scoreNumeros" /></label>
+                    <label>Responsabilidade <input type="number" min="0" max="10" value="8" id="scoreResponsabilidade" /></label>
+                    <label>Engajamento <input type="number" min="0" max="10" value="8" id="scoreEngajamento" /></label>
+                  </div>
+                  <button type="button" id="calcularNotaConsultor">Calcular média</button>
+                  <p class="consultor-resultado" id="consultorResultado">Média geral: 0</p>
+                </form>
+              </article>
+              <article class="card">
+                <h3>Observações</h3>
+                <textarea rows="10" placeholder="Escreva observações sobre o consultor"></textarea>
+              </article>
+            </div>
+          </div>
+
+          <div class="section" data-section="minha-operacao">
+            <div class="grid">
+              <article class="card">
+                <h3>Minha operação</h3>
+                <p class="sub">Resumo da operação e metas por consultor.</p>
+                <div class="operacao-form">
+                  <label>
+                    Operação
+                    <select id="operacaoNome">
+                      <option value="Tróia">Tróia</option>
+                      <option value="Meteor">Meteor</option>
+                      <option value="Chronos">Chronos</option>
+                      <option value="Constellation">Constellation</option>
+                    </select>
+                  </label>
+                  <label>
+                    Meta da operação (R$)
+                    <input type="text" id="operacaoMeta" value="5.500.000" />
+                  </label>
+                  <label>
+                    Campanha atual (pontos)
+                    <input type="text" id="operacaoCampanha" value="1200" />
+                  </label>
+                  <label>
+                    Número da sala
+                    <input type="text" id="operacaoSala" value="Sala 02" />
+                  </label>
+                  <label>
+                    Pessoas na operação
+                    <input type="number" id="operacaoPessoas" min="1" max="14" value="10" />
+                  </label>
+                </div>
+                <div class="operacao-resumo">
+                  <div>
+                    <strong>Falta para meta</strong>
+                    <span id="operacaoFalta">R$ 0,00</span>
+                  </div>
+                  <div>
+                    <strong>Média por consultor</strong>
+                    <span id="operacaoMedia">R$ 0,00</span>
+                  </div>
+                  <div>
+                    <strong>Valor por consultor</strong>
+                    <span id="operacaoPorConsultor">R$ 0,00</span>
+                  </div>
+                </div>
+              </article>
+              <article class="card">
+                <h3>Notas rápidas</h3>
+                <ul class="list">
+                  <li><span>Falta para atingir campanha</span><span id="operacaoCampanhaFalta">0 pts</span></li>
+                  <li><span>Média por consultor (meta)</span><span id="operacaoMetaConsultor">R$ 0,00</span></li>
+                  <li><span>Consultores ativos</span><span id="operacaoConsultores">0</span></li>
+                </ul>
+              </article>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script src="images.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

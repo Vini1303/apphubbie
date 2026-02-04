@@ -1,0 +1,10 @@
+{
+  "name": "consorcio-comercial",
+  "version": "1.0.0",
+  "description": "Sistema comercial básico (app + web) para consórcio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "license": "UNLICENSED"
+}
