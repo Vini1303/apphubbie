@@ -14,6 +14,7 @@ const lembretesList = document.getElementById("lembretes");
 const robosList = document.getElementById("robos");
 const metaProgress = document.getElementById("meta-progress");
 const metaText = document.getElementById("meta-text");
+codex-safe/consorcio-gestao
 const logoButton = document.getElementById("logo-button");
 const rankingValue = document.getElementById("ranking-value");
 const pontuacaoValue = document.getElementById("pontuacao-value");
@@ -32,6 +33,7 @@ const setActiveSection = (sectionId) => {
     item.classList.toggle("is-active", item.dataset.section === sectionId);
   });
 };
+main
 
 const storeToken = (token) => localStorage.setItem("token", token);
 const getToken = () => localStorage.getItem("token");
@@ -74,12 +76,15 @@ const renderDashboard = (payload) => {
   userRole.textContent = `${payload.user.role} • ${payload.user.team}`;
 
   renderMetrics(payload.metrics);
+codex-safe/consorcio-gestao
   if (rankingValue) {
     rankingValue.textContent = `#${payload.metrics.rankingGeral}`;
   }
   if (pontuacaoValue) {
     pontuacaoValue.textContent = formatNumber(payload.metrics.pontuacaoMes);
   }
+
+main
 
   renderList(
     carteiraList,
@@ -148,10 +153,14 @@ const renderDashboard = (payload) => {
 
 const fetchDashboard = async () => {
   const token = getToken();
+codex-safe/consorcio-gestao
   if (!token) {
     setLoggedOut(true);
     return;
   }
+
+  if (!token) return;
+main
 
   const response = await fetch("/api/dashboard", {
     headers: {
@@ -163,7 +172,9 @@ const fetchDashboard = async () => {
     clearToken();
     loginSection.hidden = false;
     dashboardSection.hidden = true;
+codex-safe/consorcio-gestao
     setLoggedOut(true);
+main
     return;
   }
 
@@ -171,8 +182,11 @@ const fetchDashboard = async () => {
   renderDashboard(payload);
   loginSection.hidden = true;
   dashboardSection.hidden = false;
+codex-safe/consorcio-gestao
   setLoggedOut(false);
   setActiveSection("inicio");
+
+main
 };
 
 loginForm.addEventListener("submit", async (event) => {
@@ -209,6 +223,7 @@ logoutButton.addEventListener("click", () => {
   clearToken();
   dashboardSection.hidden = true;
   loginSection.hidden = false;
+codex-safe/consorcio-gestao
   setLoggedOut(true);
 });
 
@@ -228,6 +243,8 @@ menu?.addEventListener("click", (event) => {
   const sectionId = target.dataset.section;
   if (!sectionId) return;
   setActiveSection(sectionId);
+
+main
 });
 
 robosList.addEventListener("click", async (event) => {
@@ -249,5 +266,8 @@ robosList.addEventListener("click", async (event) => {
   }, 1500);
 });
 
+codex-safe/consorcio-gestao
 setLoggedOut(true);
+
+main
 fetchDashboard();
