@@ -14,6 +14,163 @@ body {
   padding: 0;
 }
 
+codex-safe/consorcio-gestao
+.layout {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  background: #f5f7fb;
+}
+
+.logged-out .sidebar {
+  display: none;
+}
+
+.logged-out .content {
+  padding: 0;
+}
+
+.logged-out .layout {
+  grid-template-columns: 1fr;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #e2e8f0;
+  padding: 24px 16px;
+  display: grid;
+  gap: 24px;
+}
+
+.logo {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  width: 140px;
+  height: auto;
+}
+
+.menu {
+  display: grid;
+  gap: 8px;
+}
+
+.menu-item {
+  text-decoration: none;
+  color: #334155;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.menu-item:hover,
+.menu-item:focus {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.menu-item.is-active {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.content {
+  padding: 32px;
+  display: grid;
+  gap: 24px;
+}
+
+.login {
+  min-height: 100vh;
+  display: grid;
+}
+
+.login-wrapper {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  min-height: 100vh;
+}
+
+.login-hero {
+  background: linear-gradient(145deg, rgba(109, 40, 217, 0.85), rgba(124, 58, 237, 0.85)),
+    url("login-hero-bg.svg");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 56px 64px;
+  display: grid;
+  align-content: center;
+  gap: 16px;
+}
+
+.hero-badge {
+  width: 120px;
+  height: 120px;
+}
+
+.hero-badge img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+}
+
+.login-title {
+  font-size: 40px;
+  margin: 0;
+}
+
+.login-subtitle {
+  font-size: 16px;
+  margin: 0 0 16px;
+}
+
+.hero-word {
+  font-size: 96px;
+  font-weight: 800;
+  letter-spacing: 6px;
+  line-height: 1;
+  background-image: url("hero-texture.svg");
+  background-size: cover;
+  background-position: center;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  opacity: 0.9;
+}
+
+.login-form-panel {
+  display: grid;
+  align-content: center;
+  padding: 56px;
+  gap: 16px;
+  background: #fff;
+}
+
+.login-form-panel h2 {
+  margin: 0;
+}
+
+.login-form-panel p {
+  margin: 0 0 16px;
 .app {
   min-height: 100vh;
   padding: 32px;
@@ -30,6 +187,7 @@ body {
 
 .login h1 {
   margin: 0 0 8px;
+main
 }
 
 form {
@@ -55,7 +213,11 @@ button {
   border: none;
   border-radius: 10px;
   padding: 12px 16px;
+codex-safe/consorcio-gestao
+  background: #6d28d9;
+
   background: #2563eb;
+main
   color: #fff;
   font-weight: 600;
   cursor: pointer;
@@ -82,6 +244,17 @@ button.logout {
   gap: 24px;
 }
 
+codex-safe/consorcio-gestao
+.section {
+  display: grid;
+  gap: 16px;
+}
+
+.section.hidden {
+  display: none;
+}
+
+main
 .dashboard-header {
   display: flex;
   align-items: center;
@@ -150,6 +323,46 @@ button.logout {
   font-weight: 600;
 }
 
+codex-safe/consorcio-gestao
+.panel-muted {
+  margin: 6px 0 12px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.ranking-summary {
+  display: grid;
+  gap: 8px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.checklist li {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #f8fafc;
+  font-size: 14px;
+}
+
+main
 .progress {
   height: 12px;
   background: #e2e8f0;
@@ -165,8 +378,40 @@ button.logout {
   transition: width 0.3s ease;
 }
 
+codex-safe/consorcio-gestao
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .login-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 720px) {
+  .content {
+    padding: 20px;
+  }
+
+  .login-hero,
+  .login-form-panel {
+    padding: 32px;
+  }
+
+  .hero-word {
+    font-size: 64px;
+  }
+
 @media (max-width: 720px) {
   .app {
     padding: 20px;
   }
+main
 }
