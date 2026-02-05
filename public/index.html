@@ -35,6 +35,11 @@
           <button class="menu__item" data-section="agenda" data-roles="Comercial,Gestor,TI">
             Agenda e lembretes
           </button>
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
+          <button class="menu__item" data-section="chamados" data-roles="Comercial,Gestor,TI">
+            Chamados
+          </button>
+codex/develop-comprehensive-consorcio-management-system
           <button class="menu__item" data-section="relatorio-consultor" data-roles="Gestor,TI">
             Relatório de consultor
           </button>
@@ -419,6 +424,261 @@
             </div>
           </div>
 
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
+          <div class="section" data-section="chamados">
+            <div class="card chamados-panel">
+              <header class="chamados-panel__header">
+                <div>
+                  <h3>Chamados</h3>
+                  <p class="sub">Acompanhe e registre suas solicitações.</p>
+                </div>
+                <div class="chamados-tabs">
+                  <button class="chamados-tab is-active" data-chamados-tab="pessoal" data-roles="Comercial,Gestor">
+                    Chamado pessoal
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="equipe" data-roles="Gestor">
+                    Chamado equipe
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="abrir" data-roles="Comercial,Gestor">
+                    Abrir chamado
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="ti-dashboard" data-roles="TI">
+                    Dashboard TI
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="ti-detalhe" data-roles="TI">
+                    Detalhe chamado
+                  </button>
+                </div>
+              </header>
+
+              <div class="chamados-content is-active" data-chamados-content="pessoal" data-roles="Comercial,Gestor">
+                <div class="chamados-layout">
+                  <div class="chamados-status">
+                    <div class="chamado-status">
+                      <span class="status-dot status--novo"></span>
+                      Novo
+                      <span class="status-count">3</span>
+                    </div>
+                    <div class="chamado-status status--em-atendimento">
+                      Em atendimento
+                      <span class="status-count">1</span>
+                    </div>
+                    <div class="chamado-status status--pendente">
+                      Pendente
+                      <span class="status-count">2</span>
+                    </div>
+                    <div class="chamado-status status--solucionado">
+                      Solucionado
+                      <span class="status-count">4</span>
+                    </div>
+                    <div class="chamado-status status--fechado">
+                      Fechado
+                      <span class="status-count">1</span>
+                    </div>
+                    <div class="chamado-status status--excluido">
+                      Excluído
+                      <span class="status-count">0</span>
+                      <span class="trash">🗑️</span>
+                    </div>
+                  </div>
+                  <div class="chamados-list">
+                    <article class="chamado-card status--novo">
+                      <div>
+                        <strong>Chamado #1024</strong>
+                        <p>Problema no headset do consultor.</p>
+                        <small>Categoria: Headset • Equipe Tróia</small>
+                      </div>
+                      <span class="status-pill">Novo</span>
+                    </article>
+                    <article class="chamado-card status--em-atendimento">
+                      <div>
+                        <strong>Chamado #1023</strong>
+                        <p>CPU com lentidão na sala 02.</p>
+                        <small>Categoria: CPU • Equipe Chronos</small>
+                      </div>
+                      <span class="status-pill">Em atendimento</span>
+                    </article>
+                    <article class="chamado-card status--pendente">
+                      <div>
+                        <strong>Chamado #1018</strong>
+                        <p>Teclado com teclas travando.</p>
+                        <small>Categoria: Teclado • Equipe Suits</small>
+                      </div>
+                      <span class="status-pill">Pendente</span>
+                    </article>
+                  </div>
+                  <aside class="chamados-summary">
+                    <h4>Seus chamados</h4>
+                    <ul>
+                      <li><span>Total abertos</span><strong>6</strong></li>
+                      <li><span>Em atendimento</span><strong>1</strong></li>
+                      <li><span>Pendentes</span><strong>2</strong></li>
+                      <li><span>Solucionados</span><strong>4</strong></li>
+                    </ul>
+                  </aside>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="equipe" data-roles="Gestor">
+                <div class="chamados-layout">
+                  <div class="chamados-filter-top">
+                    <span>Filtro:</span>
+                    <button class="chip is-active">Todos</button>
+                    <button class="chip">Equipe Tróia</button>
+                    <button class="chip">Equipe Chronos</button>
+                    <button class="chip">Equipe Suits</button>
+                  </div>
+                  <div class="chamados-list">
+                    <article class="chamado-card status--novo">
+                      <div>
+                        <strong>Chamado #2011</strong>
+                        <p>Monitor com falha de imagem.</p>
+                        <small>Categoria: Monitor • Equipe Tróia</small>
+                      </div>
+                      <span class="status-pill">Novo</span>
+                    </article>
+                    <article class="chamado-card status--pendente">
+                      <div>
+                        <strong>Chamado #2008</strong>
+                        <p>Mouse sem resposta.</p>
+                        <small>Categoria: Mouse • Equipe Meteor</small>
+                      </div>
+                      <span class="status-pill">Pendente</span>
+                    </article>
+                  </div>
+                  <aside class="chamados-summary">
+                    <h4>Equipe</h4>
+                    <ul>
+                      <li><span>Chamados abertos</span><strong>12</strong></li>
+                      <li><span>Em atendimento</span><strong>3</strong></li>
+                      <li><span>Pendentes</span><strong>4</strong></li>
+                      <li><span>Fechados</span><strong>5</strong></li>
+                    </ul>
+                  </aside>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="abrir" data-roles="Comercial,Gestor">
+                <form class="chamado-form">
+                  <div class="form-grid">
+                    <label>
+                      Categoria
+                      <select id="chamadoCategoria">
+                        <option>4NET</option>
+                        <option>Headset</option>
+                        <option>Mouse</option>
+                        <option>Teclado</option>
+                        <option>CPU</option>
+                        <option>Monitor</option>
+                        <option>Convert</option>
+                        <option>RD Station</option>
+                        <option>Pilhas</option>
+                        <option>Celular</option>
+                      </select>
+                    </label>
+                    <label>
+                      Equipe
+                      <select id="chamadoEquipe">
+                        <option>Equipe Tróia</option>
+                        <option>Equipe Chronos</option>
+                        <option>Equipe Suits</option>
+                        <option>Equipe Meteor</option>
+                        <option>Equipe Titan</option>
+                        <option>Equipe Maktub</option>
+                        <option>Equipe Constellation</option>
+                      </select>
+                    </label>
+                    <label class="form-full">
+                      Título
+                      <input type="text" placeholder="Assunto do problema" />
+                    </label>
+                    <label class="form-full">
+                      Descrição
+                      <textarea rows="6" placeholder="Descreva o problema"></textarea>
+                    </label>
+                    <label class="form-full">
+                      Fotos/arquivos (até 5MB)
+                      <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
+                      <small>Formatos permitidos: PDF, JPG, PNG, DOC (até 5MB por arquivo).</small>
+                    </label>
+                  </div>
+                  <button type="button" class="primary">Abrir chamado</button>
+                </form>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="ti-dashboard" data-roles="TI">
+                <div class="ti-dashboard">
+                  <div class="ti-card">
+                    <h4>Chamados novos</h4>
+                    <strong>12</strong>
+                  </div>
+                  <div class="ti-card">
+                    <h4>Em atendimento</h4>
+                    <strong>8</strong>
+                  </div>
+                  <div class="ti-card">
+                    <h4>Pendentes</h4>
+                    <strong>5</strong>
+                  </div>
+                  <div class="ti-card">
+                    <h4>Solucionados</h4>
+                    <strong>18</strong>
+                  </div>
+                  <div class="ti-card">
+                    <h4>Fechados</h4>
+                    <strong>22</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="ti-detalhe" data-roles="TI">
+                <div class="ti-detalhe">
+                  <div class="ti-thread">
+                    <div class="ti-message">
+                      <strong>Consultor</strong>
+                      <p>Olá, meu monitor está piscando e fica preto.</p>
+                      <small>10:42</small>
+                    </div>
+                    <div class="ti-message ti-message--reply">
+                      <strong>TI</strong>
+                      <p>Vamos verificar. Pode enviar a etiqueta do monitor?</p>
+                      <small>10:50</small>
+                    </div>
+                  </div>
+                  <div class="ti-side">
+                    <label>
+                      Status do chamado
+                      <select>
+                        <option>Novo</option>
+                        <option>Em andamento</option>
+                        <option>Pendente</option>
+                        <option>Solucionado</option>
+                        <option>Fechado</option>
+                      </select>
+                    </label>
+                    <label>
+                      Categoria
+                      <select>
+                        <option>Monitor</option>
+                        <option>CPU</option>
+                        <option>Headset</option>
+                        <option>Mouse</option>
+                        <option>Teclado</option>
+                        <option>4NET</option>
+                      </select>
+                    </label>
+                    <label class="form-full">
+                      Resposta/Atualização
+                      <textarea rows="5" placeholder="Digite a resposta..."></textarea>
+                    </label>
+                    <button type="button" class="primary">Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+ codex/develop-comprehensive-consorcio-management-system
           <div class="section" data-section="comunicacao">
             <div class="card">
               <h3>Comunicação com clientes</h3>
