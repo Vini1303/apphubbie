@@ -69,8 +69,10 @@ const operacaoPorConsultor = document.getElementById('operacaoPorConsultor');
 const operacaoCampanhaFalta = document.getElementById('operacaoCampanhaFalta');
 const operacaoMetaConsultor = document.getElementById('operacaoMetaConsultor');
 const operacaoConsultores = document.getElementById('operacaoConsultores');
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
 const chamadosTabs = document.querySelectorAll('.chamados-tab');
 const chamadosContents = document.querySelectorAll('.chamados-content');
+codex/develop-comprehensive-consorcio-management-system
 
 let storedOverrides = {};
 try {
@@ -863,6 +865,7 @@ const setActiveRobotTab = (tabId) => {
   });
 };
 
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
 const setActiveChamadosTab = (tabId) => {
   chamadosTabs.forEach((tab) => {
     tab.classList.toggle('is-active', tab.dataset.chamadosTab === tabId);
@@ -900,6 +903,7 @@ const updateChamadosByRole = (role) => {
   }
 };
 
+codex/develop-comprehensive-consorcio-management-system
 const persistImageOverrides = (overrides) => {
   localStorage.setItem('hubbieImageOverrides', JSON.stringify(overrides));
 };
@@ -1075,9 +1079,15 @@ const loadSession = () => {
     state.user = JSON.parse(saved);
     userName.textContent = state.user.name;
     userRole.textContent = state.user.role;
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
   updateMenuByRole(state.user.role);
   setLoggedInView();
   renderDashboard();
+
+    updateMenuByRole(state.user.role);
+    setLoggedInView();
+    renderDashboard();
+codex/develop-comprehensive-consorcio-management-system
   } else {
     updateMenuByRole('Comercial');
     setLoggedOutView();
@@ -1154,6 +1164,7 @@ const updateMenuByRole = (role) => {
     const nextSection = visibleItems[0].dataset.section;
     setActiveSection(nextSection);
   }
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
 
   if (normalizedRole === 'TI') {
     setActiveChamadosTab('ti-dashboard');
@@ -1162,6 +1173,7 @@ const updateMenuByRole = (role) => {
   } else {
     setActiveChamadosTab('pessoal');
   }
+codex/develop-comprehensive-consorcio-management-system
 };
 
 subnavButtons.forEach((button) => {
@@ -1220,12 +1232,14 @@ robotTabs.forEach((tab) => {
   });
 });
 
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
 chamadosTabs.forEach((tab) => {
   tab.addEventListener('click', () => {
     setActiveChamadosTab(tab.dataset.chamadosTab);
   });
 });
 
+codex/develop-comprehensive-consorcio-management-system
 const filterRobotFiles = (items, query) =>
   items.filter((item) => item.id.toLowerCase().includes(query));
 
@@ -1300,7 +1314,9 @@ if (operacaoCampanhaInput) {
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 setActiveRobotTab('contratos');
+codex/desenvolver-sistema-de-gestao-para-consorcio-8ijo7q
 updateChamadosByRole('Comercial');
+codex/develop-comprehensive-consorcio-management-system
 renderOperacaoResumo();
 calcularMediaConsultor();
 fetchRankingFromSheets();
