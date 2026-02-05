@@ -963,6 +963,67 @@ button:hover {
   gap: 16px;
 }
 
+.ti-analytics {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.ti-analytics__card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ti-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.ti-metrics div {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 10px;
+  text-align: center;
+}
+
+.ti-chart {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  align-items: end;
+  margin-top: 12px;
+  height: 120px;
+}
+
+.ti-chart span {
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.ti-chart .bar {
+  width: 100%;
+  border-radius: 8px;
+  background: #60a5fa;
+}
+
+.ti-list {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+  display: grid;
+  gap: 10px;
+}
+
+.ti-list li {
+  display: flex;
+  justify-content: space-between;
+}
+
 .ti-card {
   background: #f8fafc;
   border: 1px solid #e5e7eb;

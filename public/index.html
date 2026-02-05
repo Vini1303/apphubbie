@@ -14,43 +14,43 @@
           <span>Hubbie</span>
         </button>
         <nav class="menu" id="menu">
-          <button class="menu__item is-active" data-section="inicio" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item is-active" data-section="inicio" data-roles="Comercial,Gestor,Administrador">
             Início
           </button>
-          <button class="menu__item" data-section="carteira" data-roles="Comercial,TI">
+          <button class="menu__item" data-section="carteira" data-roles="Comercial,Administrador">
             Carteira de clientes
           </button>
-          <button class="menu__item" data-section="boletos" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="boletos" data-roles="Comercial,Gestor,Administrador">
             Boletos e vencimentos
           </button>
-          <button class="menu__item" data-section="metas" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="metas" data-roles="Comercial,Gestor,Administrador">
             Metas e campanhas
           </button>
-          <button class="menu__item" data-section="ranking" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="ranking" data-roles="Comercial,Gestor,Administrador">
             Ranking e pontuação
           </button>
-          <button class="menu__item" data-section="robos" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="robos" data-roles="Comercial,Gestor,Administrador">
             Robôs
           </button>
-          <button class="menu__item" data-section="agenda" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="agenda" data-roles="Comercial,Gestor,Administrador">
             Agenda e lembretes
           </button>
-          <button class="menu__item" data-section="chamados" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item" data-section="chamados" data-roles="Comercial,Gestor,Administrador">
             Chamados
           </button>
-          <button class="menu__item" data-section="relatorio-consultor" data-roles="Gestor,TI">
+          <button class="menu__item" data-section="relatorio-consultor" data-roles="Gestor,Administrador">
             Relatório de consultor
           </button>
-          <button class="menu__item" data-section="minha-operacao" data-roles="Gestor,TI">
+          <button class="menu__item" data-section="minha-operacao" data-roles="Gestor,Administrador">
             Minha operação
           </button>
-          <button class="menu__item" data-section="comunicacao" data-roles="TI">
+          <button class="menu__item" data-section="comunicacao" data-roles="Administrador">
             Comunicação
           </button>
-          <button class="menu__item" data-section="relatorios" data-roles="TI">
+          <button class="menu__item" data-section="relatorios" data-roles="Administrador">
             Relatórios
           </button>
-          <button class="menu__item menu__item--logout" data-section="logout" data-roles="Comercial,Gestor,TI">
+          <button class="menu__item menu__item--logout" data-section="logout" data-roles="Comercial,Gestor,Administrador">
             Sair
           </button>
         </nav>
@@ -439,10 +439,10 @@
                   <button class="chamados-tab" data-chamados-tab="abrir" data-roles="Comercial,Gestor">
                     Abrir chamado
                   </button>
-                  <button class="chamados-tab" data-chamados-tab="ti-dashboard" data-roles="TI">
+                  <button class="chamados-tab" data-chamados-tab="ti-dashboard" data-roles="Administrador">
                     Dashboard TI
                   </button>
-                  <button class="chamados-tab" data-chamados-tab="ti-detalhe" data-roles="TI">
+                  <button class="chamados-tab" data-chamados-tab="ti-detalhe" data-roles="Administrador">
                     Detalhe chamado
                   </button>
                 </div>
@@ -603,7 +603,7 @@
                 </form>
               </div>
 
-              <div class="chamados-content" data-chamados-content="ti-dashboard" data-roles="TI">
+              <div class="chamados-content" data-chamados-content="ti-dashboard" data-roles="Administrador">
                 <div class="ti-dashboard">
                   <div class="ti-card">
                     <h4>Chamados novos</h4>
@@ -626,9 +626,45 @@
                     <strong>22</strong>
                   </div>
                 </div>
+                <div class="ti-analytics">
+                  <div class="ti-analytics__card">
+                    <h4>Média de chamados</h4>
+                    <div class="ti-metrics">
+                      <div><span>Dia</span><strong>5,4</strong></div>
+                      <div><span>Mês</span><strong>162</strong></div>
+                      <div><span>Ano</span><strong>1.942</strong></div>
+                    </div>
+                  </div>
+                  <div class="ti-analytics__card">
+                    <h4>Chamados por período</h4>
+                    <div class="ti-chart">
+                      <span>Jan</span><div class="bar" style="height: 40%"></div>
+                      <span>Fev</span><div class="bar" style="height: 65%"></div>
+                      <span>Mar</span><div class="bar" style="height: 80%"></div>
+                      <span>Abr</span><div class="bar" style="height: 55%"></div>
+                      <span>Mai</span><div class="bar" style="height: 70%"></div>
+                    </div>
+                  </div>
+                  <div class="ti-analytics__card">
+                    <h4>Dias com mais chamados</h4>
+                    <ul class="ti-list">
+                      <li><span>Segunda-feira</span><strong>32%</strong></li>
+                      <li><span>Terça-feira</span><strong>24%</strong></li>
+                      <li><span>Quarta-feira</span><strong>18%</strong></li>
+                    </ul>
+                  </div>
+                  <div class="ti-analytics__card">
+                    <h4>Motivos mais comuns</h4>
+                    <ul class="ti-list">
+                      <li><span>Headset</span><strong>28%</strong></li>
+                      <li><span>Monitor</span><strong>22%</strong></li>
+                      <li><span>CPU</span><strong>19%</strong></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
 
-              <div class="chamados-content" data-chamados-content="ti-detalhe" data-roles="TI">
+              <div class="chamados-content" data-chamados-content="ti-detalhe" data-roles="Administrador">
                 <div class="ti-detalhe">
                   <div class="ti-thread">
                     <div class="ti-message">

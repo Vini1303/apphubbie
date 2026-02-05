@@ -891,7 +891,7 @@ const updateChamadosByRole = (role) => {
     content.style.display = visible ? '' : 'none';
   });
 
-  if (normalizedRole === 'TI') {
+  if (normalizedRole === 'Administrador') {
     setActiveChamadosTab('ti-dashboard');
   } else if (normalizedRole === 'Gestor') {
     setActiveChamadosTab('equipe');
@@ -1131,7 +1131,7 @@ const normalizeRole = (role) => {
     return 'Comercial';
   }
   if (role.toLowerCase().startsWith('ti')) {
-    return 'TI';
+    return 'Administrador';
   }
   return role;
 };
