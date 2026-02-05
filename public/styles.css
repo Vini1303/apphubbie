@@ -970,11 +970,82 @@ button:hover {
   gap: 16px;
 }
 
+.ti-analytics__card--wide {
+  grid-column: 1 / -1;
+}
+
 .ti-analytics__card {
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 16px;
   padding: 16px;
+}
+
+.ti-chart-line {
+  margin-top: 12px;
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+}
+
+.ti-chart-line svg {
+  width: 100%;
+  height: auto;
+}
+
+.ti-chart-line polyline {
+  fill: none;
+  stroke: #f59e0b;
+  stroke-width: 3;
+}
+
+.ti-chart-line .line-secondary {
+  stroke: #38bdf8;
+}
+
+.ti-chart-legend {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.legend::before {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 4px;
+  margin-right: 6px;
+}
+
+.legend--abertos::before {
+  background: #60a5fa;
+}
+
+.legend--solucionados::before {
+  background: #f59e0b;
+}
+
+.legend--atrasados::before {
+  background: #ef4444;
+}
+
+.legend--fechados::before {
+  background: #10b981;
+}
+
+.ti-chart-axis {
+  display: grid;
+  grid-template-columns: repeat(11, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
 }
 
 .ti-metrics {
