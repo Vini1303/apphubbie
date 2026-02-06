@@ -935,6 +935,8 @@ button:hover {
   border-radius: 999px;
   background: #fff;
   cursor: pointer;
+  color: #1f2937;
+  font-weight: 600;
 }
 
 .chip.is-active {
