@@ -430,17 +430,11 @@
                   <p class="sub">Acompanhe e registre suas solicitações.</p>
                 </div>
                 <div class="chamados-tabs">
-                  <button class="chamados-tab is-active" data-chamados-tab="pessoal" data-roles="Comercial,Gestor">
-                    Chamado pessoal
+                  <button class="chamados-tab is-active" data-chamados-tab="dashboard" data-roles="Comercial,Gestor,Administrador">
+                    Dashboard
                   </button>
-                  <button class="chamados-tab" data-chamados-tab="equipe" data-roles="Gestor">
-                    Chamado equipe
-                  </button>
-                  <button class="chamados-tab" data-chamados-tab="abrir" data-roles="Comercial,Gestor">
-                    Abrir chamado
-                  </button>
-                  <button class="chamados-tab" data-chamados-tab="ti-dashboard" data-roles="Administrador">
-                    Dashboard TI
+                  <button class="chamados-tab" data-chamados-tab="lista" data-roles="Comercial,Gestor,Administrador">
+                    Lista de chamados
                   </button>
                   <button class="chamados-tab" data-chamados-tab="ti-detalhe" data-roles="Administrador">
                     Detalhe chamado
@@ -448,162 +442,7 @@
                 </div>
               </header>
 
-              <div class="chamados-content is-active" data-chamados-content="pessoal" data-roles="Comercial,Gestor">
-                <div class="chamados-layout">
-                  <div class="chamados-status">
-                    <div class="chamado-status">
-                      <span class="status-dot status--novo"></span>
-                      Novo
-                      <span class="status-count">3</span>
-                    </div>
-                    <div class="chamado-status status--em-atendimento">
-                      Em atendimento
-                      <span class="status-count">1</span>
-                    </div>
-                    <div class="chamado-status status--pendente">
-                      Pendente
-                      <span class="status-count">2</span>
-                    </div>
-                    <div class="chamado-status status--solucionado">
-                      Solucionado
-                      <span class="status-count">4</span>
-                    </div>
-                    <div class="chamado-status status--fechado">
-                      Fechado
-                      <span class="status-count">1</span>
-                    </div>
-                    <div class="chamado-status status--excluido">
-                      Excluído
-                      <span class="status-count">0</span>
-                      <span class="trash">🗑️</span>
-                    </div>
-                  </div>
-                  <div class="chamados-list">
-                    <article class="chamado-card status--novo">
-                      <div>
-                        <strong>Chamado #1024</strong>
-                        <p>Problema no headset do consultor.</p>
-                        <small>Categoria: Headset • Equipe Tróia</small>
-                      </div>
-                      <span class="status-pill">Novo</span>
-                    </article>
-                    <article class="chamado-card status--em-atendimento">
-                      <div>
-                        <strong>Chamado #1023</strong>
-                        <p>CPU com lentidão na sala 02.</p>
-                        <small>Categoria: CPU • Equipe Chronos</small>
-                      </div>
-                      <span class="status-pill">Em atendimento</span>
-                    </article>
-                    <article class="chamado-card status--pendente">
-                      <div>
-                        <strong>Chamado #1018</strong>
-                        <p>Teclado com teclas travando.</p>
-                        <small>Categoria: Teclado • Equipe Suits</small>
-                      </div>
-                      <span class="status-pill">Pendente</span>
-                    </article>
-                  </div>
-                  <aside class="chamados-summary">
-                    <h4>Seus chamados</h4>
-                    <ul>
-                      <li><span>Total abertos</span><strong>6</strong></li>
-                      <li><span>Em atendimento</span><strong>1</strong></li>
-                      <li><span>Pendentes</span><strong>2</strong></li>
-                      <li><span>Solucionados</span><strong>4</strong></li>
-                    </ul>
-                  </aside>
-                </div>
-              </div>
-
-              <div class="chamados-content" data-chamados-content="equipe" data-roles="Gestor">
-                <div class="chamados-layout">
-                  <div class="chamados-filter-top">
-                    <span>Filtro:</span>
-                    <button class="chip is-active">Todos</button>
-                    <button class="chip">Equipe Tróia</button>
-                    <button class="chip">Equipe Chronos</button>
-                    <button class="chip">Equipe Suits</button>
-                  </div>
-                  <div class="chamados-list">
-                    <article class="chamado-card status--novo">
-                      <div>
-                        <strong>Chamado #2011</strong>
-                        <p>Monitor com falha de imagem.</p>
-                        <small>Categoria: Monitor • Equipe Tróia</small>
-                      </div>
-                      <span class="status-pill">Novo</span>
-                    </article>
-                    <article class="chamado-card status--pendente">
-                      <div>
-                        <strong>Chamado #2008</strong>
-                        <p>Mouse sem resposta.</p>
-                        <small>Categoria: Mouse • Equipe Meteor</small>
-                      </div>
-                      <span class="status-pill">Pendente</span>
-                    </article>
-                  </div>
-                  <aside class="chamados-summary">
-                    <h4>Equipe</h4>
-                    <ul>
-                      <li><span>Chamados abertos</span><strong>12</strong></li>
-                      <li><span>Em atendimento</span><strong>3</strong></li>
-                      <li><span>Pendentes</span><strong>4</strong></li>
-                      <li><span>Fechados</span><strong>5</strong></li>
-                    </ul>
-                  </aside>
-                </div>
-              </div>
-
-              <div class="chamados-content" data-chamados-content="abrir" data-roles="Comercial,Gestor">
-                <form class="chamado-form">
-                  <div class="form-grid">
-                    <label>
-                      Categoria
-                      <select id="chamadoCategoria">
-                        <option>4NET</option>
-                        <option>Headset</option>
-                        <option>Mouse</option>
-                        <option>Teclado</option>
-                        <option>CPU</option>
-                        <option>Monitor</option>
-                        <option>Convert</option>
-                        <option>RD Station</option>
-                        <option>Pilhas</option>
-                        <option>Celular</option>
-                      </select>
-                    </label>
-                    <label>
-                      Equipe
-                      <select id="chamadoEquipe">
-                        <option>Equipe Tróia</option>
-                        <option>Equipe Chronos</option>
-                        <option>Equipe Suits</option>
-                        <option>Equipe Meteor</option>
-                        <option>Equipe Titan</option>
-                        <option>Equipe Maktub</option>
-                        <option>Equipe Constellation</option>
-                      </select>
-                    </label>
-                    <label class="form-full">
-                      Título
-                      <input type="text" placeholder="Assunto do problema" />
-                    </label>
-                    <label class="form-full">
-                      Descrição
-                      <textarea rows="6" placeholder="Descreva o problema"></textarea>
-                    </label>
-                    <label class="form-full">
-                      Fotos/arquivos (até 5MB)
-                      <input type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" />
-                      <small>Formatos permitidos: PDF, JPG, PNG, DOC (até 5MB por arquivo).</small>
-                    </label>
-                  </div>
-                  <button type="button" class="primary">Abrir chamado</button>
-                </form>
-              </div>
-
-              <div class="chamados-content" data-chamados-content="ti-dashboard" data-roles="Administrador">
+              <div class="chamados-content is-active" data-chamados-content="dashboard" data-roles="Comercial,Gestor,Administrador">
                 <div class="ti-layout">
                   <aside class="ti-sidebar">
                     <div class="ti-select">
@@ -614,22 +453,22 @@
                       <small>Localizações</small>
                       <span>Hubbie</span>
                     </div>
-                    <div class="ti-sidecard ti-sidecard--yellow">
+                    <button class="ti-sidecard ti-sidecard--yellow" type="button" data-status="todos">
                       <strong>462</strong>
                       <span>Chamados</span>
-                    </div>
-                    <div class="ti-sidecard ti-sidecard--orange">
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--orange" type="button" data-status="atrasados">
                       <strong>0</strong>
                       <span>Chamados atrasados</span>
-                    </div>
-                    <div class="ti-sidecard ti-sidecard--red">
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--red" type="button" data-status="problema">
                       <strong>0</strong>
                       <span>Problema</span>
-                    </div>
-                    <div class="ti-sidecard ti-sidecard--green">
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--green" type="button" data-status="mudanca">
                       <strong>0</strong>
                       <span>Mudança</span>
-                    </div>
+                    </button>
                   </aside>
                   <div class="ti-main">
                     <div class="ti-chart-card">
@@ -656,30 +495,30 @@
                       <small>Evolução dos chamados no último ano</small>
                     </div>
                     <div class="ti-metric-grid">
-                      <div class="ti-metric ti-metric--green">
+                      <button class="ti-metric ti-metric--green" type="button" data-status="novo">
                         <strong>0</strong>
                         <span>Chamados novos</span>
-                      </div>
-                      <div class="ti-metric ti-metric--blue">
+                      </button>
+                      <button class="ti-metric ti-metric--blue" type="button" data-status="atribuido">
                         <strong>1</strong>
                         <span>Chamados atribuídos</span>
-                      </div>
-                      <div class="ti-metric ti-metric--gray">
+                      </button>
+                      <button class="ti-metric ti-metric--gray" type="button" data-status="solucionado">
                         <strong>378</strong>
                         <span>Chamados solucionados</span>
-                      </div>
-                      <div class="ti-metric ti-metric--yellow">
+                      </button>
+                      <button class="ti-metric ti-metric--yellow" type="button" data-status="em-atendimento">
                         <strong>28</strong>
                         <span>Em atendimento</span>
-                      </div>
-                      <div class="ti-metric ti-metric--orange">
+                      </button>
+                      <button class="ti-metric ti-metric--orange" type="button" data-status="pendente">
                         <strong>19</strong>
                         <span>Pendentes</span>
-                      </div>
-                      <div class="ti-metric ti-metric--red">
+                      </button>
+                      <button class="ti-metric ti-metric--red" type="button" data-status="atrasado">
                         <strong>0</strong>
                         <span>Atrasados</span>
-                      </div>
+                      </button>
                     </div>
                     <div class="ti-analytics">
                       <div class="ti-analytics__card">
@@ -708,6 +547,54 @@
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="lista" data-roles="Comercial,Gestor,Administrador">
+                <div class="chamados-list-header">
+                  <h4 id="chamadosListaTitulo">Chamados - Todos</h4>
+                  <div class="chamados-filter-top">
+                    <button class="chip is-active" data-status="todos">Todos</button>
+                    <button class="chip" data-status="novo">Novo</button>
+                    <button class="chip" data-status="em-atendimento">Em atendimento</button>
+                    <button class="chip" data-status="pendente">Pendente</button>
+                    <button class="chip" data-status="solucionado">Solucionado</button>
+                    <button class="chip" data-status="fechado">Fechado</button>
+                  </div>
+                </div>
+                <div class="chamados-list">
+                  <article class="chamado-card status--novo">
+                    <div>
+                      <strong>Chamado #3051</strong>
+                      <p>Monitor apagando.</p>
+                      <small>Categoria: Monitor • Equipe Tróia</small>
+                    </div>
+                    <span class="status-pill">Novo</span>
+                  </article>
+                  <article class="chamado-card status--em-atendimento">
+                    <div>
+                      <strong>Chamado #3048</strong>
+                      <p>CPU lenta.</p>
+                      <small>Categoria: CPU • Equipe Chronos</small>
+                    </div>
+                    <span class="status-pill">Em atendimento</span>
+                  </article>
+                  <article class="chamado-card status--pendente">
+                    <div>
+                      <strong>Chamado #3040</strong>
+                      <p>Headset com ruído.</p>
+                      <small>Categoria: Headset • Equipe Meteor</small>
+                    </div>
+                    <span class="status-pill">Pendente</span>
+                  </article>
+                  <article class="chamado-card status--solucionado">
+                    <div>
+                      <strong>Chamado #3032</strong>
+                      <p>Teclado substituído.</p>
+                      <small>Categoria: Teclado • Equipe Suits</small>
+                    </div>
+                    <span class="status-pill">Solucionado</span>
+                  </article>
                 </div>
               </div>
 

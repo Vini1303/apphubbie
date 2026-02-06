@@ -872,6 +872,41 @@ const setActiveChamadosTab = (tabId) => {
   });
 };
 
+const updateChamadosListTitle = (status) => {
+  const title = document.getElementById('chamadosListaTitulo');
+  if (!title) {
+    return;
+  }
+  const map = {
+    todos: 'Chamados - Todos',
+    novo: 'Chamados - Novos',
+    'em-atendimento': 'Chamados - Em atendimento',
+    pendente: 'Chamados - Pendentes',
+    solucionado: 'Chamados - Solucionados',
+    fechado: 'Chamados - Fechados',
+    atribuido: 'Chamados - Atribuídos',
+    atrasado: 'Chamados - Atrasados',
+    problema: 'Chamados - Problemas',
+    mudanca: 'Chamados - Mudanças'
+  };
+  title.textContent = map[status] || 'Chamados - Todos';
+};
+
+const bindChamadosStatusButtons = () => {
+  const buttons = document.querySelectorAll('[data-status]');
+  const chips = document.querySelectorAll('.chamados-filter-top .chip');
+  buttons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const status = button.dataset.status || 'todos';
+      setActiveChamadosTab('lista');
+      updateChamadosListTitle(status);
+      chips.forEach((chip) => {
+        chip.classList.toggle('is-active', chip.dataset.status === status);
+      });
+    });
+  });
+};
+
 const updateChamadosByRole = (role) => {
   const normalizedRole = normalizeRole(role);
   chamadosTabs.forEach((tab) => {
@@ -891,13 +926,7 @@ const updateChamadosByRole = (role) => {
     content.style.display = visible ? '' : 'none';
   });
 
-  if (normalizedRole === 'Administrador') {
-    setActiveChamadosTab('ti-dashboard');
-  } else if (normalizedRole === 'Gestor') {
-    setActiveChamadosTab('equipe');
-  } else {
-    setActiveChamadosTab('pessoal');
-  }
+  setActiveChamadosTab('dashboard');
 };
 
 const persistImageOverrides = (overrides) => {
@@ -1226,6 +1255,8 @@ chamadosTabs.forEach((tab) => {
   });
 });
 
+bindChamadosStatusButtons();
+
 const filterRobotFiles = (items, query) =>
   items.filter((item) => item.id.toLowerCase().includes(query));
 
@@ -1301,6 +1332,7 @@ setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 setActiveRobotTab('contratos');
 updateChamadosByRole('Comercial');
+updateChamadosListTitle('todos');
 renderOperacaoResumo();
 calcularMediaConsultor();
 fetchRankingFromSheets();
