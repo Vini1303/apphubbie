@@ -13,6 +13,8 @@ const RANKING_REFRESH_MS = Number(process.env.RANKING_REFRESH_MS || 60 * 1000);
 const BOLETOS_BASE_DIR =
   process.env.BOLETOS_BASE_DIR ||
   'C:\\Users\\vinicius.mesquita\\Desktop\\mesclarboletos\\renomearboletos4';
+const BOLETOS_DB_PATH =
+  process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -155,6 +157,117 @@ const sendJson = (res, statusCode, payload) => {
   sendResponse(res, statusCode, JSON.stringify(payload), MIME_TYPES['.json']);
 };
 
+const parseJsonBody = (req) =>
+  new Promise((resolve, reject) => {
+    let body = '';
+
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+      if (body.length > 1_000_000) {
+        reject(new Error('Payload muito grande.'));
+      }
+    });
+
+    req.on('end', () => {
+      if (!body.trim()) {
+        resolve({});
+        return;
+      }
+
+      try {
+        resolve(JSON.parse(body));
+      } catch (error) {
+        reject(new Error('JSON inválido.'));
+      }
+    });
+
+    req.on('error', (error) => reject(error));
+  });
+
+const buildBoletosDatabase = async (baseDir) => {
+  const contracts = {};
+  const entries = await fs.promises.readdir(baseDir, { withFileTypes: true });
+
+  for (const entry of entries) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+
+    const contract = entry.name.trim();
+    if (!isValidContract(contract)) {
+      continue;
+    }
+
+    const contractDir = path.join(baseDir, contract);
+    const relativeFiles = await listPdfFilesRecursive(contractDir);
+
+    if (relativeFiles.length) {
+      contracts[contract] = relativeFiles;
+    }
+  }
+
+  const database = {
+    baseDir,
+    updatedAt: new Date().toISOString(),
+    contracts
+  };
+
+  await fs.promises.mkdir(path.dirname(BOLETOS_DB_PATH), { recursive: true });
+  await fs.promises.writeFile(BOLETOS_DB_PATH, JSON.stringify(database, null, 2), 'utf-8');
+  return database;
+};
+
+const loadBoletosDatabase = async () => {
+  try {
+    const content = await fs.promises.readFile(BOLETOS_DB_PATH, 'utf-8');
+    return JSON.parse(content);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  }
+};
+
+let boletosDatabase = null;
+
+const rebuildBoletosDatabase = async (preferredBaseDir) => {
+  const existingBaseDir = preferredBaseDir || (await findExistingBaseDir());
+  if (!existingBaseDir) {
+    throw new Error('Pasta base de boletos não encontrada.');
+  }
+
+  boletosDatabase = await buildBoletosDatabase(existingBaseDir);
+  return boletosDatabase;
+};
+
+const ensureBoletosDatabaseLoaded = async () => {
+  if (boletosDatabase) {
+    return boletosDatabase;
+  }
+
+  boletosDatabase = await loadBoletosDatabase();
+
+  if (!boletosDatabase) {
+    try {
+      boletosDatabase = await rebuildBoletosDatabase();
+    } catch (error) {
+      boletosDatabase = null;
+    }
+  }
+
+  return boletosDatabase;
+};
+
+const mapDatabaseFilesToApi = (contract, files = []) =>
+  files.map((relativePath) => ({
+    file: relativePath,
+    status: 'PDF encontrado',
+    downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
+      relativePath
+    )}`
+  }));
+
 const server = http.createServer(async (req, res) => {
   const requestUrl = new URL(req.url, `http://${req.headers.host || `localhost:${PORT}`}`);
 
@@ -175,15 +288,80 @@ const server = http.createServer(async (req, res) => {
     }
 
     try {
+      const db = await ensureBoletosDatabaseLoaded();
+      if (db && db.contracts && db.contracts[contract]) {
+        sendJson(res, 200, {
+          contract,
+          files: mapDatabaseFilesToApi(contract, db.contracts[contract]),
+          source: 'database',
+          updatedAt: db.updatedAt
+        });
+        return;
+      }
+
       const result = await listContractPdfFiles(contract);
       if (result.error) {
         sendJson(res, 400, { error: result.error });
         return;
       }
-      sendJson(res, 200, { contract, files: result.files });
+
+      sendJson(res, 200, { contract, files: result.files, source: 'filesystem' });
       return;
     } catch (error) {
       sendJson(res, 500, { error: 'Não foi possível buscar os arquivos.' });
+      return;
+    }
+  }
+
+  if (requestUrl.pathname === '/api/boletos/database/status') {
+    const db = await ensureBoletosDatabaseLoaded();
+    const totalContracts = db ? Object.keys(db.contracts || {}).length : 0;
+    const totalFiles = db
+      ? Object.values(db.contracts || {}).reduce((sum, files) => sum + files.length, 0)
+      : 0;
+
+    sendJson(res, 200, {
+      configuredBaseDir: BOLETOS_BASE_DIR,
+      dbPath: BOLETOS_DB_PATH,
+      loaded: Boolean(db),
+      baseDir: db?.baseDir || null,
+      updatedAt: db?.updatedAt || null,
+      totalContracts,
+      totalFiles
+    });
+    return;
+  }
+
+  if (requestUrl.pathname === '/api/boletos/database/rebuild' && req.method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const requestedBaseDir = (body.baseDir || '').trim();
+      const resolvedBaseDir = requestedBaseDir || (await findExistingBaseDir());
+
+      if (!resolvedBaseDir) {
+        sendJson(res, 400, {
+          error:
+            'Pasta base não encontrada. Informe baseDir no body ou configure BOLETOS_BASE_DIR corretamente.'
+        });
+        return;
+      }
+
+      const database = await rebuildBoletosDatabase(resolvedBaseDir);
+      const totalContracts = Object.keys(database.contracts || {}).length;
+      const totalFiles = Object.values(database.contracts || {}).reduce((sum, files) => sum + files.length, 0);
+
+      sendJson(res, 200, {
+        ok: true,
+        message: 'Banco de boletos reconstruído com sucesso.',
+        baseDir: database.baseDir,
+        updatedAt: database.updatedAt,
+        totalContracts,
+        totalFiles,
+        dbPath: BOLETOS_DB_PATH
+      });
+      return;
+    } catch (error) {
+      sendJson(res, 500, { error: error.message || 'Falha ao reconstruir banco de boletos.' });
       return;
     }
   }
@@ -265,6 +443,10 @@ const server = http.createServer(async (req, res) => {
       sendResponse(res, 200, content, contentType);
     });
   });
+});
+
+ensureBoletosDatabaseLoaded().catch((error) => {
+  console.warn('Não foi possível carregar banco de boletos.', error);
 });
 
 server.listen(PORT, () => {
