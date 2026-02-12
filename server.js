@@ -60,12 +60,73 @@ updateRankingCache();
 
 const isValidContract = (contract) => /^[a-zA-Z0-9_-]+$/.test(contract);
 
+const normalizeBaseDirCandidates = (baseDir) => {
+  const candidates = [baseDir];
+
+  if (process.platform !== 'win32' && /^[a-zA-Z]:\\/.test(baseDir)) {
+    const drive = baseDir[0].toLowerCase();
+    const rest = baseDir.slice(2).replace(/\\/g, '/');
+    candidates.push(`/mnt/${drive}${rest}`);
+  }
+
+  return [...new Set(candidates.map((value) => value.trim()).filter(Boolean))];
+};
+
+const findExistingBaseDir = async () => {
+  const candidates = normalizeBaseDirCandidates(BOLETOS_BASE_DIR);
+
+  for (const candidate of candidates) {
+    try {
+      const stats = await fs.promises.stat(candidate);
+      if (stats.isDirectory()) {
+        return candidate;
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  return null;
+};
+
+const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
+  const entries = await fs.promises.readdir(rootDir, { withFileTypes: true });
+  const files = [];
+
+  for (const entry of entries) {
+    const absolute = path.join(rootDir, entry.name);
+    const relative = relativePrefix ? path.join(relativePrefix, entry.name) : entry.name;
+
+    if (entry.isDirectory()) {
+      const nestedFiles = await listPdfFilesRecursive(absolute, relative);
+      files.push(...nestedFiles);
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.toLowerCase().endsWith('.pdf')) {
+      files.push(relative);
+    }
+  }
+
+  return files;
+};
+
 const listContractPdfFiles = async (contract) => {
   if (!isValidContract(contract)) {
     return { error: 'Contrato inválido.' };
   }
 
-  const contractDir = path.join(BOLETOS_BASE_DIR, contract);
+  const existingBaseDir = await findExistingBaseDir();
+  if (!existingBaseDir) {
+    return {
+      error:
+        'Pasta base de boletos não encontrada. Verifique BOLETOS_BASE_DIR no servidor e reinicie a aplicação.'
+    };
+  }
+
+  const contractDir = path.join(existingBaseDir, contract);
   try {
     const stats = await fs.promises.stat(contractDir);
     if (!stats.isDirectory()) {
@@ -78,18 +139,16 @@ const listContractPdfFiles = async (contract) => {
     throw error;
   }
 
-  const entries = await fs.promises.readdir(contractDir, { withFileTypes: true });
-  const files = entries
-    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.pdf'))
-    .map((entry) => ({
-      file: entry.name,
-      status: 'PDF encontrado',
-      downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
-        entry.name
-      )}`
-    }));
+  const relativeFiles = await listPdfFilesRecursive(contractDir);
+  const files = relativeFiles.map((relativePath) => ({
+    file: relativePath,
+    status: 'PDF encontrado',
+    downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
+      relativePath
+    )}`
+  }));
 
-  return { files };
+  return { files, baseDir: existingBaseDir };
 };
 
 const sendJson = (res, statusCode, payload) => {
@@ -133,25 +192,52 @@ const server = http.createServer(async (req, res) => {
     const contract = (requestUrl.searchParams.get('contract') || '').trim();
     const file = (requestUrl.searchParams.get('file') || '').trim();
 
-    if (!isValidContract(contract) || !file || path.basename(file) !== file || !file.toLowerCase().endsWith('.pdf')) {
+    if (!isValidContract(contract) || !file || !file.toLowerCase().endsWith('.pdf')) {
       sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
       return;
     }
 
-    const filePath = path.join(BOLETOS_BASE_DIR, contract, file);
-    fs.stat(filePath, (err, stats) => {
-      if (err || !stats.isFile()) {
+    const normalizedFile = path.normalize(file).replace(/^([/\\])+/, '');
+    if (normalizedFile.includes('..')) {
+      sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
+      return;
+    }
+
+    try {
+      const existingBaseDir = await findExistingBaseDir();
+      if (!existingBaseDir) {
+        sendResponse(res, 404, 'Pasta base não encontrada.', 'text/plain; charset=utf-8');
+        return;
+      }
+
+      const contractDir = path.resolve(existingBaseDir, contract);
+      const filePath = path.resolve(contractDir, normalizedFile);
+
+      if (!filePath.startsWith(contractDir + path.sep) && filePath !== contractDir) {
+        sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
+        return;
+      }
+
+      const stats = await fs.promises.stat(filePath);
+      if (!stats.isFile()) {
         sendResponse(res, 404, 'Arquivo não encontrado.', 'text/plain; charset=utf-8');
         return;
       }
 
       res.writeHead(200, {
         'Content-Type': MIME_TYPES['.pdf'],
-        'Content-Disposition': `inline; filename="${file}"`
+        'Content-Disposition': `inline; filename="${path.basename(normalizedFile)}"`
       });
       fs.createReadStream(filePath).pipe(res);
-    });
-    return;
+      return;
+    } catch (error) {
+      if (error.code === 'ENOENT') {
+        sendResponse(res, 404, 'Arquivo não encontrado.', 'text/plain; charset=utf-8');
+        return;
+      }
+      sendResponse(res, 500, 'Erro ao carregar arquivo.', 'text/plain; charset=utf-8');
+      return;
+    }
   }
 
   const filePath = resolveFilePath(requestUrl.pathname);

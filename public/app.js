@@ -761,7 +761,7 @@ const renderReminders = () => {
   );
 };
 
-const renderRobotFiles = (listElement, items) => {
+const renderRobotFiles = (listElement, items, emptyMessage = 'Nenhum arquivo encontrado para esse contrato.') => {
   if (!listElement) {
     return;
   }
@@ -769,7 +769,7 @@ const renderRobotFiles = (listElement, items) => {
   if (!items.length) {
     const empty = document.createElement('li');
     empty.className = 'robot-file robot-file--empty';
-    empty.textContent = 'Nenhum arquivo encontrado para esse contrato.';
+    empty.textContent = emptyMessage;
     listElement.appendChild(empty);
     return;
   }
@@ -1299,14 +1299,14 @@ if (boletoSearchButton) {
       const data = await response.json();
 
       if (!response.ok) {
-        renderRobotFiles(boletoFilesList, []);
+        renderRobotFiles(boletoFilesList, [], data.error || 'Nenhum arquivo encontrado para esse contrato.');
         return;
       }
 
       renderRobotFiles(boletoFilesList, data.files || []);
     } catch (error) {
       console.warn('Falha ao buscar boletos do contrato.', error);
-      renderRobotFiles(boletoFilesList, []);
+      renderRobotFiles(boletoFilesList, [], 'Não foi possível buscar os boletos.');
     }
   });
 }
