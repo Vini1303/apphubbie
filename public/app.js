@@ -51,11 +51,8 @@ const contractEmitButton = document.getElementById('contractEmitButton');
 const contractFilesList = document.getElementById('contractFiles');
 const contractStatus = document.getElementById('contractStatus');
 const boletoSearchInput = document.getElementById('boletoSearch');
-const boletoAccountSelect = document.getElementById('boletoAccount');
 const boletoSearchButton = document.getElementById('boletoSearchButton');
-const boletoEmitButton = document.getElementById('boletoEmitButton');
 const boletoFilesList = document.getElementById('boletoFiles');
-const boletoStatus = document.getElementById('boletoStatus');
 const contempladosList = document.getElementById('contempladosList');
 const consultorForm = document.getElementById('consultorForm');
 const consultorResultado = document.getElementById('consultorResultado');
@@ -1288,21 +1285,6 @@ if (boletoSearchButton) {
     const query = (boletoSearchInput?.value || '').trim().toLowerCase();
     const matches = query ? filterRobotFiles(state.robotBoletos, query) : state.robotBoletos;
     renderRobotFiles(boletoFilesList, matches);
-    if (boletoStatus) {
-      boletoStatus.textContent = query ? `Busca realizada para ${query}.` : '';
-    }
-  });
-}
-
-if (boletoEmitButton) {
-  boletoEmitButton.addEventListener('click', () => {
-    const boletoNumber = (boletoSearchInput?.value || '').trim();
-    const account = boletoAccountSelect?.value || '';
-    if (boletoStatus) {
-      boletoStatus.textContent = boletoNumber
-        ? `Robô de boletos acionado para ${boletoNumber} (${account}).`
-        : 'Informe um número de contrato antes de emitir.';
-    }
   });
 }
 
