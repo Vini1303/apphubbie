@@ -495,7 +495,7 @@ const renderDashboard = () => {
   applyClientFilter();
   renderReminders();
   renderRobotFiles(contractFilesList, state.robotContracts);
-  renderRobotFiles(boletoFilesList, state.robotBoletos);
+  renderRobotFiles(boletoFilesList, []);
   renderContemplados();
 };
 
@@ -776,12 +776,17 @@ const renderRobotFiles = (listElement, items) => {
   items.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'robot-file';
+
+    const action = item.downloadUrl
+      ? `<a class="ghost" href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer">Baixar</a>`
+      : '<button type="button" class="ghost">Baixar</button>';
+
     li.innerHTML = `
       <div>
         <strong>${item.file}</strong>
         <span>${item.status}</span>
       </div>
-      <button type="button" class="ghost">Baixar</button>
+      ${action}
     `;
     listElement.appendChild(li);
   });
@@ -1281,10 +1286,28 @@ if (contractEmitButton) {
 }
 
 if (boletoSearchButton) {
-  boletoSearchButton.addEventListener('click', () => {
-    const query = (boletoSearchInput?.value || '').trim().toLowerCase();
-    const matches = query ? filterRobotFiles(state.robotBoletos, query) : state.robotBoletos;
-    renderRobotFiles(boletoFilesList, matches);
+  boletoSearchButton.addEventListener('click', async () => {
+    const query = (boletoSearchInput?.value || '').trim();
+
+    if (!query) {
+      renderRobotFiles(boletoFilesList, []);
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/boletos?contract=${encodeURIComponent(query)}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        renderRobotFiles(boletoFilesList, []);
+        return;
+      }
+
+      renderRobotFiles(boletoFilesList, data.files || []);
+    } catch (error) {
+      console.warn('Falha ao buscar boletos do contrato.', error);
+      renderRobotFiles(boletoFilesList, []);
+    }
   });
 }
 
