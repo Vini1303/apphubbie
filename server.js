@@ -115,7 +115,12 @@ const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
   return files;
 };
 
-const findContractDirectoriesRecursive = async (rootDir, contract, relativePrefix = '') => {
+const findContractDirectoriesRecursive = async (
+  rootDir,
+  contract,
+  relativePrefix = '',
+  allowPartialMatch = false
+) => {
   const entries = await fs.promises.readdir(rootDir, { withFileTypes: true });
   const matches = [];
 
@@ -126,12 +131,19 @@ const findContractDirectoriesRecursive = async (rootDir, contract, relativePrefi
 
     const absolute = path.join(rootDir, entry.name);
     const relative = relativePrefix ? path.join(relativePrefix, entry.name) : entry.name;
+    const directoryName = entry.name.trim();
+    const isMatch = allowPartialMatch ? directoryName.includes(contract) : directoryName === contract;
 
-    if (entry.name.trim() === contract) {
+    if (isMatch) {
       matches.push({ absolute, relative });
     }
 
-    const nested = await findContractDirectoriesRecursive(absolute, contract, relative);
+    const nested = await findContractDirectoriesRecursive(
+      absolute,
+      contract,
+      relative,
+      allowPartialMatch
+    );
     matches.push(...nested);
   }
 
@@ -168,6 +180,11 @@ const listContractPdfFiles = async (contract) => {
   if (!contractDirs.length) {
     const nestedMatches = await findContractDirectoriesRecursive(existingBaseDir, contract);
     contractDirs.push(...nestedMatches);
+  }
+
+  if (!contractDirs.length) {
+    const partialMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
+    contractDirs.push(...partialMatches);
   }
 
   if (!contractDirs.length) {
@@ -347,15 +364,7 @@ const server = http.createServer(async (req, res) => {
 
     try {
       const db = await ensureBoletosDatabaseLoaded();
-      if (db && db.contracts && db.contracts[contract]) {
-        sendJson(res, 200, {
-          contract,
-          files: mapDatabaseFilesToApi(contract, db.contracts[contract]),
-          source: 'database',
-          updatedAt: db.updatedAt
-        });
-        return;
-      }
+      const dbFiles = db && db.contracts && db.contracts[contract] ? mapDatabaseFilesToApi(contract, db.contracts[contract]) : [];
 
       const result = await listContractPdfFiles(contract);
       if (result.error) {
@@ -363,7 +372,23 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
-      sendJson(res, 200, { contract, files: result.files, source: 'filesystem' });
+      const mergedMap = new Map();
+      [...dbFiles, ...(result.files || [])].forEach((item) => {
+        if (!item || !item.file) {
+          return;
+        }
+        mergedMap.set(item.file, item);
+      });
+
+      const mergedFiles = Array.from(mergedMap.values());
+      const source = dbFiles.length && result.files?.length ? 'database+filesystem' : dbFiles.length ? 'database' : 'filesystem';
+
+      sendJson(res, 200, {
+        contract,
+        files: mergedFiles,
+        source,
+        updatedAt: db?.updatedAt || null
+      });
       return;
     } catch (error) {
       sendJson(res, 500, { error: 'Não foi possível buscar os arquivos.' });
@@ -464,6 +489,16 @@ const server = http.createServer(async (req, res) => {
         const nestedMatches = await findContractDirectoriesRecursive(existingBaseDir, contract);
         candidateDirs.push(
           ...nestedMatches.map((match) => ({
+            absolute: path.resolve(match.absolute),
+            relative: match.relative
+          }))
+        );
+      }
+
+      if (!candidateDirs.length) {
+        const partialMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
+        candidateDirs.push(
+          ...partialMatches.map((match) => ({
             absolute: path.resolve(match.absolute),
             relative: match.relative
           }))
