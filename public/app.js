@@ -204,11 +204,9 @@ const state = {
     { id: '40100222', file: '40100222_01.pdf', status: 'Clique para baixar' }
   ],
   contemplados: [
-    { name: 'Ana Luiza Pereira', plan: 'Plano 310', value: 'R$ 180.000,00' },
-    { name: 'Gustavo Almeida', plan: 'Plano 240', value: 'R$ 220.000,00' },
-    { name: 'Isabella Costa', plan: 'Plano 180', value: 'R$ 140.000,00' },
-    { name: 'Lucas Martins', plan: 'Plano 360', value: 'R$ 320.000,00' },
-    { name: 'Mariana Ferreira', plan: 'Plano 200', value: 'R$ 190.000,00' }
+    { colC: 'Ana Luiza Pereira', colD: 'Plano 310', colE: 'R$ 180.000,00', colF: 'Aprovado' },
+    { colC: 'Gustavo Almeida', colD: 'Plano 240', colE: 'R$ 220.000,00', colF: 'Aprovado' },
+    { colC: 'Isabella Costa', colD: 'Plano 180', colE: 'R$ 140.000,00', colF: 'Aprovado' }
   ],
   campaigns: [
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
@@ -707,6 +705,26 @@ const fetchRankingFromSheets = async () => {
   }
 };
 
+
+const fetchContemplados = async () => {
+  try {
+    const response = await fetch('/api/contemplados');
+    if (!response.ok) {
+      throw new Error(`Falha ao carregar contemplados: ${response.status}`);
+    }
+
+    const payload = await response.json();
+    if (Array.isArray(payload.rows) && payload.rows.length) {
+      state.contemplados = payload.rows;
+      if (state.user) {
+        renderContemplados();
+      }
+    }
+  } catch (error) {
+    console.warn('Não foi possível carregar contemplados da planilha.', error);
+  }
+};
+
 const renderIndividualCampaigns = () => {
   const container = document.getElementById('individualCampaigns');
   container.innerHTML = '';
@@ -796,14 +814,17 @@ const renderContemplados = () => {
   if (!contempladosList) {
     return;
   }
+
   contempladosList.innerHTML = '';
+
   state.contemplados.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'robot-contemplado';
     li.innerHTML = `
-      <span>${item.name}</span>
-      <span>${item.plan}</span>
-      <strong>${item.value}</strong>
+      <span>${item.colC || '-'}</span>
+      <span>${item.colD || '-'}</span>
+      <span>${item.colE || '-'}</span>
+      <strong>${item.colF || '-'}</strong>
     `;
     contempladosList.appendChild(li);
   });
@@ -1342,6 +1363,7 @@ renderOperacaoResumo();
 calcularMediaConsultor();
 fetchRankingFromSheets();
 setInterval(fetchRankingFromSheets, rankingRefreshMs);
+fetchContemplados();
 loadSession();
 initializeLoginHero();
 initializeLoginHeroUpload();
