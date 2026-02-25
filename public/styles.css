@@ -700,7 +700,7 @@ button:hover {
 
 .robot-contemplado {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr;
   gap: 12px;
   padding: 14px 16px;
   border-radius: 12px;
