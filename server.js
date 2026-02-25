@@ -475,7 +475,8 @@ const server = http.createServer(async (req, res) => {
     }
 
     const normalizedFile = path.normalize(file).replace(/^([/\\])+/, '');
-    if (normalizedFile.includes('..')) {
+    const normalizedFileForMatch = normalizedFile.replace(/\\/g, '/');
+    if (normalizedFileForMatch.includes('..')) {
       sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
       return;
     }
@@ -524,11 +525,11 @@ const server = http.createServer(async (req, res) => {
       let resolvedFilePath = null;
       for (const dirMatch of candidateDirs) {
         const relativePrefix = `${dirMatch.relative.replace(/\\/g, '/')}/`;
-        if (!normalizedFile.startsWith(relativePrefix)) {
+        if (!normalizedFileForMatch.startsWith(relativePrefix)) {
           continue;
         }
 
-        const innerPath = normalizedFile.slice(relativePrefix.length);
+        const innerPath = normalizedFileForMatch.slice(relativePrefix.length);
         if (!innerPath) {
           continue;
         }
