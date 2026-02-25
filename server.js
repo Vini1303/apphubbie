@@ -17,7 +17,12 @@ const BOLETOS_BASE_DIR =
 const BOLETOS_DB_PATH =
   process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
 const CONTEMPLADOS_XLSX_PATH =
+codex/check-and-display-boleto-files
+  process.env.CONTEMPLADOS_XLSX_PATH ||
+  'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
+
   process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
+codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -25,7 +30,11 @@ const MIME_TYPES = {
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
   '.svg': 'image/svg+xml',
-  '.pdf': 'application/pdf'
+  '.pdf': 'application/pdf',
+  '.txt': 'text/plain; charset=utf-8',
+  '.csv': 'text/csv; charset=utf-8',
+  '.xml': 'application/xml; charset=utf-8',
+  '.zip': 'application/zip'
 };
 
 const sendResponse = (res, statusCode, content, contentType) => {
@@ -64,6 +73,91 @@ setInterval(updateRankingCache, RANKING_REFRESH_MS);
 updateRankingCache();
 
 const isValidContract = (contract) => /^\d+$/.test(contract);
+
+const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const isDirectoryContractMatch = (directoryName, contract, allowFlexibleMatch = false) => {
+  const normalizedName = directoryName.trim();
+  if (!allowFlexibleMatch) {
+    return normalizedName === contract;
+  }
+
+  const flexiblePattern = new RegExp(`^${escapeRegExp(contract)}(?:\\D|$)`);
+  return flexiblePattern.test(normalizedName);
+};
+
+
+const normalizeWindowsPathCandidates = (inputPath) => {
+  const candidates = [inputPath];
+
+  if (process.platform !== 'win32' && /^[a-zA-Z]:\\/.test(inputPath)) {
+    const drive = inputPath[0].toLowerCase();
+    const rest = inputPath.slice(2).replace(/\\/g, '/');
+    candidates.push(`/mnt/${drive}${rest}`);
+  }
+
+  return [...new Set(candidates.map((value) => value.trim()).filter(Boolean))];
+};
+
+const findExistingFilePath = async (inputPath) => {
+  const candidates = normalizeWindowsPathCandidates(inputPath);
+
+  for (const candidate of candidates) {
+    try {
+      const stats = await fs.promises.stat(candidate);
+      if (stats.isFile()) {
+        return candidate;
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  return null;
+};
+
+const loadContempladosFromSpreadsheet = async () => {
+  const spreadsheetPath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
+
+  if (!spreadsheetPath) {
+    throw new Error(
+      'Planilha de contemplados não encontrada. Verifique CONTEMPLADOS_XLSX_PATH no servidor.'
+    );
+  }
+
+  const workbook = xlsx.readFile(spreadsheetPath);
+  const firstSheetName = workbook.SheetNames[0];
+
+  if (!firstSheetName) {
+    return { items: [], spreadsheetPath };
+  }
+
+  const rows = xlsx.utils.sheet_to_json(workbook.Sheets[firstSheetName], {
+    header: 1,
+    defval: ''
+  });
+
+  const items = rows
+    .slice(1)
+    .map((row) => {
+      const colC = (row[2] || '').toString().trim();
+      const colD = (row[3] || '').toString().trim();
+      const colE = (row[4] || '').toString().trim();
+      const colF = (row[5] || '').toString().trim();
+
+      return {
+        colC,
+        colD,
+        colE,
+        colF
+      };
+    })
+    .filter((item) => item.colC || item.colD || item.colE || item.colF);
+
+  return { items, spreadsheetPath };
+};
 
 const normalizeBaseDirCandidates = (baseDir) => {
   const candidates = [baseDir];
@@ -168,7 +262,7 @@ const findExistingBaseDir = async () => {
   return null;
 };
 
-const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
+const listFilesRecursive = async (rootDir, relativePrefix = '') => {
   const entries = await fs.promises.readdir(rootDir, { withFileTypes: true });
   const files = [];
 
@@ -177,12 +271,12 @@ const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
     const relative = relativePrefix ? path.join(relativePrefix, entry.name) : entry.name;
 
     if (entry.isDirectory()) {
-      const nestedFiles = await listPdfFilesRecursive(absolute, relative);
+      const nestedFiles = await listFilesRecursive(absolute, relative);
       files.push(...nestedFiles);
       continue;
     }
 
-    if (entry.isFile() && entry.name.toLowerCase().endsWith('.pdf')) {
+    if (entry.isFile()) {
       files.push(relative);
     }
   }
@@ -194,7 +288,7 @@ const findContractDirectoriesRecursive = async (
   rootDir,
   contract,
   relativePrefix = '',
-  allowPartialMatch = false
+  allowFlexibleMatch = false
 ) => {
   const entries = await fs.promises.readdir(rootDir, { withFileTypes: true });
   const matches = [];
@@ -207,7 +301,7 @@ const findContractDirectoriesRecursive = async (
     const absolute = path.join(rootDir, entry.name);
     const relative = relativePrefix ? path.join(relativePrefix, entry.name) : entry.name;
     const directoryName = entry.name.trim();
-    const isMatch = allowPartialMatch ? directoryName.includes(contract) : directoryName === contract;
+    const isMatch = isDirectoryContractMatch(directoryName, contract, allowFlexibleMatch);
 
     if (isMatch) {
       matches.push({ absolute, relative });
@@ -217,7 +311,7 @@ const findContractDirectoriesRecursive = async (
       absolute,
       contract,
       relative,
-      allowPartialMatch
+      allowFlexibleMatch
     );
     matches.push(...nested);
   }
@@ -225,7 +319,7 @@ const findContractDirectoriesRecursive = async (
   return matches;
 };
 
-const listContractPdfFiles = async (contract) => {
+const listContractFiles = async (contract) => {
   if (!isValidContract(contract)) {
     return { error: 'Contrato inválido.' };
   }
@@ -258,8 +352,8 @@ const listContractPdfFiles = async (contract) => {
   }
 
   if (!contractDirs.length) {
-    const partialMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
-    contractDirs.push(...partialMatches);
+    const flexibleMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
+    contractDirs.push(...flexibleMatches);
   }
 
   if (!contractDirs.length) {
@@ -270,7 +364,7 @@ const listContractPdfFiles = async (contract) => {
   const files = [];
 
   for (const contractDir of contractDirs) {
-    const relativeFiles = await listPdfFilesRecursive(contractDir.absolute);
+    const relativeFiles = await listFilesRecursive(contractDir.absolute);
 
     for (const relativePath of relativeFiles) {
       const prefixedRelativePath = path.join(contractDir.relative, relativePath).replace(/\\/g, '/');
@@ -280,7 +374,7 @@ const listContractPdfFiles = async (contract) => {
       unique.add(prefixedRelativePath);
       files.push({
         file: prefixedRelativePath,
-        status: 'PDF encontrado',
+        status: 'Arquivo encontrado',
         downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
           prefixedRelativePath
         )}`
@@ -338,7 +432,7 @@ const buildBoletosDatabase = async (baseDir) => {
       const contract = entry.name.trim();
 
       if (isValidContract(contract)) {
-        const relativeFiles = await listPdfFilesRecursive(absolute);
+        const relativeFiles = await listFilesRecursive(absolute);
 
         if (relativeFiles.length) {
           const prefixed = relativeFiles.map((file) => path.join(relative, file).replace(/\\/g, '/'));
@@ -412,7 +506,7 @@ const ensureBoletosDatabaseLoaded = async () => {
 const mapDatabaseFilesToApi = (contract, files = []) =>
   files.map((relativePath) => ({
     file: relativePath,
-    status: 'PDF encontrado',
+    status: 'Arquivo encontrado',
     downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
       relativePath
     )}`
@@ -430,6 +524,22 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+  if (requestUrl.pathname === '/api/contemplados') {
+    try {
+      const contemplados = await loadContempladosFromSpreadsheet();
+      sendJson(res, 200, {
+        source: 'spreadsheet',
+        path: contemplados.spreadsheetPath,
+        total: contemplados.items.length,
+        items: contemplados.items
+      });
+      return;
+    } catch (error) {
+      sendJson(res, 400, { error: error.message || 'Falha ao carregar planilha de contemplados.' });
+      return;
+    }
+  }
+
   if (requestUrl.pathname === '/api/boletos') {
     const contract = (requestUrl.searchParams.get('contract') || '').trim();
     if (!contract) {
@@ -441,7 +551,7 @@ const server = http.createServer(async (req, res) => {
       const db = await ensureBoletosDatabaseLoaded();
       const dbFiles = db && db.contracts && db.contracts[contract] ? mapDatabaseFilesToApi(contract, db.contracts[contract]) : [];
 
-      const result = await listContractPdfFiles(contract);
+      const result = await listContractFiles(contract);
       if (result.error) {
         sendJson(res, 400, { error: result.error });
         return;
@@ -548,13 +658,14 @@ const server = http.createServer(async (req, res) => {
     const contract = (requestUrl.searchParams.get('contract') || '').trim();
     const file = (requestUrl.searchParams.get('file') || '').trim();
 
-    if (!isValidContract(contract) || !file || !file.toLowerCase().endsWith('.pdf')) {
+    if (!isValidContract(contract) || !file) {
       sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
       return;
     }
 
     const normalizedFile = path.normalize(file).replace(/^([/\\])+/, '');
-    if (normalizedFile.includes('..')) {
+    const normalizedFileForMatch = normalizedFile.replace(/\\/g, '/');
+    if (normalizedFileForMatch.includes('..')) {
       sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
       return;
     }
@@ -591,9 +702,9 @@ const server = http.createServer(async (req, res) => {
       }
 
       if (!candidateDirs.length) {
-        const partialMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
+        const flexibleMatches = await findContractDirectoriesRecursive(existingBaseDir, contract, '', true);
         candidateDirs.push(
-          ...partialMatches.map((match) => ({
+          ...flexibleMatches.map((match) => ({
             absolute: path.resolve(match.absolute),
             relative: match.relative
           }))
@@ -603,11 +714,11 @@ const server = http.createServer(async (req, res) => {
       let resolvedFilePath = null;
       for (const dirMatch of candidateDirs) {
         const relativePrefix = `${dirMatch.relative.replace(/\\/g, '/')}/`;
-        if (!normalizedFile.startsWith(relativePrefix)) {
+        if (!normalizedFileForMatch.startsWith(relativePrefix)) {
           continue;
         }
 
-        const innerPath = normalizedFile.slice(relativePrefix.length);
+        const innerPath = normalizedFileForMatch.slice(relativePrefix.length);
         if (!innerPath) {
           continue;
         }
@@ -635,9 +746,12 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      const extension = path.extname(resolvedFilePath).toLowerCase();
+      const contentType = MIME_TYPES[extension] || 'application/octet-stream';
+
       res.writeHead(200, {
-        'Content-Type': MIME_TYPES['.pdf'],
-        'Content-Disposition': `inline; filename="${path.basename(normalizedFile)}"`
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${path.basename(normalizedFile)}"`
       });
       fs.createReadStream(resolvedFilePath).pipe(res);
       return;

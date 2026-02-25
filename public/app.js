@@ -203,11 +203,15 @@ const state = {
     { id: '40311211', file: '40311211_04.pdf', status: 'Clique para baixar' },
     { id: '40100222', file: '40100222_01.pdf', status: 'Clique para baixar' }
   ],
+codex/check-and-display-boleto-files
+  contemplados: [],
+
   contemplados: [
     { colC: 'Ana Luiza Pereira', colD: 'Plano 310', colE: 'R$ 180.000,00', colF: 'Aprovado' },
     { colC: 'Gustavo Almeida', colD: 'Plano 240', colE: 'R$ 220.000,00', colF: 'Aprovado' },
     { colC: 'Isabella Costa', colD: 'Plano 180', colE: 'R$ 140.000,00', colF: 'Aprovado' }
   ],
+codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   campaigns: [
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
     { name: 'Campanha Indique & Ganhe', status: '2 indicações pendentes' },
@@ -662,6 +666,25 @@ const buildRankingFromRows = (rows) => {
 
 const rankingRefreshMs = 60 * 1000;
 
+
+const fetchContempladosFromSpreadsheet = async () => {
+  try {
+    const response = await fetch('/api/contemplados');
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Falha ao carregar contemplados.');
+    }
+
+    state.contemplados = Array.isArray(data.items) ? data.items : [];
+    renderContemplados();
+  } catch (error) {
+    console.warn('Não foi possível carregar contemplados da planilha.', error);
+    state.contemplados = [];
+    renderContemplados();
+  }
+};
+
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
   const gid = '1940056038';
@@ -817,18 +840,43 @@ const renderContemplados = () => {
 
   contempladosList.innerHTML = '';
 
+codex/check-and-display-boleto-files
+  if (!state.contemplados.length) {
+    const li = document.createElement('li');
+    li.className = 'robot-contemplado';
+    li.innerHTML = '<span>Nenhum contemplado encontrado na planilha.</span>';
+    contempladosList.appendChild(li);
+    return;
+  }
+
+
+codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   state.contemplados.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'robot-contemplado';
+
+    const colC = item.colC || item.name || '-';
+    const colD = item.colD || item.plan || '-';
+    const colE = item.colE || item.value || '-';
+    const colF = item.colF || item.extra || '-';
+
     li.innerHTML = `
+codex/check-and-display-boleto-files
+      <span>${colC}</span>
+      <span>${colD}</span>
+      <strong>${colE}</strong>
+      <span>${colF}</span>
+
       <span>${item.colC || '-'}</span>
       <span>${item.colD || '-'}</span>
       <span>${item.colE || '-'}</span>
       <strong>${item.colF || '-'}</strong>
+codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
     `;
     contempladosList.appendChild(li);
   });
 };
+
 
 const calcularMediaConsultor = () => {
   if (!consultorForm || !consultorResultado) {
@@ -1362,6 +1410,7 @@ updateChamadosListTitle('todos');
 renderOperacaoResumo();
 calcularMediaConsultor();
 fetchRankingFromSheets();
+fetchContempladosFromSpreadsheet();
 setInterval(fetchRankingFromSheets, rankingRefreshMs);
 fetchContemplados();
 loadSession();
