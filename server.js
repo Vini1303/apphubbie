@@ -18,6 +18,7 @@ const BOLETOS_DB_PATH =
   process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
 const CONTEMPLADOS_XLSX_PATH =
   process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
+const CONTEMPLADOS_SHEET_NAME = (process.env.CONTEMPLADOS_SHEET_NAME || '').trim();
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -118,21 +119,9 @@ const normalizeContempladosHeader = (value) =>
     .toUpperCase()
     .trim();
 
-const getContempladosFromWorkbook = async () => {
-  const existingFilePath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
-  if (!existingFilePath) {
-    return {
-      error:
-        'Planilha de contemplados não encontrada. Verifique CONTEMPLADOS_XLSX_PATH no servidor e reinicie a aplicação.'
-    };
-  }
-
-  const workbook = xlsx.readFile(existingFilePath, { cellDates: true });
-  const firstSheetName = workbook.SheetNames[0];
-  const worksheet = firstSheetName ? workbook.Sheets[firstSheetName] : null;
-
+const parseContempladosRowsFromWorksheet = (worksheet) => {
   if (!worksheet) {
-    return { error: 'A planilha de contemplados está vazia.' };
+    return [];
   }
 
   const rowsMatrix = xlsx.utils.sheet_to_json(worksheet, {
@@ -145,7 +134,7 @@ const getContempladosFromWorkbook = async () => {
   let headerRowIndex = -1;
   let headerMap = {};
 
-  for (let index = 0; index < Math.min(rowsMatrix.length, 15); index += 1) {
+  for (let index = 0; index < Math.min(rowsMatrix.length, 20); index += 1) {
     const normalizedHeader = (rowsMatrix[index] || []).map(normalizeContempladosHeader);
     const map = {};
 
@@ -164,7 +153,7 @@ const getContempladosFromWorkbook = async () => {
   const fallbackHeaderIndexes = { COTA: 2, NOME: 3, VALOR_CREDITO: 4, TIPO: 5 };
   const startRow = useNamedHeaders ? headerRowIndex + 1 : 0;
 
-  const rows = rowsMatrix
+  return rowsMatrix
     .slice(startRow)
     .map((row) => {
       const cota = (row[useNamedHeaders ? headerMap.COTA : fallbackHeaderIndexes.COTA] || '').toString().trim();
@@ -191,10 +180,44 @@ const getContempladosFromWorkbook = async () => {
       };
     })
     .filter(Boolean);
+};
+
+const getContempladosFromWorkbook = async () => {
+  const existingFilePath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
+  if (!existingFilePath) {
+    return {
+      error:
+        'Planilha de contemplados não encontrada. Verifique CONTEMPLADOS_XLSX_PATH no servidor e reinicie a aplicação.'
+    };
+  }
+
+  const workbook = xlsx.readFile(existingFilePath, { cellDates: true });
+  const sheetNames = workbook.SheetNames || [];
+
+  if (!sheetNames.length) {
+    return { error: 'A planilha de contemplados está vazia.' };
+  }
+
+  const orderedSheetNames = CONTEMPLADOS_SHEET_NAME
+    ? [CONTEMPLADOS_SHEET_NAME, ...sheetNames.filter((name) => name !== CONTEMPLADOS_SHEET_NAME)]
+    : sheetNames;
+
+  let bestRows = [];
+  let bestSheetName = orderedSheetNames[0];
+
+  orderedSheetNames.forEach((sheetName) => {
+    const worksheet = workbook.Sheets[sheetName];
+    const parsedRows = parseContempladosRowsFromWorksheet(worksheet);
+    if (parsedRows.length > bestRows.length) {
+      bestRows = parsedRows;
+      bestSheetName = sheetName;
+    }
+  });
 
   return {
-    rows,
-    sourcePath: existingFilePath
+    rows: bestRows,
+    sourcePath: existingFilePath,
+    sheetName: bestSheetName
   };
 };
 

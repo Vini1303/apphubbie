@@ -167,4 +167,5 @@ O módulo **Robô → Contemplados** lê a planilha local abaixo e envia todos o
 
 ### Variáveis de ambiente opcionais
 - `CONTEMPLADOS_XLSX_PATH`: caminho da planilha (padrão: `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`).
+- `CONTEMPLADOS_SHEET_NAME`: nome da aba a ser priorizada (opcional). Se não informar, o sistema escolhe automaticamente a aba com mais registros válidos de contemplados.
 - `HUBBIE_CONTEMPLADOS_REFRESH_MS`: intervalo de atualização no navegador, em ms (padrão: `15000`).
