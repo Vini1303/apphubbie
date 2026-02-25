@@ -19,6 +19,11 @@ const BOLETOS_DB_PATH =
 const CONTEMPLADOS_XLSX_PATH =
   process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
 const CONTEMPLADOS_SHEET_NAME = (process.env.CONTEMPLADOS_SHEET_NAME || '').trim();
+const CONTEMPLADOS_SHEETS_ID = process.env.CONTEMPLADOS_SHEETS_ID || '1ndgDJESYEP-9Xx22EIyeb8yj59wxW3mRwOwMNs23qlA';
+const CONTEMPLADOS_SHEETS_GID = process.env.CONTEMPLADOS_SHEETS_GID || '953195054';
+const CONTEMPLADOS_SHEETS_CSV_URL =
+  process.env.CONTEMPLADOS_SHEETS_CSV_URL ||
+  `https://docs.google.com/spreadsheets/d/${CONTEMPLADOS_SHEETS_ID}/gviz/tq?tqx=out:csv&gid=${CONTEMPLADOS_SHEETS_GID}`;
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -119,17 +124,46 @@ const normalizeContempladosHeader = (value) =>
     .toUpperCase()
     .trim();
 
-const parseContempladosRowsFromWorksheet = (worksheet) => {
-  if (!worksheet) {
-    return [];
+const parseCsvLine = (line = '') => {
+  const values = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const nextChar = line[index + 1];
+
+    if (char === '"' && inQuotes && nextChar === '"') {
+      current += '"';
+      index += 1;
+      continue;
+    }
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+      continue;
+    }
+
+    if (char === ',' && !inQuotes) {
+      values.push(current);
+      current = '';
+      continue;
+    }
+
+    current += char;
   }
 
-  const rowsMatrix = xlsx.utils.sheet_to_json(worksheet, {
-    header: 1,
-    defval: '',
-    raw: false
-  });
+  values.push(current);
+  return values;
+};
 
+const parseCsvText = (text = '') => {
+  const normalized = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = normalized.split('\n').filter((line) => line.trim() !== '');
+  return lines.map(parseCsvLine);
+};
+
+const mapContempladosRows = (rowsMatrix = []) => {
   const requiredHeaders = ['COTA', 'NOME', 'VALOR_CREDITO', 'TIPO'];
   let headerRowIndex = -1;
   let headerMap = {};
@@ -182,6 +216,37 @@ const parseContempladosRowsFromWorksheet = (worksheet) => {
     .filter(Boolean);
 };
 
+const parseContempladosRowsFromWorksheet = (worksheet) => {
+  if (!worksheet) {
+    return [];
+  }
+
+  const rowsMatrix = xlsx.utils.sheet_to_json(worksheet, {
+    header: 1,
+    defval: '',
+    raw: false
+  });
+
+  return mapContempladosRows(rowsMatrix);
+};
+
+const getContempladosFromGoogleSheets = async () => {
+  const response = await fetch(CONTEMPLADOS_SHEETS_CSV_URL);
+  if (!response.ok) {
+    throw new Error(`Falha ao buscar contemplados no Google Sheets: ${response.status}`);
+  }
+
+  const csvText = await response.text();
+  const rowsMatrix = parseCsvText(csvText);
+  const rows = mapContempladosRows(rowsMatrix);
+
+  return {
+    rows,
+    sourcePath: CONTEMPLADOS_SHEETS_CSV_URL,
+    sourceType: 'google_sheets'
+  };
+};
+
 const getContempladosFromWorkbook = async () => {
   const existingFilePath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
   if (!existingFilePath) {
@@ -217,8 +282,21 @@ const getContempladosFromWorkbook = async () => {
   return {
     rows: bestRows,
     sourcePath: existingFilePath,
+    sourceType: 'local_xlsx',
     sheetName: bestSheetName
   };
+};
+
+const getContemplados = async () => {
+  try {
+    return await getContempladosFromGoogleSheets();
+  } catch (error) {
+    const localResult = await getContempladosFromWorkbook();
+    if (localResult.error) {
+      throw error;
+    }
+    return localResult;
+  }
 };
 
 const findExistingBaseDir = async () => {
@@ -598,7 +676,7 @@ const server = http.createServer(async (req, res) => {
 
   if (requestUrl.pathname === '/api/contemplados') {
     try {
-      const result = await getContempladosFromWorkbook();
+      const result = await getContemplados();
       if (result.error) {
         sendJson(res, 400, { error: result.error });
         return;
@@ -607,6 +685,8 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 200, {
         rows: result.rows,
         sourcePath: result.sourcePath,
+        sourceType: result.sourceType || 'local_xlsx',
+        sheetName: result.sheetName || null,
         updatedAt: new Date().toISOString()
       });
       return;

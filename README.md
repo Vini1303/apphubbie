@@ -157,15 +157,19 @@ Você pode configurar a planilha sem alterar código:
 - `RANKING_REFRESH_MS`: intervalo de atualização em ms (padrão: 60000).
 
 ## Robô Contemplados com atualização em tempo real
-O módulo **Robô → Contemplados** lê a planilha local abaixo e envia todos os clientes para o sistema:
+O módulo **Robô → Contemplados** busca os dados primeiro do Google Sheets abaixo (aba **Contemplados**) e envia todos os clientes para o sistema:
 
-- `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`
+- `https://docs.google.com/spreadsheets/d/1ndgDJESYEP-9Xx22EIyeb8yj59wxW3mRwOwMNs23qlA/edit?gid=953195054#gid=953195054`
 
 ### Como funciona
-- O backend expõe o endpoint `GET /api/contemplados` e faz a leitura direta do `.xlsx` a cada requisição.
-- O frontend consulta esse endpoint continuamente (polling) para refletir alterações da planilha em tempo real na tela.
+- O backend expõe o endpoint `GET /api/contemplados` e lê o CSV publicado do Google Sheets (gid `953195054`) a cada requisição.
+- Se o Google Sheets ficar indisponível, o backend usa fallback para planilha local `.xlsx`.
+- O frontend consulta esse endpoint continuamente (polling) para refletir alterações em tempo real na tela.
 
 ### Variáveis de ambiente opcionais
-- `CONTEMPLADOS_XLSX_PATH`: caminho da planilha (padrão: `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`).
-- `CONTEMPLADOS_SHEET_NAME`: nome da aba a ser priorizada (opcional). Se não informar, o sistema escolhe automaticamente a aba com mais registros válidos de contemplados.
+- `CONTEMPLADOS_SHEETS_CSV_URL`: URL completa do CSV da aba contemplados.
+- `CONTEMPLADOS_SHEETS_ID`: ID da planilha Google (padrão já configurado para essa planilha).
+- `CONTEMPLADOS_SHEETS_GID`: GID da aba contemplados (padrão: `953195054`).
+- `CONTEMPLADOS_XLSX_PATH`: caminho da planilha local de fallback (padrão: `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`).
+- `CONTEMPLADOS_SHEET_NAME`: nome da aba a ser priorizada no fallback local (opcional). Se não informar, o sistema escolhe automaticamente a aba com mais registros válidos de contemplados.
 - `HUBBIE_CONTEMPLADOS_REFRESH_MS`: intervalo de atualização no navegador, em ms (padrão: `15000`).
