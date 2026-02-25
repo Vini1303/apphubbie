@@ -155,3 +155,16 @@ Você pode configurar a planilha sem alterar código:
 - `SHEETS_ID`: ID da planilha (se não usar a URL completa).
 - `SHEETS_GID`: GID da aba (padrão: Analise Vendas Fevereiro).
 - `RANKING_REFRESH_MS`: intervalo de atualização em ms (padrão: 60000).
+
+## Robô Contemplados com atualização em tempo real
+O módulo **Robô → Contemplados** lê a planilha local abaixo e envia todos os clientes para o sistema:
+
+- `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`
+
+### Como funciona
+- O backend expõe o endpoint `GET /api/contemplados` e faz a leitura direta do `.xlsx` a cada requisição.
+- O frontend consulta esse endpoint continuamente (polling) para refletir alterações da planilha em tempo real na tela.
+
+### Variáveis de ambiente opcionais
+- `CONTEMPLADOS_XLSX_PATH`: caminho da planilha (padrão: `C:\Users\vinicius.mesquita\Documents\Contemplados.xlsx`).
+- `HUBBIE_CONTEMPLADOS_REFRESH_MS`: intervalo de atualização no navegador, em ms (padrão: `15000`).

@@ -661,6 +661,7 @@ const buildRankingFromRows = (rows) => {
 };
 
 const rankingRefreshMs = 60 * 1000;
+const contempladosRefreshMs = Number(window.HUBBIE_CONTEMPLADOS_REFRESH_MS || 15 * 1000);
 
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
@@ -1380,6 +1381,7 @@ calcularMediaConsultor();
 fetchRankingFromSheets();
 setInterval(fetchRankingFromSheets, rankingRefreshMs);
 fetchContemplados();
+setInterval(fetchContemplados, contempladosRefreshMs);
 loadSession();
 initializeLoginHero();
 initializeLoginHeroUpload();
