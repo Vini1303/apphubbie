@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const xlsx = require('xlsx');
 
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, 'public');
@@ -15,6 +16,9 @@ const BOLETOS_BASE_DIR =
   'C:\\Users\\vinicius.mesquita\\Desktop\\mesclarboletos\\renomearboletos4';
 const BOLETOS_DB_PATH =
   process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
+const CONTEMPLADOS_XLSX_PATH =
+  process.env.CONTEMPLADOS_XLSX_PATH ||
+  'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -76,6 +80,79 @@ const isDirectoryContractMatch = (directoryName, contract, allowFlexibleMatch = 
 
   const flexiblePattern = new RegExp(`^${escapeRegExp(contract)}(?:\\D|$)`);
   return flexiblePattern.test(normalizedName);
+};
+
+
+const normalizeWindowsPathCandidates = (inputPath) => {
+  const candidates = [inputPath];
+
+  if (process.platform !== 'win32' && /^[a-zA-Z]:\\/.test(inputPath)) {
+    const drive = inputPath[0].toLowerCase();
+    const rest = inputPath.slice(2).replace(/\\/g, '/');
+    candidates.push(`/mnt/${drive}${rest}`);
+  }
+
+  return [...new Set(candidates.map((value) => value.trim()).filter(Boolean))];
+};
+
+const findExistingFilePath = async (inputPath) => {
+  const candidates = normalizeWindowsPathCandidates(inputPath);
+
+  for (const candidate of candidates) {
+    try {
+      const stats = await fs.promises.stat(candidate);
+      if (stats.isFile()) {
+        return candidate;
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  return null;
+};
+
+const loadContempladosFromSpreadsheet = async () => {
+  const spreadsheetPath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
+
+  if (!spreadsheetPath) {
+    throw new Error(
+      'Planilha de contemplados não encontrada. Verifique CONTEMPLADOS_XLSX_PATH no servidor.'
+    );
+  }
+
+  const workbook = xlsx.readFile(spreadsheetPath);
+  const firstSheetName = workbook.SheetNames[0];
+
+  if (!firstSheetName) {
+    return { items: [], spreadsheetPath };
+  }
+
+  const rows = xlsx.utils.sheet_to_json(workbook.Sheets[firstSheetName], {
+    header: 1,
+    defval: ''
+  });
+
+  const items = rows
+    .slice(1)
+    .map((row) => {
+      const colC = (row[2] || '').toString().trim();
+      const colD = (row[3] || '').toString().trim();
+      const colE = (row[4] || '').toString().trim();
+      const colF = (row[5] || '').toString().trim();
+
+      return {
+        colC,
+        colD,
+        colE,
+        colF
+      };
+    })
+    .filter((item) => item.colC || item.colD || item.colE || item.colF);
+
+  return { items, spreadsheetPath };
 };
 
 const normalizeBaseDirCandidates = (baseDir) => {
@@ -369,6 +446,22 @@ const server = http.createServer(async (req, res) => {
     }
     sendResponse(res, 200, rankingCache.csv, 'text/csv; charset=utf-8');
     return;
+  }
+
+  if (requestUrl.pathname === '/api/contemplados') {
+    try {
+      const contemplados = await loadContempladosFromSpreadsheet();
+      sendJson(res, 200, {
+        source: 'spreadsheet',
+        path: contemplados.spreadsheetPath,
+        total: contemplados.items.length,
+        items: contemplados.items
+      });
+      return;
+    } catch (error) {
+      sendJson(res, 400, { error: error.message || 'Falha ao carregar planilha de contemplados.' });
+      return;
+    }
   }
 
   if (requestUrl.pathname === '/api/boletos') {
