@@ -713,6 +713,17 @@ button:hover {
   color: #111827;
 }
 
+
+.robot-contemplado--header {
+  background: #e5edf9;
+  border-color: #c9d7ef;
+  font-weight: 700;
+}
+
+.robot-contemplado--header strong {
+  color: #1f2937;
+}
+
 .consultor-form {
   display: flex;
   flex-direction: column;

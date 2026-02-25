@@ -204,9 +204,9 @@ const state = {
     { id: '40100222', file: '40100222_01.pdf', status: 'Clique para baixar' }
   ],
   contemplados: [
-    { colC: 'Ana Luiza Pereira', colD: 'Plano 310', colE: 'R$ 180.000,00', colF: 'Aprovado' },
-    { colC: 'Gustavo Almeida', colD: 'Plano 240', colE: 'R$ 220.000,00', colF: 'Aprovado' },
-    { colC: 'Isabella Costa', colD: 'Plano 180', colE: 'R$ 140.000,00', colF: 'Aprovado' }
+    { cota: '0314-00', nome: 'GUSTAVO SILVA', valorCredito: '70.000,00', tipo: 'LANCE' },
+    { cota: '4346-00', nome: 'KAMILLA GONCALVES', valorCredito: '90.000,00', tipo: 'LANCE' },
+    { cota: '4517-00', nome: 'PAULO RIBEIRO', valorCredito: '70.000,00', tipo: 'LANCE' }
   ],
   campaigns: [
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
@@ -823,14 +823,24 @@ const renderContemplados = () => {
     return;
   }
 
+  const header = document.createElement('li');
+  header.className = 'robot-contemplado robot-contemplado--header';
+  header.innerHTML = `
+    <span>COTA</span>
+    <span>NOME</span>
+    <span>VALOR CREDITO</span>
+    <span>TIPO</span>
+  `;
+  contempladosList.appendChild(header);
+
   state.contemplados.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'robot-contemplado';
     li.innerHTML = `
-      <span>${item.colC || '-'}</span>
-      <span>${item.colD || '-'}</span>
-      <span>${item.colE || '-'}</span>
-      <strong>${item.colF || '-'}</strong>
+      <span>${item.cota || item.colC || '-'}</span>
+      <span>${item.nome || item.colD || '-'}</span>
+      <span>${item.valorCredito || item.colE || '-'}</span>
+      <strong>${item.tipo || item.colF || '-'}</strong>
     `;
     contempladosList.appendChild(li);
   });

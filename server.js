@@ -108,6 +108,16 @@ const findExistingFilePath = async (targetPath) => {
   return null;
 };
 
+const normalizeContempladosHeader = (value) =>
+  (value || '')
+    .toString()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/[^A-Za-z0-9_]/g, '')
+    .toUpperCase()
+    .trim();
+
 const getContempladosFromWorkbook = async () => {
   const existingFilePath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
   if (!existingFilePath) {
@@ -125,40 +135,65 @@ const getContempladosFromWorkbook = async () => {
     return { error: 'A planilha de contemplados está vazia.' };
   }
 
-  const range = xlsx.utils.decode_range(worksheet['!ref'] || 'A1:A1');
-  const rows = [];
+  const rowsMatrix = xlsx.utils.sheet_to_json(worksheet, {
+    header: 1,
+    defval: '',
+    raw: false
+  });
 
-  for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex += 1) {
-    const values = ['C', 'D', 'E', 'F'].map((column) => {
-      const cellAddress = `${column}${rowIndex + 1}`;
-      const cell = worksheet[cellAddress];
-      if (!cell) {
-        return '';
-      }
-      const formatted = xlsx.utils.format_cell(cell);
-      return (formatted || '').toString().trim();
+  const requiredHeaders = ['COTA', 'NOME', 'VALOR_CREDITO', 'TIPO'];
+  let headerRowIndex = -1;
+  let headerMap = {};
+
+  for (let index = 0; index < Math.min(rowsMatrix.length, 15); index += 1) {
+    const normalizedHeader = (rowsMatrix[index] || []).map(normalizeContempladosHeader);
+    const map = {};
+
+    requiredHeaders.forEach((header) => {
+      map[header] = normalizedHeader.findIndex((value) => value === header);
     });
 
-    if (values.every((value) => !value)) {
-      continue;
+    if (requiredHeaders.every((header) => map[header] !== -1)) {
+      headerRowIndex = index;
+      headerMap = map;
+      break;
     }
-
-    rows.push({ colC: values[0], colD: values[1], colE: values[2], colF: values[3] });
   }
 
-  const normalizedHeaders = ['nome', 'plano', 'valor', 'status'];
-  const firstRow = rows[0];
-  const firstRowValues = firstRow
-    ? [firstRow.colC, firstRow.colD, firstRow.colE, firstRow.colF]
-        .map((value) => (value || '').toString().trim().toLowerCase())
-    : [];
-  const looksLikeHeader =
-    firstRowValues.length === 4 &&
-    (firstRowValues.every((value, index) => value === normalizedHeaders[index]) ||
-      firstRowValues.every((value, index) => value === String.fromCharCode(99 + index)));
+  const useNamedHeaders = headerRowIndex !== -1;
+  const fallbackHeaderIndexes = { COTA: 2, NOME: 3, VALOR_CREDITO: 4, TIPO: 5 };
+  const startRow = useNamedHeaders ? headerRowIndex + 1 : 0;
+
+  const rows = rowsMatrix
+    .slice(startRow)
+    .map((row) => {
+      const cota = (row[useNamedHeaders ? headerMap.COTA : fallbackHeaderIndexes.COTA] || '').toString().trim();
+      const nome = (row[useNamedHeaders ? headerMap.NOME : fallbackHeaderIndexes.NOME] || '').toString().trim();
+      const valorCredito =
+        (row[useNamedHeaders ? headerMap.VALOR_CREDITO : fallbackHeaderIndexes.VALOR_CREDITO] || '')
+          .toString()
+          .trim();
+      const tipo = (row[useNamedHeaders ? headerMap.TIPO : fallbackHeaderIndexes.TIPO] || '').toString().trim();
+
+      if (!cota && !nome && !valorCredito && !tipo) {
+        return null;
+      }
+
+      return {
+        cota,
+        nome,
+        valorCredito,
+        tipo,
+        colC: cota,
+        colD: nome,
+        colE: valorCredito,
+        colF: tipo
+      };
+    })
+    .filter(Boolean);
 
   return {
-    rows: looksLikeHeader ? rows.slice(1) : rows,
+    rows,
     sourcePath: existingFilePath
   };
 };
