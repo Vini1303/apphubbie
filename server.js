@@ -1,6 +1,7 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const xlsx = require('xlsx');
 
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, 'public');
@@ -15,6 +16,8 @@ const BOLETOS_BASE_DIR =
   'C:\\Users\\vinicius.mesquita\\Desktop\\mesclarboletos\\renomearboletos4';
 const BOLETOS_DB_PATH =
   process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
+const CONTEMPLADOS_XLSX_PATH =
+  process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -72,6 +75,92 @@ const normalizeBaseDirCandidates = (baseDir) => {
   }
 
   return [...new Set(candidates.map((value) => value.trim()).filter(Boolean))];
+};
+
+const normalizePathCandidates = (targetPath) => {
+  const candidates = [targetPath];
+
+  if (process.platform !== 'win32' && /^[a-zA-Z]:\\/.test(targetPath)) {
+    const drive = targetPath[0].toLowerCase();
+    const rest = targetPath.slice(2).replace(/\\/g, '/');
+    candidates.push(`/mnt/${drive}${rest}`);
+  }
+
+  return [...new Set(candidates.map((value) => value.trim()).filter(Boolean))];
+};
+
+const findExistingFilePath = async (targetPath) => {
+  const candidates = normalizePathCandidates(targetPath);
+
+  for (const candidate of candidates) {
+    try {
+      const stats = await fs.promises.stat(candidate);
+      if (stats.isFile()) {
+        return candidate;
+      }
+    } catch (error) {
+      if (error.code !== 'ENOENT') {
+        throw error;
+      }
+    }
+  }
+
+  return null;
+};
+
+const getContempladosFromWorkbook = async () => {
+  const existingFilePath = await findExistingFilePath(CONTEMPLADOS_XLSX_PATH);
+  if (!existingFilePath) {
+    return {
+      error:
+        'Planilha de contemplados não encontrada. Verifique CONTEMPLADOS_XLSX_PATH no servidor e reinicie a aplicação.'
+    };
+  }
+
+  const workbook = xlsx.readFile(existingFilePath, { cellDates: true });
+  const firstSheetName = workbook.SheetNames[0];
+  const worksheet = firstSheetName ? workbook.Sheets[firstSheetName] : null;
+
+  if (!worksheet) {
+    return { error: 'A planilha de contemplados está vazia.' };
+  }
+
+  const range = xlsx.utils.decode_range(worksheet['!ref'] || 'A1:A1');
+  const rows = [];
+
+  for (let rowIndex = range.s.r; rowIndex <= range.e.r; rowIndex += 1) {
+    const values = ['C', 'D', 'E', 'F'].map((column) => {
+      const cellAddress = `${column}${rowIndex + 1}`;
+      const cell = worksheet[cellAddress];
+      if (!cell) {
+        return '';
+      }
+      const formatted = xlsx.utils.format_cell(cell);
+      return (formatted || '').toString().trim();
+    });
+
+    if (values.every((value) => !value)) {
+      continue;
+    }
+
+    rows.push({ colC: values[0], colD: values[1], colE: values[2], colF: values[3] });
+  }
+
+  const normalizedHeaders = ['nome', 'plano', 'valor', 'status'];
+  const firstRow = rows[0];
+  const firstRowValues = firstRow
+    ? [firstRow.colC, firstRow.colD, firstRow.colE, firstRow.colF]
+        .map((value) => (value || '').toString().trim().toLowerCase())
+    : [];
+  const looksLikeHeader =
+    firstRowValues.length === 4 &&
+    (firstRowValues.every((value, index) => value === normalizedHeaders[index]) ||
+      firstRowValues.every((value, index) => value === String.fromCharCode(99 + index)));
+
+  return {
+    rows: looksLikeHeader ? rows.slice(1) : rows,
+    sourcePath: existingFilePath
+  };
 };
 
 const findExistingBaseDir = async () => {
@@ -445,6 +534,26 @@ const server = http.createServer(async (req, res) => {
       return;
     } catch (error) {
       sendJson(res, 500, { error: error.message || 'Falha ao reconstruir banco de boletos.' });
+      return;
+    }
+  }
+
+  if (requestUrl.pathname === '/api/contemplados') {
+    try {
+      const result = await getContempladosFromWorkbook();
+      if (result.error) {
+        sendJson(res, 400, { error: result.error });
+        return;
+      }
+
+      sendJson(res, 200, {
+        rows: result.rows,
+        sourcePath: result.sourcePath,
+        updatedAt: new Date().toISOString()
+      });
+      return;
+    } catch (error) {
+      sendJson(res, 500, { error: 'Não foi possível carregar a planilha de contemplados.' });
       return;
     }
   }
