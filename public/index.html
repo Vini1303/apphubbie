@@ -14,6 +14,45 @@
           <span>Hubbie</span>
         </button>
         <nav class="menu" id="menu">
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+          <button class="menu__item is-active" data-section="inicio" data-roles="Comercial,Gestor,Administrador">
+            Início
+          </button>
+          <button class="menu__item" data-section="carteira" data-roles="Comercial,Administrador">
+            Carteira de clientes
+          </button>
+          <button class="menu__item" data-section="boletos" data-roles="Comercial,Gestor,Administrador">
+            Boletos e vencimentos
+          </button>
+          <button class="menu__item" data-section="metas" data-roles="Comercial,Gestor,Administrador">
+            Metas e campanhas
+          </button>
+          <button class="menu__item" data-section="ranking" data-roles="Comercial,Gestor,Administrador">
+            Ranking e pontuação
+          </button>
+          <button class="menu__item" data-section="robos" data-roles="Comercial,Gestor,Administrador">
+            Robôs
+          </button>
+          <button class="menu__item" data-section="agenda" data-roles="Comercial,Gestor,Administrador">
+            Agenda e lembretes
+          </button>
+          <button class="menu__item" data-section="chamados" data-roles="Comercial,Gestor,Administrador">
+            Chamados
+          </button>
+          <button class="menu__item" data-section="relatorio-consultor" data-roles="Gestor,Administrador">
+            Relatório de consultor
+          </button>
+          <button class="menu__item" data-section="minha-operacao" data-roles="Gestor,Administrador">
+            Minha operação
+          </button>
+          <button class="menu__item" data-section="comunicacao" data-roles="Administrador">
+            Comunicação
+          </button>
+          <button class="menu__item" data-section="relatorios" data-roles="Administrador">
+            Relatórios
+          </button>
+          <button class="menu__item menu__item--logout" data-section="logout" data-roles="Comercial,Gestor,Administrador">
+
           <button class="menu__item is-active" data-section="inicio" data-roles="Comercial,Gestor,TI">
             Início
           </button>
@@ -48,6 +87,7 @@
             Relatórios
           </button>
           <button class="menu__item menu__item--logout" data-section="logout" data-roles="Comercial,Gestor,TI">
+ codex/develop-comprehensive-consorcio-management-system
             Sair
           </button>
         </nav>
@@ -363,6 +403,8 @@
                       <button type="button" class="ghost" id="boletoSearchButton">Buscar</button>
                     </div>
                   </label>
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+
                   <label>
                     Conta
                     <select id="boletoAccount">
@@ -375,6 +417,7 @@
                     <button type="button" id="boletoEmitButton">Emitir boleto</button>
                     <small class="robot-status" id="boletoStatus"></small>
                   </div>
+ codex/develop-comprehensive-consorcio-management-system
                 </div>
                 <div class="robot-files">
                   <h4>Arquivos encontrados</h4>
@@ -419,6 +462,232 @@
             </div>
           </div>
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+          <div class="section" data-section="chamados">
+            <div class="card chamados-panel">
+              <header class="chamados-panel__header">
+                <div>
+                  <h3>Chamados</h3>
+                  <p class="sub">Acompanhe e registre suas solicitações.</p>
+                </div>
+                <div class="chamados-tabs">
+                  <button class="chamados-tab is-active" data-chamados-tab="dashboard" data-roles="Comercial,Gestor,Administrador">
+                    Dashboard
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="lista" data-roles="Comercial,Gestor,Administrador">
+                    Lista de chamados
+                  </button>
+                  <button class="chamados-tab" data-chamados-tab="ti-detalhe" data-roles="Administrador">
+                    Detalhe chamado
+                  </button>
+                </div>
+              </header>
+
+              <div class="chamados-content is-active" data-chamados-content="dashboard" data-roles="Comercial,Gestor,Administrador">
+                <div class="ti-layout">
+                  <aside class="ti-sidebar">
+                    <div class="ti-select">
+                      <span>Assistência</span>
+                      <span class="chevron">▾</span>
+                    </div>
+                    <div class="ti-location">
+                      <small>Localizações</small>
+                      <span>Hubbie</span>
+                    </div>
+                    <button class="ti-sidecard ti-sidecard--yellow" type="button" data-status="todos">
+                      <strong>462</strong>
+                      <span>Chamados</span>
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--orange" type="button" data-status="atrasados">
+                      <strong>0</strong>
+                      <span>Chamados atrasados</span>
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--red" type="button" data-status="problema">
+                      <strong>0</strong>
+                      <span>Problema</span>
+                    </button>
+                    <button class="ti-sidecard ti-sidecard--green" type="button" data-status="mudanca">
+                      <strong>0</strong>
+                      <span>Mudança</span>
+                    </button>
+                  </aside>
+                  <div class="ti-main">
+                    <div class="ti-chart-card">
+                      <div class="ti-chart-legend">
+                        <span class="legend legend--abertos">Abertos</span>
+                        <span class="legend legend--solucionados">Solucionados</span>
+                        <span class="legend legend--atrasados">Atrasado</span>
+                        <span class="legend legend--fechados">Fechado</span>
+                      </div>
+                      <svg viewBox="0 0 600 200" role="img" aria-label="Gráfico de chamados">
+                        <line class="grid" x1="0" y1="40" x2="600" y2="40" />
+                        <line class="grid" x1="0" y1="80" x2="600" y2="80" />
+                        <line class="grid" x1="0" y1="120" x2="600" y2="120" />
+                        <line class="grid" x1="0" y1="160" x2="600" y2="160" />
+                        <path class="area-solucionados" d="M0,180 L60,60 L120,80 L180,120 L240,130 L300,110 L360,100 L420,120 L480,160 L540,90 L600,140 L600,200 L0,200 Z" />
+                        <polyline class="line-solucionados" points="0,180 60,60 120,80 180,120 240,130 300,110 360,100 420,120 480,160 540,90 600,140" />
+                        <polyline class="line-abertos" points="0,170 60,90 120,100 180,140 240,150 300,135 360,130 420,140 480,170 540,120 600,150" />
+                        <polyline class="line-atrasados" points="0,190 60,170 120,175 180,180 240,182 300,176 360,178 420,180 480,185 540,178 600,182" />
+                        <polyline class="line-fechados" points="0,195 60,180 120,182 180,185 240,188 300,183 360,185 420,187 480,190 540,184 600,188" />
+                      </svg>
+                      <div class="ti-chart-axis">
+                        <span>2025-03</span><span>2025-04</span><span>2025-05</span><span>2025-06</span><span>2025-07</span><span>2025-08</span><span>2025-09</span><span>2025-10</span><span>2025-11</span><span>2025-12</span><span>2026-01</span>
+                      </div>
+                      <small>Evolução dos chamados no último ano</small>
+                    </div>
+                    <div class="ti-metric-grid">
+                      <button class="ti-metric ti-metric--green" type="button" data-status="novo">
+                        <strong>0</strong>
+                        <span>Chamados novos</span>
+                      </button>
+                      <button class="ti-metric ti-metric--blue" type="button" data-status="atribuido">
+                        <strong>1</strong>
+                        <span>Chamados atribuídos</span>
+                      </button>
+                      <button class="ti-metric ti-metric--gray" type="button" data-status="solucionado">
+                        <strong>378</strong>
+                        <span>Chamados solucionados</span>
+                      </button>
+                      <button class="ti-metric ti-metric--yellow" type="button" data-status="em-atendimento">
+                        <strong>28</strong>
+                        <span>Em atendimento</span>
+                      </button>
+                      <button class="ti-metric ti-metric--orange" type="button" data-status="pendente">
+                        <strong>19</strong>
+                        <span>Pendentes</span>
+                      </button>
+                      <button class="ti-metric ti-metric--red" type="button" data-status="atrasado">
+                        <strong>0</strong>
+                        <span>Atrasados</span>
+                      </button>
+                    </div>
+                    <div class="ti-analytics">
+                      <div class="ti-analytics__card">
+                        <h4>Média de chamados</h4>
+                        <div class="ti-metrics">
+                          <div><span>Dia</span><strong>5,4</strong></div>
+                          <div><span>Mês</span><strong>162</strong></div>
+                          <div><span>Ano</span><strong>1.942</strong></div>
+                        </div>
+                      </div>
+                      <div class="ti-analytics__card">
+                        <h4>Dias com mais chamados</h4>
+                        <ul class="ti-list">
+                          <li><span>Segunda-feira</span><strong>32%</strong></li>
+                          <li><span>Terça-feira</span><strong>24%</strong></li>
+                          <li><span>Quarta-feira</span><strong>18%</strong></li>
+                        </ul>
+                      </div>
+                      <div class="ti-analytics__card">
+                        <h4>Motivos mais comuns</h4>
+                        <ul class="ti-list">
+                          <li><span>Headset</span><strong>28%</strong></li>
+                          <li><span>Monitor</span><strong>22%</strong></li>
+                          <li><span>CPU</span><strong>19%</strong></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="lista" data-roles="Comercial,Gestor,Administrador">
+                <div class="chamados-list-header">
+                  <h4 id="chamadosListaTitulo">Chamados - Todos</h4>
+                  <div class="chamados-filter-top">
+                    <button class="chip is-active" data-status="todos">Todos</button>
+                    <button class="chip" data-status="novo">Novo</button>
+                    <button class="chip" data-status="em-atendimento">Em atendimento</button>
+                    <button class="chip" data-status="pendente">Pendente</button>
+                    <button class="chip" data-status="solucionado">Solucionado</button>
+                    <button class="chip" data-status="fechado">Fechado</button>
+                  </div>
+                </div>
+                <div class="chamados-list">
+                  <article class="chamado-card status--novo">
+                    <div>
+                      <strong>Chamado #3051</strong>
+                      <p>Monitor apagando.</p>
+                      <small>Categoria: Monitor • Equipe Tróia</small>
+                    </div>
+                    <span class="status-pill">Novo</span>
+                  </article>
+                  <article class="chamado-card status--em-atendimento">
+                    <div>
+                      <strong>Chamado #3048</strong>
+                      <p>CPU lenta.</p>
+                      <small>Categoria: CPU • Equipe Chronos</small>
+                    </div>
+                    <span class="status-pill">Em atendimento</span>
+                  </article>
+                  <article class="chamado-card status--pendente">
+                    <div>
+                      <strong>Chamado #3040</strong>
+                      <p>Headset com ruído.</p>
+                      <small>Categoria: Headset • Equipe Meteor</small>
+                    </div>
+                    <span class="status-pill">Pendente</span>
+                  </article>
+                  <article class="chamado-card status--solucionado">
+                    <div>
+                      <strong>Chamado #3032</strong>
+                      <p>Teclado substituído.</p>
+                      <small>Categoria: Teclado • Equipe Suits</small>
+                    </div>
+                    <span class="status-pill">Solucionado</span>
+                  </article>
+                </div>
+              </div>
+
+              <div class="chamados-content" data-chamados-content="ti-detalhe" data-roles="Administrador">
+                <div class="ti-detalhe">
+                  <div class="ti-thread">
+                    <div class="ti-message">
+                      <strong>Consultor</strong>
+                      <p>Olá, meu monitor está piscando e fica preto.</p>
+                      <small>10:42</small>
+                    </div>
+                    <div class="ti-message ti-message--reply">
+                      <strong>TI</strong>
+                      <p>Vamos verificar. Pode enviar a etiqueta do monitor?</p>
+                      <small>10:50</small>
+                    </div>
+                  </div>
+                  <div class="ti-side">
+                    <label>
+                      Status do chamado
+                      <select>
+                        <option>Novo</option>
+                        <option>Em andamento</option>
+                        <option>Pendente</option>
+                        <option>Solucionado</option>
+                        <option>Fechado</option>
+                      </select>
+                    </label>
+                    <label>
+                      Categoria
+                      <select>
+                        <option>Monitor</option>
+                        <option>CPU</option>
+                        <option>Headset</option>
+                        <option>Mouse</option>
+                        <option>Teclado</option>
+                        <option>4NET</option>
+                      </select>
+                    </label>
+                    <label class="form-full">
+                      Resposta/Atualização
+                      <textarea rows="5" placeholder="Digite a resposta..."></textarea>
+                    </label>
+                    <button type="button" class="primary">Salvar</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+ codex/develop-comprehensive-consorcio-management-system
           <div class="section" data-section="comunicacao">
             <div class="card">
               <h3>Comunicação com clientes</h3>

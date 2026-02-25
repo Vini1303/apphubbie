@@ -4,7 +4,17 @@
   "description": "Sistema comercial básico (app + web) para consórcio",
   "main": "server.js",
   "scripts": {
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+    "start": "node server.js",
+    "test": "node --test tests/server.integration.test.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "xlsx": "^0.18.5"
+  }
+
     "start": "node server.js"
   },
   "license": "UNLICENSED"
+ codex/develop-comprehensive-consorcio-management-system
 }
