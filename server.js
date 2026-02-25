@@ -318,7 +318,7 @@ const findExistingBaseDir = async () => {
   return null;
 };
 
-const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
+const listFilesRecursive = async (rootDir, relativePrefix = '') => {
   const entries = await fs.promises.readdir(rootDir, { withFileTypes: true });
   const files = [];
 
@@ -327,12 +327,12 @@ const listPdfFilesRecursive = async (rootDir, relativePrefix = '') => {
     const relative = relativePrefix ? path.join(relativePrefix, entry.name) : entry.name;
 
     if (entry.isDirectory()) {
-      const nestedFiles = await listPdfFilesRecursive(absolute, relative);
+      const nestedFiles = await listFilesRecursive(absolute, relative);
       files.push(...nestedFiles);
       continue;
     }
 
-    if (entry.isFile() && entry.name.toLowerCase().endsWith('.pdf')) {
+    if (entry.isFile()) {
       files.push(relative);
     }
   }
@@ -420,7 +420,7 @@ const listContractPdfFiles = async (contract) => {
   const files = [];
 
   for (const contractDir of contractDirs) {
-    const relativeFiles = await listPdfFilesRecursive(contractDir.absolute);
+    const relativeFiles = await listFilesRecursive(contractDir.absolute);
 
     for (const relativePath of relativeFiles) {
       const prefixedRelativePath = path.join(contractDir.relative, relativePath).replace(/\\/g, '/');
@@ -430,7 +430,7 @@ const listContractPdfFiles = async (contract) => {
       unique.add(prefixedRelativePath);
       files.push({
         file: prefixedRelativePath,
-        status: 'PDF encontrado',
+        status: 'Arquivo encontrado',
         downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
           prefixedRelativePath
         )}`
@@ -488,7 +488,7 @@ const buildBoletosDatabase = async (baseDir) => {
       const contract = entry.name.trim();
 
       if (isValidContract(contract)) {
-        const relativeFiles = await listPdfFilesRecursive(absolute);
+        const relativeFiles = await listFilesRecursive(absolute);
 
         if (relativeFiles.length) {
           const prefixed = relativeFiles.map((file) => path.join(relative, file).replace(/\\/g, '/'));
@@ -562,7 +562,7 @@ const ensureBoletosDatabaseLoaded = async () => {
 const mapDatabaseFilesToApi = (contract, files = []) =>
   files.map((relativePath) => ({
     file: relativePath,
-    status: 'PDF encontrado',
+    status: 'Arquivo encontrado',
     downloadUrl: `/api/boletos/download?contract=${encodeURIComponent(contract)}&file=${encodeURIComponent(
       relativePath
     )}`
@@ -700,7 +700,7 @@ const server = http.createServer(async (req, res) => {
     const contract = (requestUrl.searchParams.get('contract') || '').trim();
     const file = (requestUrl.searchParams.get('file') || '').trim();
 
-    if (!isValidContract(contract) || !file || !file.toLowerCase().endsWith('.pdf')) {
+    if (!isValidContract(contract) || !file) {
       sendResponse(res, 400, 'Parâmetros inválidos.', 'text/plain; charset=utf-8');
       return;
     }
@@ -787,9 +787,12 @@ const server = http.createServer(async (req, res) => {
         return;
       }
 
+      const extension = path.extname(normalizedFile).toLowerCase();
+      const contentType = MIME_TYPES[extension] || 'application/octet-stream';
+
       res.writeHead(200, {
-        'Content-Type': MIME_TYPES['.pdf'],
-        'Content-Disposition': `inline; filename="${path.basename(normalizedFile)}"`
+        'Content-Type': contentType,
+        'Content-Disposition': `attachment; filename="${path.basename(normalizedFile)}"`
       });
       fs.createReadStream(resolvedFilePath).pipe(res);
       return;
