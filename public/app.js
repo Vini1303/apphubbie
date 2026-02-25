@@ -51,8 +51,16 @@ const contractEmitButton = document.getElementById('contractEmitButton');
 const contractFilesList = document.getElementById('contractFiles');
 const contractStatus = document.getElementById('contractStatus');
 const boletoSearchInput = document.getElementById('boletoSearch');
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const boletoSearchButton = document.getElementById('boletoSearchButton');
 const boletoFilesList = document.getElementById('boletoFiles');
+
+const boletoAccountSelect = document.getElementById('boletoAccount');
+const boletoSearchButton = document.getElementById('boletoSearchButton');
+const boletoEmitButton = document.getElementById('boletoEmitButton');
+const boletoFilesList = document.getElementById('boletoFiles');
+const boletoStatus = document.getElementById('boletoStatus');
+ codex/develop-comprehensive-consorcio-management-system
 const contempladosList = document.getElementById('contempladosList');
 const consultorForm = document.getElementById('consultorForm');
 const consultorResultado = document.getElementById('consultorResultado');
@@ -66,8 +74,11 @@ const operacaoPorConsultor = document.getElementById('operacaoPorConsultor');
 const operacaoCampanhaFalta = document.getElementById('operacaoCampanhaFalta');
 const operacaoMetaConsultor = document.getElementById('operacaoMetaConsultor');
 const operacaoConsultores = document.getElementById('operacaoConsultores');
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const chamadosTabs = document.querySelectorAll('.chamados-tab');
 const chamadosContents = document.querySelectorAll('.chamados-content');
+
+ codex/develop-comprehensive-consorcio-management-system
 
 let storedOverrides = {};
 try {
@@ -203,6 +214,7 @@ const state = {
     { id: '40311211', file: '40311211_04.pdf', status: 'Clique para baixar' },
     { id: '40100222', file: '40100222_01.pdf', status: 'Clique para baixar' }
   ],
+codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 codex/check-and-display-boleto-files
   contemplados: [],
 
@@ -212,6 +224,14 @@ codex/check-and-display-boleto-files
     { colC: 'Isabella Costa', colD: 'Plano 180', colE: 'R$ 140.000,00', colF: 'Aprovado' }
   ],
 codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+  contemplados: [
+    { name: 'Ana Luiza Pereira', plan: 'Plano 310', value: 'R$ 180.000,00' },
+    { name: 'Gustavo Almeida', plan: 'Plano 240', value: 'R$ 220.000,00' },
+    { name: 'Isabella Costa', plan: 'Plano 180', value: 'R$ 140.000,00' },
+    { name: 'Lucas Martins', plan: 'Plano 360', value: 'R$ 320.000,00' },
+    { name: 'Mariana Ferreira', plan: 'Plano 200', value: 'R$ 190.000,00' }
+  ],
+ codex/develop-comprehensive-consorcio-management-system
   campaigns: [
     { name: 'Campanha Ouro', status: 'Faltam 80 pts' },
     { name: 'Campanha Indique & Ganhe', status: '2 indicações pendentes' },
@@ -497,7 +517,11 @@ const renderDashboard = () => {
   applyClientFilter();
   renderReminders();
   renderRobotFiles(contractFilesList, state.robotContracts);
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   renderRobotFiles(boletoFilesList, []);
+
+  renderRobotFiles(boletoFilesList, state.robotBoletos);
+ codex/develop-comprehensive-consorcio-management-system
   renderContemplados();
 };
 
@@ -666,6 +690,7 @@ const buildRankingFromRows = (rows) => {
 
 const rankingRefreshMs = 60 * 1000;
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
 const fetchContempladosFromSpreadsheet = async () => {
   try {
@@ -685,6 +710,8 @@ const fetchContempladosFromSpreadsheet = async () => {
   }
 };
 
+
+ codex/develop-comprehensive-consorcio-management-system
 const fetchRankingFromSheets = async () => {
   const sheetId = '1IuODtcSId6uzy7Rzz1rA0Msm7p6w7PlTbs4xbMR6VKg';
   const gid = '1940056038';
@@ -728,6 +755,7 @@ const fetchRankingFromSheets = async () => {
   }
 };
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
 const fetchContemplados = async () => {
   try {
@@ -748,6 +776,8 @@ const fetchContemplados = async () => {
   }
 };
 
+
+ codex/develop-comprehensive-consorcio-management-system
 const renderIndividualCampaigns = () => {
   const container = document.getElementById('individualCampaigns');
   container.innerHTML = '';
@@ -802,7 +832,11 @@ const renderReminders = () => {
   );
 };
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const renderRobotFiles = (listElement, items, emptyMessage = 'Nenhum arquivo encontrado para esse contrato.') => {
+
+const renderRobotFiles = (listElement, items) => {
+ codex/develop-comprehensive-consorcio-management-system
   if (!listElement) {
     return;
   }
@@ -810,24 +844,35 @@ const renderRobotFiles = (listElement, items, emptyMessage = 'Nenhum arquivo enc
   if (!items.length) {
     const empty = document.createElement('li');
     empty.className = 'robot-file robot-file--empty';
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
     empty.textContent = emptyMessage;
+
+    empty.textContent = 'Nenhum arquivo encontrado para esse contrato.';
+ codex/develop-comprehensive-consorcio-management-system
     listElement.appendChild(empty);
     return;
   }
   items.forEach((item) => {
     const li = document.createElement('li');
     li.className = 'robot-file';
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
     const action = item.downloadUrl
       ? `<a class="ghost" href="${item.downloadUrl}" target="_blank" rel="noopener noreferrer">Baixar</a>`
       : '<button type="button" class="ghost">Baixar</button>';
 
+
+ codex/develop-comprehensive-consorcio-management-system
     li.innerHTML = `
       <div>
         <strong>${item.file}</strong>
         <span>${item.status}</span>
       </div>
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
       ${action}
+
+      <button type="button" class="ghost">Baixar</button>
+ codex/develop-comprehensive-consorcio-management-system
     `;
     listElement.appendChild(li);
   });
@@ -837,6 +882,7 @@ const renderContemplados = () => {
   if (!contempladosList) {
     return;
   }
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
   contempladosList.innerHTML = '';
 
@@ -872,12 +918,25 @@ codex/check-and-display-boleto-files
       <span>${item.colE || '-'}</span>
       <strong>${item.colF || '-'}</strong>
 codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
+
+  contempladosList.innerHTML = '';
+  state.contemplados.forEach((item) => {
+    const li = document.createElement('li');
+    li.className = 'robot-contemplado';
+    li.innerHTML = `
+      <span>${item.name}</span>
+      <span>${item.plan}</span>
+      <strong>${item.value}</strong>
+ codex/develop-comprehensive-consorcio-management-system
     `;
     contempladosList.appendChild(li);
   });
 };
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
+
+ codex/develop-comprehensive-consorcio-management-system
 const calcularMediaConsultor = () => {
   if (!consultorForm || !consultorResultado) {
     return;
@@ -934,6 +993,7 @@ const setActiveRobotTab = (tabId) => {
   });
 };
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const setActiveChamadosTab = (tabId) => {
   chamadosTabs.forEach((tab) => {
     tab.classList.toggle('is-active', tab.dataset.chamadosTab === tabId);
@@ -1000,6 +1060,8 @@ const updateChamadosByRole = (role) => {
   setActiveChamadosTab('dashboard');
 };
 
+
+ codex/develop-comprehensive-consorcio-management-system
 const persistImageOverrides = (overrides) => {
   localStorage.setItem('hubbieImageOverrides', JSON.stringify(overrides));
 };
@@ -1175,9 +1237,15 @@ const loadSession = () => {
     state.user = JSON.parse(saved);
     userName.textContent = state.user.name;
     userRole.textContent = state.user.role;
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   updateMenuByRole(state.user.role);
   setLoggedInView();
   renderDashboard();
+
+    updateMenuByRole(state.user.role);
+    setLoggedInView();
+    renderDashboard();
+ codex/develop-comprehensive-consorcio-management-system
   } else {
     updateMenuByRole('Comercial');
     setLoggedOutView();
@@ -1231,7 +1299,11 @@ const normalizeRole = (role) => {
     return 'Comercial';
   }
   if (role.toLowerCase().startsWith('ti')) {
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
     return 'Administrador';
+
+    return 'TI';
+ codex/develop-comprehensive-consorcio-management-system
   }
   return role;
 };
@@ -1254,6 +1326,7 @@ const updateMenuByRole = (role) => {
     const nextSection = visibleItems[0].dataset.section;
     setActiveSection(nextSection);
   }
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
   if (normalizedRole === 'TI') {
     setActiveChamadosTab('ti-dashboard');
@@ -1262,6 +1335,8 @@ const updateMenuByRole = (role) => {
   } else {
     setActiveChamadosTab('pessoal');
   }
+
+ codex/develop-comprehensive-consorcio-management-system
 };
 
 subnavButtons.forEach((button) => {
@@ -1320,6 +1395,7 @@ robotTabs.forEach((tab) => {
   });
 });
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 chamadosTabs.forEach((tab) => {
   tab.addEventListener('click', () => {
     setActiveChamadosTab(tab.dataset.chamadosTab);
@@ -1328,6 +1404,8 @@ chamadosTabs.forEach((tab) => {
 
 bindChamadosStatusButtons();
 
+
+ codex/develop-comprehensive-consorcio-management-system
 const filterRobotFiles = (items, query) =>
   items.filter((item) => item.id.toLowerCase().includes(query));
 
@@ -1355,6 +1433,7 @@ if (contractEmitButton) {
 }
 
 if (boletoSearchButton) {
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   boletoSearchButton.addEventListener('click', async () => {
     const query = (boletoSearchInput?.value || '').trim();
 
@@ -1376,6 +1455,26 @@ if (boletoSearchButton) {
     } catch (error) {
       console.warn('Falha ao buscar boletos do contrato.', error);
       renderRobotFiles(boletoFilesList, [], 'Não foi possível buscar os boletos.');
+
+  boletoSearchButton.addEventListener('click', () => {
+    const query = (boletoSearchInput?.value || '').trim().toLowerCase();
+    const matches = query ? filterRobotFiles(state.robotBoletos, query) : state.robotBoletos;
+    renderRobotFiles(boletoFilesList, matches);
+    if (boletoStatus) {
+      boletoStatus.textContent = query ? `Busca realizada para ${query}.` : '';
+    }
+  });
+}
+
+if (boletoEmitButton) {
+  boletoEmitButton.addEventListener('click', () => {
+    const boletoNumber = (boletoSearchInput?.value || '').trim();
+    const account = boletoAccountSelect?.value || '';
+    if (boletoStatus) {
+      boletoStatus.textContent = boletoNumber
+        ? `Robô de boletos acionado para ${boletoNumber} (${account}).`
+        : 'Informe um número de contrato antes de emitir.';
+ codex/develop-comprehensive-consorcio-management-system
     }
   });
 }
@@ -1405,6 +1504,7 @@ if (operacaoCampanhaInput) {
 setActiveSection('inicio');
 setActiveSubsection('campanhas-individuais');
 setActiveRobotTab('contratos');
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 updateChamadosByRole('Comercial');
 updateChamadosListTitle('todos');
 renderOperacaoResumo();
@@ -1413,6 +1513,12 @@ fetchRankingFromSheets();
 fetchContempladosFromSpreadsheet();
 setInterval(fetchRankingFromSheets, rankingRefreshMs);
 fetchContemplados();
+
+renderOperacaoResumo();
+calcularMediaConsultor();
+fetchRankingFromSheets();
+setInterval(fetchRankingFromSheets, rankingRefreshMs);
+ codex/develop-comprehensive-consorcio-management-system
 loadSession();
 initializeLoginHero();
 initializeLoginHeroUpload();

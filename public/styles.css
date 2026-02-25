@@ -14,12 +14,15 @@ body {
   background: #f5f7fb;
 }
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 .is-login .sidebar,
 .is-login #topbar,
 .is-login #content {
   display: none !important;
 }
 
+
+ codex/develop-comprehensive-consorcio-management-system
 .layout {
   min-height: 100vh;
   display: flex;
@@ -700,7 +703,11 @@ button:hover {
 
 .robot-contemplado {
   display: grid;
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   grid-template-columns: 1.4fr 1fr 1fr 1fr;
+
+  grid-template-columns: 1.5fr 1fr 1fr;
+ codex/develop-comprehensive-consorcio-management-system
   gap: 12px;
   padding: 14px 16px;
   border-radius: 12px;
@@ -764,6 +771,7 @@ button:hover {
   color: #111827;
 }
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 .chamados-panel {
   display: flex;
   flex-direction: column;
@@ -1288,6 +1296,8 @@ button:hover {
   }
 }
 
+
+ codex/develop-comprehensive-consorcio-management-system
 @media (max-width: 960px) {
   .team-ranking-visual__content {
     grid-template-columns: 1fr;

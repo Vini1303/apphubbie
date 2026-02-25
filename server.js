@@ -1,7 +1,10 @@
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const xlsx = require('xlsx');
+
+ codex/develop-comprehensive-consorcio-management-system
 
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, 'public');
@@ -11,6 +14,7 @@ const SHEETS_CSV_URL =
   process.env.SHEETS_CSV_URL ||
   `https://docs.google.com/spreadsheets/d/${SHEETS_ID}/gviz/tq?tqx=out:csv&gid=${SHEETS_GID}`;
 const RANKING_REFRESH_MS = Number(process.env.RANKING_REFRESH_MS || 60 * 1000);
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const BOLETOS_BASE_DIR =
   process.env.BOLETOS_BASE_DIR ||
   'C:\\Users\\vinicius.mesquita\\Desktop\\mesclarboletos\\renomearboletos4';
@@ -24,17 +28,23 @@ codex/check-and-display-boleto-files
   process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
 codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 
+ codex/develop-comprehensive-consorcio-management-system
+
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.css': 'text/css; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
   '.json': 'application/json; charset=utf-8',
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   '.svg': 'image/svg+xml',
   '.pdf': 'application/pdf',
   '.txt': 'text/plain; charset=utf-8',
   '.csv': 'text/csv; charset=utf-8',
   '.xml': 'application/xml; charset=utf-8',
   '.zip': 'application/zip'
+
+  '.svg': 'image/svg+xml'
+ codex/develop-comprehensive-consorcio-management-system
 };
 
 const sendResponse = (res, statusCode, content, contentType) => {
@@ -72,6 +82,7 @@ const updateRankingCache = async () => {
 setInterval(updateRankingCache, RANKING_REFRESH_MS);
 updateRankingCache();
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 const isValidContract = (contract) => /^\d+$/.test(contract);
 
 const escapeRegExp = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
@@ -516,6 +527,10 @@ const server = http.createServer(async (req, res) => {
   const requestUrl = new URL(req.url, `http://${req.headers.host || `localhost:${PORT}`}`);
 
   if (requestUrl.pathname === '/api/ranking') {
+=======
+const server = http.createServer((req, res) => {
+  if (req.url.startsWith('/api/ranking')) {
+ codex/develop-comprehensive-consorcio-management-system
     if (!rankingCache.csv) {
       sendResponse(res, 503, 'Ranking indisponível.', 'text/plain; charset=utf-8');
       return;
@@ -524,6 +539,7 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
   if (requestUrl.pathname === '/api/contemplados') {
     try {
       const contemplados = await loadContempladosFromSpreadsheet();
@@ -767,6 +783,9 @@ const server = http.createServer(async (req, res) => {
 
   const filePath = resolveFilePath(requestUrl.pathname);
 
+  const filePath = resolveFilePath(req.url);
+ codex/develop-comprehensive-consorcio-management-system
+
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
       const fallbackPath = path.join(publicDir, 'index.html');
@@ -792,10 +811,13 @@ const server = http.createServer(async (req, res) => {
   });
 });
 
+ codex/desenvolver-sistema-de-gestao-para-consorcio-u7c7wf
 ensureBoletosDatabaseLoaded().catch((error) => {
   console.warn('Não foi possível carregar banco de boletos.', error);
 });
 
+
+ codex/develop-comprehensive-consorcio-management-system
 server.listen(PORT, () => {
   console.log(`Servidor iniciado em http://localhost:${PORT}`);
 });
