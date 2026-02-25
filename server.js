@@ -561,7 +561,7 @@ const server = http.createServer(async (req, res) => {
 
       res.writeHead(200, {
         'Content-Type': contentType,
-        'Content-Disposition': `inline; filename="${path.basename(normalizedFile)}"`
+        'Content-Disposition': `attachment; filename="${path.basename(normalizedFile)}"`
       });
       fs.createReadStream(resolvedFilePath).pipe(res);
       return;
