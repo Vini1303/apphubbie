@@ -2,6 +2,7 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const xlsx = require('xlsx');
+const { spawn } = require('child_process');
 
 const PORT = process.env.PORT || 3000;
 const publicDir = path.join(__dirname, 'public');
@@ -16,6 +17,7 @@ const BOLETOS_BASE_DIR =
   'C:\\Users\\vinicius.mesquita\\Desktop\\mesclarboletos\\renomearboletos4';
 const BOLETOS_DB_PATH =
   process.env.BOLETOS_DB_PATH || path.join(__dirname, 'data', 'boletos-database.json');
+const BOLETOS_ROBO_PYTHON_BIN = process.env.BOLETOS_ROBO_PYTHON_BIN || 'python';
 const CONTEMPLADOS_XLSX_PATH =
   process.env.CONTEMPLADOS_XLSX_PATH || 'C:\\Users\\vinicius.mesquita\\Documents\\Contemplados.xlsx';
 const CONTEMPLADOS_SHEET_NAME = (process.env.CONTEMPLADOS_SHEET_NAME || '').trim();
@@ -531,6 +533,137 @@ const loadBoletosDatabase = async () => {
 
 let boletosDatabase = null;
 
+const boletosJobs = new Map();
+
+const buildPythonEmitScript = (moduleName) => `
+import importlib
+import pathlib
+import sys
+
+module = importlib.import_module("${moduleName}")
+result = module.main(sys.argv[1], sys.argv[2])
+if result is None:
+    raise RuntimeError("Robô não retornou caminho de arquivo.")
+print(pathlib.Path(str(result)).resolve())
+`;
+
+const runPythonRobot = (moduleName, contract, email) =>
+  new Promise((resolve, reject) => {
+    const script = buildPythonEmitScript(moduleName);
+    const child = spawn(BOLETOS_ROBO_PYTHON_BIN, ['-c', script, contract, email], {
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+
+    let stdout = '';
+    let stderr = '';
+
+    child.stdout.on('data', (chunk) => {
+      stdout += chunk.toString();
+    });
+
+    child.stderr.on('data', (chunk) => {
+      stderr += chunk.toString();
+    });
+
+    child.on('error', (error) => reject(error));
+
+    child.on('close', (code) => {
+      if (code !== 0) {
+        reject(new Error(stderr.trim() || `Robô finalizou com código ${code}.`));
+        return;
+      }
+
+      const outputPath = stdout
+        .split(/\r?\n/)
+        .map((line) => line.trim())
+        .filter(Boolean)
+        .pop();
+
+      if (!outputPath) {
+        reject(new Error('Robô não retornou caminho do arquivo.'));
+        return;
+      }
+
+      resolve(outputPath);
+    });
+  });
+
+const dispatchBoletoRobot = async (contract, account, email) => {
+  const normalizedAccount = (account || '').trim().toUpperCase();
+
+  if (!isValidContract(contract)) {
+    throw new Error('Contrato inválido.');
+  }
+
+  if (!email || !email.trim()) {
+    throw new Error('Informe o e-mail para execução do robô.');
+  }
+
+  const moduleName =
+    normalizedAccount === 'USECRED VOLKS'
+      ? 'robo_volks'
+      : normalizedAccount === 'USECRED FIAT'
+        ? 'robofuncionandofiat'
+        : null;
+
+  if (!moduleName) {
+    throw new Error("Conta inválida. Use 'USECRED FIAT' ou 'USECRED VOLKS'.");
+  }
+
+  const emittedPath = await runPythonRobot(moduleName, contract, email.trim());
+  const resolvedPath = path.resolve(emittedPath);
+
+  const stats = await fs.promises.stat(resolvedPath);
+  if (!stats.isFile()) {
+    throw new Error('Robô não retornou um arquivo válido.');
+  }
+
+  const baseDir = (await findExistingBaseDir()) || BOLETOS_BASE_DIR;
+  await fs.promises.mkdir(baseDir, { recursive: true });
+  const destinationPath = path.join(baseDir, `${contract}.pdf`);
+  await fs.promises.copyFile(resolvedPath, destinationPath);
+
+  return {
+    contract,
+    account: normalizedAccount,
+    file: path.basename(destinationPath),
+    destinationPath
+  };
+};
+
+const startBoletoRobotJob = ({ contract, account, email }) => {
+  const jobId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+
+  boletosJobs.set(jobId, {
+    status: 'running',
+    contract,
+    account,
+    email,
+    startedAt: new Date().toISOString(),
+    result: null,
+    error: null
+  });
+
+  dispatchBoletoRobot(contract, account, email)
+    .then((result) => {
+      const current = boletosJobs.get(jobId);
+      if (!current) return;
+      boletosJobs.set(jobId, { ...current, status: 'done', result, finishedAt: new Date().toISOString() });
+    })
+    .catch((error) => {
+      const current = boletosJobs.get(jobId);
+      if (!current) return;
+      boletosJobs.set(jobId, {
+        ...current,
+        status: 'error',
+        error: error.message || 'Falha ao executar robô de boletos.',
+        finishedAt: new Date().toISOString()
+      });
+    });
+
+  return jobId;
+};
+
 const rebuildBoletosDatabase = async (preferredBaseDir) => {
   const existingBaseDir = preferredBaseDir || (await findExistingBaseDir());
   if (!existingBaseDir) {
@@ -694,6 +827,46 @@ const server = http.createServer(async (req, res) => {
       sendJson(res, 500, { error: 'Não foi possível carregar a planilha de contemplados.' });
       return;
     }
+  }
+
+  if (requestUrl.pathname === '/api/boletos/emit' && req.method === 'POST') {
+    try {
+      const body = await parseJsonBody(req);
+      const contract = (body.contract || '').toString().trim();
+      const account = (body.account || '').toString().trim();
+      const email = (body.email || '').toString().trim();
+
+      if (!contract || !account || !email) {
+        sendJson(res, 400, {
+          error: 'Informe contract, account e email para executar o robô de boletos.'
+        });
+        return;
+      }
+
+      const jobId = startBoletoRobotJob({ contract, account, email });
+      sendJson(res, 202, { ok: true, jobId, status: 'running' });
+      return;
+    } catch (error) {
+      sendJson(res, 500, { error: 'Não foi possível iniciar o robô de boletos.' });
+      return;
+    }
+  }
+
+  if (requestUrl.pathname === '/api/boletos/emit/status') {
+    const jobId = (requestUrl.searchParams.get('jobId') || '').trim();
+    if (!jobId) {
+      sendJson(res, 400, { error: 'Informe jobId.' });
+      return;
+    }
+
+    const job = boletosJobs.get(jobId);
+    if (!job) {
+      sendJson(res, 404, { error: 'Job não encontrado.' });
+      return;
+    }
+
+    sendJson(res, 200, { jobId, ...job });
+    return;
   }
 
   if (requestUrl.pathname === '/api/boletos/download') {
